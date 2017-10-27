@@ -43,4 +43,10 @@ public class DBConnect {
         close();
     }
 
+    public Cursor getScannedData(int idFile){
+        String sql="select sts.head_id,sts.barcode,sts.quantity,sp.name from "+DBHelper.SCAN_TABLE_SPEC+" sts \n" +
+                " left join "+DBHelper.STORE_PRODUCT+" sp on sts.barcode = sp.barcode";
+        return database.rawQuery(sql,null);
+    }
+
 }

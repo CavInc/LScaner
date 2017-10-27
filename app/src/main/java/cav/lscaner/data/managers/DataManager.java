@@ -8,6 +8,7 @@ import android.database.Cursor;
 import java.util.ArrayList;
 
 import cav.lscaner.data.database.DBConnect;
+import cav.lscaner.data.models.ScannedDataModel;
 import cav.lscaner.data.models.ScannedFileModel;
 import cav.lscaner.utils.Func;
 import cav.lscaner.utils.LScanerApp;
@@ -56,6 +57,18 @@ public class DataManager{
                     cursor.getString(cursor.getColumnIndex("name_file")),
                     Func.getStrToDate(cursor.getString(cursor.getColumnIndex("date")),"yyyy-MM-dd"),
                     cursor.getString(cursor.getColumnIndex("time"))));
+        }
+        mDB.close();
+        return rec;
+    }
+
+    // отсканированые данные
+    public ArrayList<ScannedDataModel> getScannedData(int idFile){
+        ArrayList<ScannedDataModel> rec = new ArrayList<>();
+        mDB.open();
+        Cursor cursor = mDB.getScannedData(idFile);
+        while (cursor.moveToNext()){
+
         }
         mDB.close();
         return rec;

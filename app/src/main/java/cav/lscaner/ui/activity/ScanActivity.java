@@ -2,11 +2,15 @@ package cav.lscaner.ui.activity;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 
+import java.util.ArrayList;
+
 import cav.lscaner.R;
 import cav.lscaner.data.managers.DataManager;
+import cav.lscaner.data.models.ScannedDataModel;
 import cav.lscaner.ui.adapter.ScannedListAdapter;
 import cav.lscaner.utils.ConstantManager;
 
@@ -34,9 +38,18 @@ public class ScanActivity extends AppCompatActivity {
 
         mListView = (ListView) findViewById(R.id.san_lv);
 
+        updateUI();
     }
 
     private void updateUI(){
+        ArrayList<ScannedDataModel> model = mDataManager.getScannedData(idFile);
+        if (mAdapter == null) {
+            mAdapter = new ScannedListAdapter(this,R.layout.scanned_item,model);
+            mListView.setAdapter(mAdapter);
+        }else {
+
+            mAdapter.notifyDataSetChanged();
+        }
 
     }
 }
