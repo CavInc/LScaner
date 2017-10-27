@@ -49,4 +49,23 @@ public class DBConnect {
         return database.rawQuery(sql,null);
     }
 
+    // добавили позицию в файл
+    public void addScannedPositon(){
+
+    }
+
+    // поиск по списку товаров
+    public void searchStore(String barcode){
+
+    }
+
+    // добавить в список товаров
+    public void addStore(String barcode,String name){
+        open();
+        ContentValues values = new ContentValues();
+        values.put("barcode",barcode);
+        values.put("name",name);
+        database.insertWithOnConflict(DBHelper.STORE_PRODUCT,null,values,SQLiteDatabase.CONFLICT_REPLACE);
+        close();
+    }
 }
