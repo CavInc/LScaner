@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import cav.lscaner.R;
@@ -32,19 +33,30 @@ public class ScannedListAdapter extends ArrayAdapter<ScannedDataModel>{
             holder = new ViewHolder();
             holder.mName = (TextView) row.findViewById(R.id.sc_item_name);
             holder.mQuantity = (TextView) row.findViewById(R.id.sc_item_qa);
+            holder.mBarcode = (TextView) row.findViewById(R.id.sc_item_barcode);
             row.setTag(holder);
         }else{
             holder = (ViewHolder)row.getTag();
         }
         ScannedDataModel rec = getItem(position);
-        holder.mName.setText(rec.getName());
-
+        if (rec.getName() == null) {
+            holder.mName.setText("Новый (не опознан)");
+        } else {
+            holder.mName.setText(rec.getName());
+        }
+        holder.mQuantity.setText(String.valueOf(rec.getQuantity()));
+        holder.mBarcode.setText(rec.getBarCode());
         return row;
+    }
+
+    public void setData(ArrayList<ScannedDataModel> data){
+        this.clear();
+        this.addAll(data);
     }
 
     private class ViewHolder {
         private TextView mName;
         private TextView mQuantity;
-
+        private TextView mBarcode;
     }
 }

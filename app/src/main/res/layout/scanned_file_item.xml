@@ -15,7 +15,8 @@
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp">
         <TextView
             android:id="@+id/sd_file_date"
             android:text="21.21.2121"

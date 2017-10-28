@@ -46,6 +46,11 @@ public class DataManager{
         return mDB;
     }
 
+    // служебные запросы разные
+    public String getAndroidID(){
+        return null;
+    }
+
     // запросы к базе данных
     // запрос списка файлов
     public ArrayList<ScannedFileModel> getScannedFile(){
@@ -68,6 +73,12 @@ public class DataManager{
         mDB.open();
         Cursor cursor = mDB.getScannedData(idFile);
         while (cursor.moveToNext()){
+            rec.add(new ScannedDataModel(
+                    cursor.getInt(cursor.getColumnIndex("head_id")),
+                    cursor.getString(cursor.getColumnIndex("barcode")),
+                    cursor.getString(cursor.getColumnIndex("name")),
+                    cursor.getFloat(cursor.getColumnIndex("quantity"))
+            ));
 
         }
         mDB.close();

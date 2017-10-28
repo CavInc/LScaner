@@ -18,7 +18,9 @@ import java.util.ArrayList;
 import cav.lscaner.R;
 import cav.lscaner.data.managers.DataManager;
 import cav.lscaner.data.models.ScannedDataModel;
+import cav.lscaner.data.models.StoreProductModel;
 import cav.lscaner.ui.adapter.ScannedListAdapter;
+import cav.lscaner.ui.dialogs.QueryQuantityDialog;
 import cav.lscaner.utils.ConstantManager;
 
 public class ScanActivity extends AppCompatActivity {
@@ -30,6 +32,7 @@ public class ScanActivity extends AppCompatActivity {
     private int idFile = -1;
 
     private ScannedListAdapter mAdapter;
+    private ArrayList<ScannedDataModel> mDataModels;
 
 
     @Override
@@ -45,7 +48,6 @@ public class ScanActivity extends AppCompatActivity {
 
         mListView = (ListView) findViewById(R.id.san_lv);
 
-        mBarCode.addTextChangedListener(mBarWatcher);
         mBarCode.setOnEditorActionListener(mEditorActionListener);
 
         setupToolBar();
@@ -69,39 +71,54 @@ public class ScanActivity extends AppCompatActivity {
     }
 
     private void updateUI(){
-        ArrayList<ScannedDataModel> model = mDataManager.getScannedData(idFile);
+        mDataModels = mDataManager.getScannedData(idFile);
         if (mAdapter == null) {
-            mAdapter = new ScannedListAdapter(this,R.layout.scanned_item,model);
+            mAdapter = new ScannedListAdapter(this,R.layout.scanned_item,mDataModels);
             mListView.setAdapter(mAdapter);
         }else {
-
+            mAdapter.setData(mDataModels);
             mAdapter.notifyDataSetChanged();
         }
-
     }
 
-    TextWatcher mBarWatcher = new TextWatcher() {
-        @Override
-        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-        }
-
-        @Override
-        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-        }
-
-        @Override
-        public void afterTextChanged(Editable editable) {
-            Log.d("SA","END CHANGE");
-        }
-    };
+    private String mBar;
 
     TextView.OnEditorActionListener mEditorActionListener = new TextView.OnEditorActionListener() {
         @Override
         public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
             Log.d("SA",textView.getText().toString());
+            mBar = textView.getText().toString();
+            int l = mDataModels.indexOf(new ScannedDataModel(-1,mBar,"", 0.0f));
+            if (l == -1) {
+                // нифига не нашли в уже добавленых смотрим в базе
+                StoreProductModel product = mDataManager.getDB().searchStore(mBar);
+                if (product!= null) {
+                    Log.d("SA", product.getName());
+                } else {
+                    product = new StoreProductModel(mBar,"Новый");
+                }
+                QueryQuantityDialog dialod = QueryQuantityDialog.newInstans(product.getName(),1f);
+                dialod.setQuantityChangeListener(mQuantityChangeListener);
+                dialod.show(getSupportFragmentManager(),"QQ");
+            } else {
+                Float qq = mDataModels.get(l).getQuantity();
+                QueryQuantityDialog dialod = QueryQuantityDialog.newInstans(mDataModels.get(l).getName(),qq);
+                dialod.setQuantityChangeListener(mQuantityChangeListener);
+                dialod.show(getSupportFragmentManager(),"QQ");
+            }
+            mBarCode.setText("");
             return false;
         }
     };
+
+    QueryQuantityDialog.QuantityChangeListener mQuantityChangeListener = new QueryQuantityDialog.QuantityChangeListener(){
+        @Override
+        public void changeQuantity(Float quantity) {
+            if (quantity!=0){
+                mDataManager.getDB().addScannedPositon(idFile,mBar,quantity);
+            }
+
+        }
+    };
+
 }

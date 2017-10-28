@@ -5,6 +5,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import cav.lscaner.data.models.StoreProductModel;
+
 public class DBConnect {
 
     private SQLiteDatabase database;
@@ -50,13 +52,28 @@ public class DBConnect {
     }
 
     // добавили позицию в файл
-    public void addScannedPositon(){
-
+    public void addScannedPositon(int idFile,String barcode,Float quantity){
+        ContentValues values = new ContentValues();
+        values.put("head_id",idFile);
+        values.put("barcode",barcode);
+        values.put("quantity",quantity);
+        open();
+        database.insertWithOnConflict(DBHelper.SCAN_TABLE_SPEC,null,values,SQLiteDatabase.CONFLICT_REPLACE);
+        close();
     }
 
     // поиск по списку товаров
-    public void searchStore(String barcode){
-
+    public StoreProductModel searchStore(String barcode){
+        open();
+        Cursor cursor = database.query(DBHelper.STORE_PRODUCT,new String[]{"barcode","name"},"barcode="+barcode,null,null,null,null);
+        cursor.moveToFirst();
+        StoreProductModel model = null;
+        if (cursor.getCount() != 0) {
+            model = new StoreProductModel(cursor.getString(cursor.getColumnIndex("barcode")),
+                    cursor.getString(cursor.getColumnIndex("name")));
+        }
+        close();
+        return model;
     }
 
     // добавить в список товаров

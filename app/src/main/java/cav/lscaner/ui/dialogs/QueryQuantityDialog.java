@@ -2,8 +2,10 @@ package cav.lscaner.ui.dialogs;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,8 +16,14 @@ import cav.lscaner.R;
 
 public class QueryQuantityDialog extends DialogFragment{
 
+    private static final String POSITION_NAME = "POSITION_NAME";
+    private static final String POSITION_QUANTITY = "POSITION_QUANTITY";
+
     private TextView mName;
     private EditText mQuantity;
+
+    private String mGetName;
+    private Float mGetQuantity;
 
     private QuantityChangeListener mQuantityChangeListener;
 
@@ -23,11 +31,22 @@ public class QueryQuantityDialog extends DialogFragment{
         public void changeQuantity (Float quantity);
     }
 
-    public static QueryQuantityDialog newInstans(){
+    public static QueryQuantityDialog newInstans(String name,Float qunatity){
         Bundle args = new Bundle();
-
+        args.putString(POSITION_NAME,name);
+        args.putFloat(POSITION_QUANTITY,qunatity);
         QueryQuantityDialog dialog = new QueryQuantityDialog();
+        dialog.setArguments(args);
         return dialog;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            mGetName = getArguments().getString(POSITION_NAME,"");
+            mGetQuantity = getArguments().getFloat(POSITION_QUANTITY);
+        }
     }
 
     @NonNull
@@ -38,9 +57,35 @@ public class QueryQuantityDialog extends DialogFragment{
         mName = (TextView) v.findViewById(R.id.qq_title);
         mQuantity = (EditText) v.findViewById(R.id.qq_quantity);
 
+        if (mGetName != null) {
+            mName.setText(mGetName);
+        } else {
+            mName.setText("Новый");
+        }
+        if (mGetQuantity != null) {
+            mQuantity.setText(String.valueOf(mGetQuantity));
+        }
+
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle("Количество товара").setView(v);
+        builder.setTitle("Количество товара")
+                .setView(v)
+                .setPositiveButton(R.string.button_ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int witch) {
+                        if (mQuantityChangeListener != null){
+                            Float qq = Float.valueOf(mQuantity.getText().toString());
+                            mQuantityChangeListener.changeQuantity(qq);
+                        }
+
+                    }
+                });
+
+        mQuantity.requestFocus();
 
         return builder.create();
+    }
+
+    public void setQuantityChangeListener (QuantityChangeListener listener){
+        mQuantityChangeListener = listener;
     }
 }
