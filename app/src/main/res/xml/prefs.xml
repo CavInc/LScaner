@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:title="Настройки весового твара">
+        <EditTextPreference
+            android:title="Префиксы весового товара"/>
+
+        <EditTextPreference
+            android:title="Код весового товара (кол поисковых символов)"/>
+
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:title="Обмен">
+        <EditTextPreference
+            android:title="Имя файла с товаром"/>
+        <EditTextPreference
+            android:title="Разделитель полей"/>
+
+    </PreferenceCategory>
+</PreferenceScreen>

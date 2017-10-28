@@ -2,6 +2,8 @@ package cav.lscaner.data.managers;
 
 import android.content.SharedPreferences;
 
+import java.util.ArrayList;
+
 import cav.lscaner.utils.ConstantManager;
 import cav.lscaner.utils.LScanerApp;
 
@@ -23,5 +25,10 @@ public class PreferensManager {
     public String getDelimeterScanned(){
         return mSharedPreferences.getString(ConstantManager.DELIMETER_SCANER,"#");
     }
+
+    public ArrayList<String> getScalePrefi(){
+        return null;
+    }
+
 
 }

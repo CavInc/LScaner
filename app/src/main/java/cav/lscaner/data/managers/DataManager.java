@@ -4,7 +4,12 @@ import android.content.Context;
 
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.os.Environment;
+import android.provider.Settings;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import cav.lscaner.data.database.DBConnect;
@@ -47,11 +52,32 @@ public class DataManager{
     }
 
     // служебные запросы разные
+    // запрос данных устройства
     public String getAndroidID(){
-        return null;
+        return  Settings.Secure.getString(mContext.getContentResolver(), Settings.Secure.ANDROID_ID);
     }
 
-    // запросы к базе данных
+    // проверяем включен ли интернетик
+    public boolean isOnline(){
+        ConnectivityManager cm = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);;
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        return netInfo != null && netInfo.isConnectedOrConnecting();
+    }
+
+    // возвращает путь к локальной папки приложения
+    public String getStorageAppPath(){
+        if (!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED))
+            return null;
+        File path = new File (Environment.getExternalStorageDirectory(), "LScanner");
+        if (! path.exists()) {
+            if (!path.mkdirs()){
+                return null;
+            }
+        }
+        return path.getPath();
+    }
+
+    // =============================== запросы к базе данных =======================================
     // запрос списка файлов
     public ArrayList<ScannedFileModel> getScannedFile(){
         ArrayList<ScannedFileModel> rec = new ArrayList<>();
