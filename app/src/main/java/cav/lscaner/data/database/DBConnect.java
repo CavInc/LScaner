@@ -85,4 +85,12 @@ public class DBConnect {
         database.insertWithOnConflict(DBHelper.STORE_PRODUCT,null,values,SQLiteDatabase.CONFLICT_REPLACE);
         close();
     }
+
+    //Удалить файл
+    public void deleteFile(int idFile){
+        open();
+        database.delete(DBHelper.SCAN_TABLE,"id="+idFile,null);
+        database.delete(DBHelper.SCAN_TABLE_SPEC,"head_id="+idFile,null);
+        close();
+    }
 }

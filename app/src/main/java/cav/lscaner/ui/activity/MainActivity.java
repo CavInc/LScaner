@@ -1,5 +1,7 @@
 package cav.lscaner.ui.activity;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -144,7 +146,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     };
 
-    private void deleteRecord(int selIdFile) {
+    private void deleteRecord(final int selIdFile) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Удаление")
+                .setMessage("Удаляем ? Вы уверены ?")
+                .setPositiveButton(R.string.button_ok,new DialogInterface.OnClickListener(){
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int witch) {
+                        //TODO добавить удаление файла выгрузки с SD
+                        mDataManager.getDB().deleteFile(selIdFile);
+                        updateUI();
+                    }
+                })
+                .setNegativeButton(R.string.button_cancel,null)
+                .create();
+        builder.show();
 
     }
 
