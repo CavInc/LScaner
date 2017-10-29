@@ -128,6 +128,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         public void selectedItem(int index) {
             if (index == R.id.dialog_del_item) {
                 // удаляем
+                deleteRecord(selIdFile);
             }
             if (index == R.id.dialog_edit_item) {
                 // редактируем заголовок
@@ -142,5 +143,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         }
     };
+
+    private void deleteRecord(int selIdFile) {
+
+    }
 
 }

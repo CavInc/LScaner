@@ -5,12 +5,9 @@ import android.preference.EditTextPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import cav.lscaner.R;
 import cav.lscaner.data.managers.DataManager;
@@ -18,10 +15,11 @@ import cav.lscaner.data.managers.DataManager;
 public class SettingActivity extends PreferenceActivity {
     private DataManager mDataManager;
 
-    private EditTextPreference mScalePref;
+    private EditTextPreference mScaleSize;
     private EditTextPreference mStoreFile;
 
     private EditTextPreference mFileDelimeter;
+    private EditTextPreference mScalePrefix;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,9 +28,11 @@ public class SettingActivity extends PreferenceActivity {
 
         mDataManager = DataManager.getInstance();
 
-        mScalePref = (EditTextPreference) findPreference("scale_prefix");
+        mScalePrefix = (EditTextPreference) findPreference("prefix_scale");
+        mScalePrefix.setOnPreferenceChangeListener(mChangeListener);
 
-        mScalePref.setOnPreferenceChangeListener(mChangeListener);
+        mScaleSize = (EditTextPreference) findPreference("scale_size");
+        mScaleSize.setOnPreferenceChangeListener(mChangeListener);
 
         mStoreFile = (EditTextPreference) findPreference("file_store");
         mStoreFile.setOnPreferenceChangeListener(mChangeListener);
@@ -40,9 +40,11 @@ public class SettingActivity extends PreferenceActivity {
         mFileDelimeter = (EditTextPreference) findPreference("file_delimiter");
         mFileDelimeter.setOnPreferenceChangeListener(mChangeListener);
 
-        mScalePref.setSummary(String.valueOf(mDataManager.getPreferensManager().getSizeScale()));
+        mScaleSize.setSummary(String.valueOf(mDataManager.getPreferensManager().getSizeScale()));
         mFileDelimeter.setSummary(mDataManager.getPreferensManager().getDelimiterStoreFile());
         mStoreFile.setSummary(mDataManager.getPreferensManager().getStoreFileName());
+
+        //mScalePrefix.setSummary(mDataManager.getPreferensManager().getScalePrefix());
     }
 
     @Override
@@ -63,9 +65,9 @@ public class SettingActivity extends PreferenceActivity {
     Preference.OnPreferenceChangeListener mChangeListener = new Preference.OnPreferenceChangeListener() {
         @Override
         public boolean onPreferenceChange(Preference preference, Object o) {
-            if (preference.getKey().equals("scale_prefix")){
+            if (preference.getKey().equals("scale_size")){
                 String l = (String) o;
-                mScalePref.setSummary(l);
+                mScaleSize.setSummary(l);
                 mDataManager.getPreferensManager().setSizeScale(Integer.parseInt(l));
             }
             if (preference.getKey().equals("file_store")){

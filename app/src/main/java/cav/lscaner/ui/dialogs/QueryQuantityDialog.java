@@ -18,12 +18,14 @@ public class QueryQuantityDialog extends DialogFragment{
 
     private static final String POSITION_NAME = "POSITION_NAME";
     private static final String POSITION_QUANTITY = "POSITION_QUANTITY";
+    private static final String POSITION_OLD_QUANTITY = "POSUTUIN_OLD_QUANTITY";
 
     private TextView mName;
     private EditText mQuantity;
 
     private String mGetName;
     private Float mGetQuantity;
+    private Float mOldQuantity;
 
     private QuantityChangeListener mQuantityChangeListener;
 
@@ -31,10 +33,11 @@ public class QueryQuantityDialog extends DialogFragment{
         public void changeQuantity (Float quantity);
     }
 
-    public static QueryQuantityDialog newInstans(String name,Float qunatity){
+    public static QueryQuantityDialog newInstans(String name,Float qunatity,Float oldQuantity){
         Bundle args = new Bundle();
         args.putString(POSITION_NAME,name);
         args.putFloat(POSITION_QUANTITY,qunatity);
+        args.putFloat(POSITION_OLD_QUANTITY,oldQuantity);
         QueryQuantityDialog dialog = new QueryQuantityDialog();
         dialog.setArguments(args);
         return dialog;
@@ -46,6 +49,7 @@ public class QueryQuantityDialog extends DialogFragment{
         if (getArguments() != null) {
             mGetName = getArguments().getString(POSITION_NAME,"");
             mGetQuantity = getArguments().getFloat(POSITION_QUANTITY);
+            mOldQuantity = getArguments().getFloat(POSITION_OLD_QUANTITY);
         }
     }
 
@@ -74,7 +78,7 @@ public class QueryQuantityDialog extends DialogFragment{
                     public void onClick(DialogInterface dialogInterface, int witch) {
                         if (mQuantityChangeListener != null){
                             Float qq = Float.valueOf(mQuantity.getText().toString());
-                            mQuantityChangeListener.changeQuantity(qq);
+                            mQuantityChangeListener.changeQuantity(mOldQuantity+qq);
                         }
 
                     }

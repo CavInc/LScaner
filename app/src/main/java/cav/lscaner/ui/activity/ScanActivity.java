@@ -35,6 +35,7 @@ public class ScanActivity extends AppCompatActivity {
     private ArrayList<ScannedDataModel> mDataModels;
 
     private ArrayList<String> prefixScale;
+    private int sizeScale = -1;
 
 
     @Override
@@ -45,6 +46,7 @@ public class ScanActivity extends AppCompatActivity {
         mDataManager = DataManager.getInstance();
 
         prefixScale = mDataManager.getPreferensManager().getScalePrefix();
+        sizeScale = mDataManager.getPreferensManager().getSizeScale();
 
         idFile = getIntent().getIntExtra(ConstantManager.SELECTED_FILE,-1);
 
@@ -86,28 +88,36 @@ public class ScanActivity extends AppCompatActivity {
     }
 
     private String mBar;
+    private Float qq;
 
     TextView.OnEditorActionListener mEditorActionListener = new TextView.OnEditorActionListener() {
         @Override
         public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
             Log.d("SA",textView.getText().toString());
             mBar = textView.getText().toString();
+            qq = 1f;
+            // выкидываем EAN 8 так как его весовым у нас быть не может
+            if (prefixScale.contains(mBar.substring(0,2)) && mBar.length() == 13){
+                Log.d("SA","SCALE KODE");
+                String lq = mBar.substring(sizeScale,mBar.length()-1);
+                lq = lq.substring(0,2)+"."+lq.substring(3);
+                mBar = mBar.substring(0,sizeScale);
+                qq = Float.parseFloat(lq);
+            }
 
             int l = mDataModels.indexOf(new ScannedDataModel(-1,mBar,"", 0.0f));
             if (l == -1) {
                 // нифига не нашли в уже добавленых смотрим в базе
                 StoreProductModel product = mDataManager.getDB().searchStore(mBar);
-                if (product!= null) {
-                    Log.d("SA", product.getName());
-                } else {
+                if (product == null) {
                     product = new StoreProductModel(mBar,"Новый");
                 }
-                QueryQuantityDialog dialod = QueryQuantityDialog.newInstans(product.getName(),1f);
+                QueryQuantityDialog dialod = QueryQuantityDialog.newInstans(product.getName(),qq,0f);
                 dialod.setQuantityChangeListener(mQuantityChangeListener);
                 dialod.show(getSupportFragmentManager(),"QQ");
             } else {
                 Float qq = mDataModels.get(l).getQuantity();
-                QueryQuantityDialog dialod = QueryQuantityDialog.newInstans(mDataModels.get(l).getName(),qq);
+                QueryQuantityDialog dialod = QueryQuantityDialog.newInstans(mDataModels.get(l).getName(),qq,qq);
                 dialod.setQuantityChangeListener(mQuantityChangeListener);
                 dialod.show(getSupportFragmentManager(),"QQ");
             }
@@ -121,6 +131,7 @@ public class ScanActivity extends AppCompatActivity {
         public void changeQuantity(Float quantity) {
             if (quantity!=0){
                 mDataManager.getDB().addScannedPositon(idFile,mBar,quantity);
+                updateUI(); // TODO передалать заполнение через добавление в адаптер
             }
 
         }

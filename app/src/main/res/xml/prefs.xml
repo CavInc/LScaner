@@ -3,10 +3,13 @@
     <PreferenceCategory
         android:title="Настройки весового товара">
         <EditTextPreference
+            android:key="prefix_scale"
+            android:persistent="false"
             android:title="Префиксы весового товара"/>
         <EditTextPreference
-            android:key="scale_prefix"
-            android:title="Код весового товара (кол поисковых символов)"
+            android:key="scale_size"
+            android:persistent="false"
+            android:title="Код вес. товара (кол. поисковых символов)"
             android:inputType="numberSigned"
             android:defaultValue="7"
             android:summary="7"/>
@@ -16,9 +19,11 @@
         android:title="Обмен">
         <EditTextPreference
             android:key="file_store"
+            android:persistent="false"
             android:title="Имя файла с товаром"/>
         <EditTextPreference
             android:key="file_delimiter"
+            android:persistent="false"
             android:title="Разделитель полей"
             android:defaultValue="#"
             android:summary="#"/>
