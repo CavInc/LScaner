@@ -6,12 +6,14 @@ import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -68,6 +70,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (item.getItemId() == R.id.menu_setting){
             Intent intent = new Intent(this,SettingActivity.class);
             startActivity(intent);
+        }
+        if (item.getItemId() == R.id.menu_refresh){
+            Toast.makeText(MainActivity.this,
+                    "А тут будет диалог спрашивающий откуда взять файл (имя файла в настройка)",
+                    Toast.LENGTH_LONG).show();
         }
 
         return true;
@@ -134,6 +141,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
             if (index == R.id.dialog_edit_item) {
                 // редактируем заголовок
+                Toast.makeText(MainActivity.this,"А тут будет диалог редактирования заголовка файла",Toast.LENGTH_LONG).show();
             }
             if (index == R.id.dialog_send_item) {
                 // отправляем наружу
@@ -142,6 +150,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     return;
                 }
                 // показываем окно с выбором куда отправлять
+                Toast.makeText(MainActivity.this,"А тут будет диалог спрашивающий куда отправить",Toast.LENGTH_LONG).show();
             }
         }
     };
