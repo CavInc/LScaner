@@ -34,6 +34,8 @@ public class ScanActivity extends AppCompatActivity {
     private ScannedListAdapter mAdapter;
     private ArrayList<ScannedDataModel> mDataModels;
 
+    private ArrayList<String> prefixScale;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +43,8 @@ public class ScanActivity extends AppCompatActivity {
         setContentView(R.layout.activity_scan);
 
         mDataManager = DataManager.getInstance();
+
+        prefixScale = mDataManager.getPreferensManager().getScalePrefix();
 
         idFile = getIntent().getIntExtra(ConstantManager.SELECTED_FILE,-1);
 
@@ -88,6 +92,7 @@ public class ScanActivity extends AppCompatActivity {
         public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
             Log.d("SA",textView.getText().toString());
             mBar = textView.getText().toString();
+
             int l = mDataModels.indexOf(new ScannedDataModel(-1,mBar,"", 0.0f));
             if (l == -1) {
                 // нифига не нашли в уже добавленых смотрим в базе

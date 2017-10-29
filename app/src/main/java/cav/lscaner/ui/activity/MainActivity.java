@@ -18,6 +18,7 @@ import cav.lscaner.data.managers.DataManager;
 import cav.lscaner.data.models.ScannedFileModel;
 import cav.lscaner.ui.adapter.ScannedFileAdapter;
 import cav.lscaner.ui.dialogs.AddEditNameFileDialog;
+import cav.lscaner.ui.dialogs.SelectMainDialog;
 import cav.lscaner.utils.ConstantManager;
 import cav.lscaner.utils.Func;
 
@@ -110,9 +111,36 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         startActivity(intent);
     }
 
+    private int selIdFile;
+
     @Override
     public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long id) {
-
-        return false;
+        ScannedFileModel model = (ScannedFileModel) adapterView.getItemAtPosition(position);
+        selIdFile = model.getId();
+        SelectMainDialog dialog = new SelectMainDialog();
+        dialog.setSelectMainDialogListener(mSelectMainDialogListener);
+        dialog.show(getFragmentManager(),"SELECT_DIALOG");
+        return true;
     }
+
+    SelectMainDialog.SelectMainDialogListener mSelectMainDialogListener = new SelectMainDialog.SelectMainDialogListener() {
+        @Override
+        public void selectedItem(int index) {
+            if (index == R.id.dialog_del_item) {
+                // удаляем
+            }
+            if (index == R.id.dialog_edit_item) {
+                // редактируем заголовок
+            }
+            if (index == R.id.dialog_send_item) {
+                // отправляем наружу
+                if (!mDataManager.isOnline()){
+                    // показываем что нет сети
+                    return;
+                }
+                // показываем окно с выбором куда отправлять
+            }
+        }
+    };
+
 }
