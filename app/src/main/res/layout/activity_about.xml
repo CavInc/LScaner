@@ -8,47 +8,13 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="cav.lscaner.ui.activity.AboutActivity">]
-
-    <LinearLayout
-        android:id="@+id/ab_up_lv"
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+    tools:context="cav.lscaner.ui.activity.AboutActivity">
         <ImageView
-            android:src="@drawable/logo2"
+            android:id="@+id/ab_up_lv"
+            android:layout_gravity="top"
+            android:src="@drawable/logonewfull"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="18dp">
-            <TextView
-                android:text="Chupkov"
-                android:gravity="center"
-                android:textSize="28sp"
-                android:textStyle="bold"
-                android:textColor="@android:color/black"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1sp"
-                android:background="@color/app_gray_normal"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"/>
-            <TextView
-                android:text="Профессиональные решения \n для бизнеса"
-                android:textColor="@android:color/black"
-                android:textSize="16sp"
-                android:gravity="center"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-
-        </LinearLayout>
-
-    </LinearLayout>
+            android:layout_height="317px"/>
     <View
         android:id="@+id/ab_spliter"
         android:layout_width="match_parent"
