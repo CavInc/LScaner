@@ -42,6 +42,8 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
     private ArrayList<String> prefixScale;
     private int sizeScale = -1;
 
+    private String mFileName;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +56,7 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
         sizeScale = mDataManager.getPreferensManager().getSizeScale();
 
         idFile = getIntent().getIntExtra(ConstantManager.SELECTED_FILE,-1);
+        mFileName = getIntent().getStringExtra(ConstantManager.SELECTED_FILE_NAME);
 
         mBarCode = (EditText) findViewById(R.id.barcode_et);
 
@@ -72,6 +75,7 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
         ActionBar actionBar = getSupportActionBar();
         if (actionBar!=null){
             actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setTitle(mFileName);
         }
     }
 
