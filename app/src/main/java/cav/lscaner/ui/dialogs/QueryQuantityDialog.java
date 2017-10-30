@@ -22,6 +22,7 @@ public class QueryQuantityDialog extends DialogFragment{
 
     private TextView mName;
     private EditText mQuantity;
+    private TextView mOldQuantityTV;
 
     private String mGetName;
     private Float mGetQuantity;
@@ -60,6 +61,7 @@ public class QueryQuantityDialog extends DialogFragment{
 
         mName = (TextView) v.findViewById(R.id.qq_title);
         mQuantity = (EditText) v.findViewById(R.id.qq_quantity);
+        mOldQuantityTV = (TextView) v.findViewById(R.id.qq_old_quantity);
 
         if (mGetName != null) {
             mName.setText(mGetName);
@@ -68,6 +70,12 @@ public class QueryQuantityDialog extends DialogFragment{
         }
         if (mGetQuantity != null) {
             mQuantity.setText(String.valueOf(mGetQuantity));
+        }
+
+        if (mOldQuantity == 0) {
+            mOldQuantityTV.setVisibility(View.GONE);
+        } else {
+            mOldQuantityTV.setText(mOldQuantity+"- уже добавлено");
         }
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());

@@ -121,6 +121,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         Intent intent = new Intent(this,ScanActivity.class);
         intent.putExtra(ConstantManager.SELECTED_FILE,mFileAdapter.getItem(position).getId());
+        intent.putExtra(ConstantManager.SELECTED_FILE_NAME,mFileAdapter.getItem(position).getName());
         startActivity(intent);
     }
 

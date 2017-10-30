@@ -8,4 +8,5 @@ public interface ConstantManager{
     String SCALE_PREFIX = "SCALE_PREFIX";
     String SCALE_SIZE = "SCALE_SIZE";
     String STORE_FILE_NAME = "STORE_FILE_NAME";
+    String SELECTED_FILE_NAME = "SELECTED_FILE_NAME";
 }

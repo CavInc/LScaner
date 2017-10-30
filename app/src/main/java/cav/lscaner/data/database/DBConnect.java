@@ -52,18 +52,21 @@ public class DBConnect {
     }
 
     // добавили позицию в файл
-    public void addScannedPositon(int idFile,String barcode,Float quantity){
+    public void addScannedPositon(int idFile,String barcode,Float quantity,int position){
         open();
-        Cursor cursor = database.rawQuery("select max(pos_id)+1 as pos from "+DBHelper.SCAN_TABLE_SPEC+" where head_id="+idFile,null);
-        cursor.moveToFirst();
-        int pos = cursor.getInt(0);
-        if (pos == 0) pos = 1;
+
+        if (position == -1) {
+            Cursor cursor = database.rawQuery("select max(pos_id)+1 as pos from " + DBHelper.SCAN_TABLE_SPEC + " where head_id=" + idFile, null);
+            cursor.moveToFirst();
+            position = cursor.getInt(0);
+            if (position == 0) position = 1;
+        }
 
         ContentValues values = new ContentValues();
         values.put("head_id",idFile);
         values.put("barcode",barcode);
         values.put("quantity",quantity);
-        values.put("pos_id",pos);
+        values.put("pos_id", position);
         open();
         database.insertWithOnConflict(DBHelper.SCAN_TABLE_SPEC,null,values,SQLiteDatabase.CONFLICT_REPLACE);
         close();

@@ -96,6 +96,7 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
 
     private String mBar;
     private Float qq;
+    private int posID;
 
     TextView.OnEditorActionListener mEditorActionListener = new TextView.OnEditorActionListener() {
         @Override
@@ -103,6 +104,7 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
             Log.d("SA",textView.getText().toString());
             mBar = textView.getText().toString();
             qq = 1f;
+            posID = -1;
             boolean scaleFlg = false;
             // выкидываем EAN 8 так как его весовым у нас быть не может
             if (prefixScale.contains(mBar.substring(0,2)) && mBar.length() == 13){
@@ -126,11 +128,12 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
                     dialod.setQuantityChangeListener(mQuantityChangeListener);
                     dialod.show(getSupportFragmentManager(), "QQ");
                 } else {
-                    mDataManager.getDB().addScannedPositon(idFile, mBar, qq);
+                    mDataManager.getDB().addScannedPositon(idFile, mBar, qq,-1);
                     updateUI(); // TODO передалать заполнение через добавление в адаптер
                 }
             } else {
                 Float qq = mDataModels.get(l).getQuantity();
+                posID = mDataModels.get(l).getPosId();
                 QueryQuantityDialog dialod = QueryQuantityDialog.newInstans(mDataModels.get(l).getName(),qq,qq);
                 dialod.setQuantityChangeListener(mQuantityChangeListener);
                 dialod.show(getSupportFragmentManager(),"QQ");
@@ -144,7 +147,7 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
         @Override
         public void changeQuantity(Float quantity) {
             if (quantity!=0){
-                mDataManager.getDB().addScannedPositon(idFile,mBar,quantity);
+                mDataManager.getDB().addScannedPositon(idFile,mBar,quantity,posID);
                 updateUI(); // TODO передалать заполнение через добавление в адаптер
             }
 
