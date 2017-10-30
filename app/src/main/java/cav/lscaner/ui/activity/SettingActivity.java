@@ -45,6 +45,7 @@ public class SettingActivity extends PreferenceActivity {
         mStoreFile.setSummary(mDataManager.getPreferensManager().getStoreFileName());
 
         mScalePrefix.setSummary(mDataManager.getPreferensManager().getScalePrefixStr());
+        mScalePrefix.setDefaultValue(mDataManager.getPreferensManager().getScalePrefixStr());
     }
 
     @Override

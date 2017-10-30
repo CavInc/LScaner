@@ -47,7 +47,7 @@ public class ScannedListAdapter extends ArrayAdapter<ScannedDataModel>{
         }
         holder.mQuantity.setText(String.valueOf(rec.getQuantity()));
         holder.mBarcode.setText(rec.getBarCode());
-        holder.mPosId.setText(rec.getPosId());
+        holder.mPosId.setText(String.valueOf(rec.getPosId()));
         return row;
     }
 
