@@ -23,6 +23,7 @@ import cav.lscaner.data.models.ScannedDataModel;
 import cav.lscaner.data.models.StoreProductModel;
 import cav.lscaner.ui.adapter.ScannedListAdapter;
 import cav.lscaner.ui.dialogs.QueryQuantityDialog;
+import cav.lscaner.ui.dialogs.SelectScanDialog;
 import cav.lscaner.utils.ConstantManager;
 
 public class ScanActivity extends AppCompatActivity implements AdapterView.OnItemLongClickListener{
@@ -57,6 +58,8 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
         mListView = (ListView) findViewById(R.id.san_lv);
 
         mBarCode.setOnEditorActionListener(mEditorActionListener);
+
+        mListView.setOnItemLongClickListener(this);
 
         setupToolBar();
         updateUI();
@@ -139,8 +142,15 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
         }
     };
 
+    private int selectId;
+
     @Override
-    public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
-        return false;
+    public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long l) {
+        ScannedDataModel model = (ScannedDataModel) adapterView.getItemAtPosition(position);
+        selectId = model.getPosId();
+        SelectScanDialog dialog = new SelectScanDialog();
+        dialog.show(getSupportFragmentManager(),"SD");
+        return true;
     }
+
 }
