@@ -44,7 +44,7 @@ public class SettingActivity extends PreferenceActivity {
         mFileDelimeter.setSummary(mDataManager.getPreferensManager().getDelimiterStoreFile());
         mStoreFile.setSummary(mDataManager.getPreferensManager().getStoreFileName());
 
-        //mScalePrefix.setSummary(mDataManager.getPreferensManager().getScalePrefix());
+        mScalePrefix.setSummary(mDataManager.getPreferensManager().getScalePrefixStr());
     }
 
     @Override
@@ -79,6 +79,11 @@ public class SettingActivity extends PreferenceActivity {
                 String l = (String) o;
                 mFileDelimeter.setSummary(l);
                 mDataManager.getPreferensManager().setDelimiterStoreFile(l);
+            }
+            if (preference.getKey().equals("prefix_scale")){
+                String l = (String) o;
+                mScalePrefix.setSummary(l);
+                mDataManager.getPreferensManager().setScalePrefix(l);
             }
             return true;
         }

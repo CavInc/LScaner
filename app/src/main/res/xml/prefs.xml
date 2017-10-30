@@ -5,6 +5,8 @@
         <EditTextPreference
             android:key="prefix_scale"
             android:persistent="false"
+            android:inputType="numberDecimal"
+            android:digits="0123456789,"
             android:title="Префиксы весового товара"/>
         <EditTextPreference
             android:key="scale_size"

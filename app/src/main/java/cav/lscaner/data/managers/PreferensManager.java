@@ -34,10 +34,26 @@ public class PreferensManager {
         editor.apply();
     }
 
+    // префикс весового товара
     public ArrayList<String> getScalePrefix(){
         String pref = mSharedPreferences.getString(ConstantManager.SCALE_PREFIX,"22,23");
         ArrayList<String> x = new ArrayList<>(Arrays.asList(pref.split(",")));
         return x;
+    }
+    public String getScalePrefixStr(){
+        return  mSharedPreferences.getString(ConstantManager.SCALE_PREFIX,"22,23");
+    }
+
+    // сохраняем чрезе стринг
+    public void setScalePrefix(String prefix){
+        SharedPreferences.Editor editor = mSharedPreferences.edit();
+        editor.putString(ConstantManager.SCALE_PREFIX,prefix);
+        editor.apply();
+    }
+    // сохраняем через массив
+    public void setScalePrefix(ArrayList<String> prefix){
+        SharedPreferences.Editor editor = mSharedPreferences.edit();
+
     }
 
     public int getSizeScale(){
