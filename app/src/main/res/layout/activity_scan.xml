@@ -16,7 +16,7 @@
         android:orientation="vertical">
         <EditText
             android:id="@+id/barcode_et"
-            android:hint="Штрихкод"
+            android:hint="Штрих-код"
             android:inputType="numberSigned"
             android:lines="1"
             android:maxLength="13"
