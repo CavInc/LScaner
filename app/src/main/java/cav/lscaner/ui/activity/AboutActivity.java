@@ -25,7 +25,9 @@ public class AboutActivity extends AppCompatActivity {
         mDeviceId = (TextView) findViewById(R.id.ab_device_code);
         mSerialCode = (EditText) findViewById(R.id.ab_code_et);
 
-        mDeviceId.setText(mDataManager.getAndroidID());
+        String deviceID = mDataManager.getAndroidID();
+        mDeviceId.setText(deviceID.substring(deviceID.length()-8));
+        //mDeviceId.setText(deviceID);
 
         setupToolbar();
     }
