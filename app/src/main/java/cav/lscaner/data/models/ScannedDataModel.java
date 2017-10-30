@@ -5,6 +5,7 @@ package cav.lscaner.data.models;
  */
 public class ScannedDataModel {
     private int mIdFile;
+    private int mPosId;
     private String mBarCode;
     private String mName;
     private Float mQuantity;
@@ -30,6 +31,10 @@ public class ScannedDataModel {
 
     public Float getQuantity() {
         return mQuantity;
+    }
+
+    public int getPosId() {
+        return mPosId;
     }
 
     @Override

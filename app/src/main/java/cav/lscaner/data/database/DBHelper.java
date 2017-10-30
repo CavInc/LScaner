@@ -42,9 +42,10 @@ public class DBHelper extends SQLiteOpenHelper {
 
             db.execSQL("create table "+SCAN_TABLE_SPEC+"("+
                     "head_id integer not null,"+
+                    "pos_id integer not null,"+
                     "barcode text not null,"+
                     "quantity number default 0,"+
-                    "primary key(head_id,barcode))");
+                    "primary key(head_id,pos_id,barcode))");
         }
 
     }
