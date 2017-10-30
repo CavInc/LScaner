@@ -103,6 +103,7 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
             Log.d("SA",textView.getText().toString());
             mBar = textView.getText().toString();
             qq = 1f;
+            boolean scaleFlg = false;
             // выкидываем EAN 8 так как его весовым у нас быть не может
             if (prefixScale.contains(mBar.substring(0,2)) && mBar.length() == 13){
                 Log.d("SA","SCALE KODE");
@@ -110,6 +111,7 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
                 lq = lq.substring(0,2)+"."+lq.substring(3);
                 mBar = mBar.substring(0,sizeScale);
                 qq = Float.parseFloat(lq);
+                scaleFlg = true;
             }
 
             int l = mDataModels.indexOf(new ScannedDataModel(-1,-1,mBar,"", 0.0f));
@@ -119,9 +121,14 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
                 if (product == null) {
                     product = new StoreProductModel(mBar,"Новый");
                 }
-                QueryQuantityDialog dialod = QueryQuantityDialog.newInstans(product.getName(),qq,0f);
-                dialod.setQuantityChangeListener(mQuantityChangeListener);
-                dialod.show(getSupportFragmentManager(),"QQ");
+                if (!scaleFlg) {
+                    QueryQuantityDialog dialod = QueryQuantityDialog.newInstans(product.getName(), qq, 0f);
+                    dialod.setQuantityChangeListener(mQuantityChangeListener);
+                    dialod.show(getSupportFragmentManager(), "QQ");
+                } else {
+                    mDataManager.getDB().addScannedPositon(idFile, mBar, qq);
+                    updateUI(); // TODO передалать заполнение через добавление в адаптер
+                }
             } else {
                 Float qq = mDataModels.get(l).getQuantity();
                 QueryQuantityDialog dialod = QueryQuantityDialog.newInstans(mDataModels.get(l).getName(),qq,qq);

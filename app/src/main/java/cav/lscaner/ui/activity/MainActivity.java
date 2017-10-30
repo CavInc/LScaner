@@ -76,6 +76,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     "А тут будет диалог спрашивающий откуда взять файл (имя файла в настройка)",
                     Toast.LENGTH_LONG).show();
         }
+        if (item.getItemId() == R.id.menu_about) {
+            Intent intent = new Intent(this,AboutActivity.class);
+            startActivity(intent);
+        }
 
         return true;
     }

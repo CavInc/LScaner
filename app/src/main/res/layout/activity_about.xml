@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="cav.lscaner.ui.activity.AboutActivity">]
+
+    <LinearLayout
+        android:id="@+id/ab_up_lv"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:src="@drawable/logo2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="18dp">
+            <TextView
+                android:text="Chupkov"
+                android:gravity="center"
+                android:textSize="28sp"
+                android:textStyle="bold"
+                android:textColor="@android:color/black"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1sp"
+                android:background="@color/app_gray_normal"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"/>
+            <TextView
+                android:text="Профессиональные решения \n для бизнеса"
+                android:textColor="@android:color/black"
+                android:textSize="16sp"
+                android:gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+    <View
+        android:id="@+id/ab_spliter"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/ab_up_lv"
+        android:background="@color/app_blue"
+        android:layout_marginBottom="@dimen/activity_vertical_margin"
+        android:layout_marginTop="@dimen/activity_vertical_margin"/>
+    <TextView
+        android:id="@+id/ab_mess"
+        android:text="Программа сканнер для устройств
+работающих под управление
+Андроид"
+        android:layout_below="@+id/ab_spliter"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/activity_vertical_margin"/>
+    <TextView
+        android:id="@+id/ab_code_head"
+        android:text="Код активации:"
+        android:layout_below="@+id/ab_mess"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+    <EditText
+        android:id="@+id/ab_code_et"
+        android:hint="Регистрационный номер"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/black"
+        android:layout_below="@+id/ab_code_head"
+        android:layout_marginBottom="@dimen/activity_vertical_margin"/>
+    <TextView
+        android:id="@+id/ab_info_code_text"
+        android:text="Для получения кода активации
+отправьте код:"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ab_code_et"
+        android:layout_marginBottom="8dp"/>
+    <TextView
+        android:id="@+id/ab_device_code"
+        android:textSize="22sp"
+        android:text="12345678"
+        android:textStyle="bold"
+        android:textColor="@android:color/black"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ab_info_code_text"
+        android:layout_marginBottom="@dimen/activity_vertical_margin"/>
+    <TextView
+        android:id="@+id/ab_contact"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="на адрес info@chupkov.net или
+позвоните по телефону:
++7 (965) 482-72-72"
+        android:layout_gravity="bottom"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"/>
+</RelativeLayout>
