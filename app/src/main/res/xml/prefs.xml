@@ -4,7 +4,7 @@
         android:title="Настройки весового товара">
         <EditTextPreference
             android:key="prefix_scale"
-            android:persistent="false"
+            android:persistent="true"
             android:inputType="numberDecimal"
             android:digits="0123456789,"
             android:title="Префиксы весового товара"/>
