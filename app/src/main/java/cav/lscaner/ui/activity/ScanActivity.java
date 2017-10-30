@@ -44,6 +44,8 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
 
     private String mFileName;
 
+    private boolean newRecord = true;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,11 +113,12 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
             qq = 1f;
             posID = -1;
             boolean scaleFlg = false;
+            newRecord = true;
             // выкидываем EAN 8 так как его весовым у нас быть не может
             if (prefixScale.contains(mBar.substring(0,2)) && mBar.length() == 13){
                 Log.d("SA","SCALE KODE");
                 String lq = mBar.substring(sizeScale,mBar.length()-1);
-                lq = lq.substring(0,2)+"."+lq.substring(3);
+                lq = lq.substring(0,2)+"."+lq.substring(2);
                 mBar = mBar.substring(0,sizeScale);
                 qq = Float.parseFloat(lq);
                 scaleFlg = true;
@@ -160,12 +163,11 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
         }
     };
 
-    private int selectId;
+    private ScannedDataModel selModel;
 
     @Override
     public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long l) {
-        ScannedDataModel model = (ScannedDataModel) adapterView.getItemAtPosition(position);
-        selectId = model.getPosId();
+        selModel = (ScannedDataModel) adapterView.getItemAtPosition(position);
         SelectScanDialog dialog = new SelectScanDialog();
         dialog.setOnSelectScanDialogListener(mScanDialogListener);
         dialog.show(getSupportFragmentManager(),"SD");
@@ -176,13 +178,18 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
         @Override
         public void selectedItem(int item) {
             if (item == R.id.ss_dialog_del_item){
-                deleteRecord(idFile,selectId);
+                deleteRecord(idFile,selModel.getPosId());
             }
 
             if (item == R.id.ss_dialog_edit_item){
-
+                newRecord = false;
+                posID = selModel.getPosId();
+                QueryQuantityDialog dialog = QueryQuantityDialog.newInstans(selModel.getName(),
+                        selModel.getQuantity(),
+                        selModel.getQuantity());
+                dialog.setQuantityChangeListener(mQuantityChangeListener);
+                dialog.show(getSupportFragmentManager(),"EDITSD");
             }
-
         }
     };
 

@@ -87,7 +87,7 @@ public class QueryQuantityDialog extends DialogFragment implements View.OnClickL
         mCancelBt.setOnClickListener(this);
         mOkBt.setOnClickListener(this);
 
-        if (mGetName != null) {
+        if (mGetName != null || mGetName.length() != 0) {
             mName.setText(mGetName);
         } else {
             mName.setText("Новый");
