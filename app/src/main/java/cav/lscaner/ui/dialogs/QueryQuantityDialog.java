@@ -9,12 +9,13 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
 import cav.lscaner.R;
 
-public class QueryQuantityDialog extends DialogFragment{
+public class QueryQuantityDialog extends DialogFragment implements View.OnClickListener{
 
     private static final String POSITION_NAME = "POSITION_NAME";
     private static final String POSITION_QUANTITY = "POSITION_QUANTITY";
@@ -23,12 +24,29 @@ public class QueryQuantityDialog extends DialogFragment{
     private TextView mName;
     private EditText mQuantity;
     private TextView mOldQuantityTV;
+    private Button mCancelBt;
+    private Button mOkBt;
 
     private String mGetName;
     private Float mGetQuantity;
     private Float mOldQuantity;
 
     private QuantityChangeListener mQuantityChangeListener;
+
+    @Override
+    public void onClick(View view) {
+        if (view.getId() == R.id.qq_bt_ok) {
+            if (mQuantityChangeListener != null){
+                Float qq = Float.valueOf(mQuantity.getText().toString());
+                mQuantityChangeListener.changeQuantity(mOldQuantity+qq);
+            }
+
+            dismiss();
+        }
+        if (view.getId() == R.id.qq_bt_cancel){
+            dismiss();
+        }
+    }
 
     public interface QuantityChangeListener {
         public void changeQuantity (Float quantity);
@@ -63,6 +81,12 @@ public class QueryQuantityDialog extends DialogFragment{
         mQuantity = (EditText) v.findViewById(R.id.qq_quantity);
         mOldQuantityTV = (TextView) v.findViewById(R.id.qq_old_quantity);
 
+        mCancelBt = (Button) v.findViewById(R.id.qq_bt_cancel);
+        mOkBt = (Button) v.findViewById(R.id.qq_bt_ok);
+
+        mCancelBt.setOnClickListener(this);
+        mOkBt.setOnClickListener(this);
+
         if (mGetName != null) {
             mName.setText(mGetName);
         } else {
@@ -80,7 +104,8 @@ public class QueryQuantityDialog extends DialogFragment{
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("Количество товара")
-                .setView(v)
+                .setView(v);
+        /*
                 .setPositiveButton(R.string.button_ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int witch) {
@@ -92,6 +117,7 @@ public class QueryQuantityDialog extends DialogFragment{
                     }
                 })
                 .setNegativeButton(R.string.button_cancel,null);
+                */
 
         mQuantity.requestFocus();
 

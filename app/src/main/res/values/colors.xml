@@ -15,7 +15,13 @@
     <color name="app_green_dark">#2e7d32</color>
 
     <color name="app_orange_normal">#f07f1c</color>
+    <color name="app_orange_normal_ligth">#eda05c</color>
+    <color name="app_orange_normal_dark">#d66c0f</color>
 
     <color name="app_gray_normal">#cfcfcf</color>
+
+    <color name="app_gray_bt_normal">#37474f</color>
+    <color name="app_gray_bt_dark">#102027</color>
+    <color name="app_gray_bt_ligth">#62727b</color>
 
 </resources>

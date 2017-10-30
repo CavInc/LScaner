@@ -138,7 +138,7 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
             } else {
                 Float qq = mDataModels.get(l).getQuantity();
                 posID = mDataModels.get(l).getPosId();
-                QueryQuantityDialog dialod = QueryQuantityDialog.newInstans(mDataModels.get(l).getName(),qq,qq);
+                QueryQuantityDialog dialod = QueryQuantityDialog.newInstans(mDataModels.get(l).getName(),1f,qq);
                 dialod.setQuantityChangeListener(mQuantityChangeListener);
                 dialod.show(getSupportFragmentManager(),"QQ");
             }
