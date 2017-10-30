@@ -20,6 +20,7 @@
             android:inputType="numberSigned"
             android:lines="1"
             android:maxLength="13"
+            android:focusableInTouchMode="true"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
     </LinearLayout>

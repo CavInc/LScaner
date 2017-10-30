@@ -96,6 +96,7 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
             mAdapter.setData(mDataModels);
             mAdapter.notifyDataSetChanged();
         }
+        mBarCode.requestFocus();
     }
 
     private String mBar;
@@ -153,6 +154,7 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
             if (quantity!=0){
                 mDataManager.getDB().addScannedPositon(idFile,mBar,quantity,posID);
                 updateUI(); // TODO передалать заполнение через добавление в адаптер
+                mBarCode.requestFocus();
             }
 
         }
