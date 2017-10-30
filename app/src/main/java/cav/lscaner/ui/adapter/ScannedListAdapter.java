@@ -34,6 +34,7 @@ public class ScannedListAdapter extends ArrayAdapter<ScannedDataModel>{
             holder.mName = (TextView) row.findViewById(R.id.sc_item_name);
             holder.mQuantity = (TextView) row.findViewById(R.id.sc_item_qa);
             holder.mBarcode = (TextView) row.findViewById(R.id.sc_item_barcode);
+            holder.mPosId = (TextView) row.findViewById(R.id.sc_item_position);
             row.setTag(holder);
         }else{
             holder = (ViewHolder)row.getTag();
@@ -46,6 +47,7 @@ public class ScannedListAdapter extends ArrayAdapter<ScannedDataModel>{
         }
         holder.mQuantity.setText(String.valueOf(rec.getQuantity()));
         holder.mBarcode.setText(rec.getBarCode());
+        holder.mPosId.setText("№: "+rec.getPosId());
         return row;
     }
 
@@ -58,5 +60,6 @@ public class ScannedListAdapter extends ArrayAdapter<ScannedDataModel>{
         private TextView mName;
         private TextView mQuantity;
         private TextView mBarcode;
+        private TextView mPosId;
     }
 }

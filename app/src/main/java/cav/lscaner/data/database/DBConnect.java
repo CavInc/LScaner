@@ -46,17 +46,24 @@ public class DBConnect {
     }
 
     public Cursor getScannedData(int idFile){
-        String sql="select sts.head_id,sts.barcode,sts.quantity,sp.name from "+DBHelper.SCAN_TABLE_SPEC+" sts \n" +
-                " left join "+DBHelper.STORE_PRODUCT+" sp on sts.barcode = sp.barcode where sts.head_id="+idFile;
+        String sql="select sts.head_id,sts.barcode,sts.pos_id,sts.quantity,sp.name from "+DBHelper.SCAN_TABLE_SPEC+" sts \n" +
+                " left join "+DBHelper.STORE_PRODUCT+" sp on sts.barcode = sp.barcode where sts.head_id="+idFile+" order by sts.pos_id desc";
         return database.rawQuery(sql,null);
     }
 
     // добавили позицию в файл
     public void addScannedPositon(int idFile,String barcode,Float quantity){
+        open();
+        Cursor cursor = database.rawQuery("select max(pos_id)+1 as pos from "+DBHelper.SCAN_TABLE_SPEC+" where head_id="+idFile,null);
+        cursor.moveToFirst();
+        int pos = cursor.getInt(0);
+        if (pos == 0) pos = 1;
+
         ContentValues values = new ContentValues();
         values.put("head_id",idFile);
         values.put("barcode",barcode);
         values.put("quantity",quantity);
+        values.put("pos_id",pos);
         open();
         database.insertWithOnConflict(DBHelper.SCAN_TABLE_SPEC,null,values,SQLiteDatabase.CONFLICT_REPLACE);
         close();

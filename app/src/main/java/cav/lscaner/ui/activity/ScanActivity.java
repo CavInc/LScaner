@@ -8,6 +8,8 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -23,7 +25,7 @@ import cav.lscaner.ui.adapter.ScannedListAdapter;
 import cav.lscaner.ui.dialogs.QueryQuantityDialog;
 import cav.lscaner.utils.ConstantManager;
 
-public class ScanActivity extends AppCompatActivity {
+public class ScanActivity extends AppCompatActivity implements AdapterView.OnItemLongClickListener{
     private EditText mBarCode;
     private ListView mListView;
 
@@ -105,7 +107,7 @@ public class ScanActivity extends AppCompatActivity {
                 qq = Float.parseFloat(lq);
             }
 
-            int l = mDataModels.indexOf(new ScannedDataModel(-1,mBar,"", 0.0f));
+            int l = mDataModels.indexOf(new ScannedDataModel(-1,-1,mBar,"", 0.0f));
             if (l == -1) {
                 // нифига не нашли в уже добавленых смотрим в базе
                 StoreProductModel product = mDataManager.getDB().searchStore(mBar);
@@ -137,4 +139,8 @@ public class ScanActivity extends AppCompatActivity {
         }
     };
 
+    @Override
+    public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+        return false;
+    }
 }

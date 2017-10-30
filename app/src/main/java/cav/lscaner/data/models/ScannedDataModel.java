@@ -10,11 +10,12 @@ public class ScannedDataModel {
     private String mName;
     private Float mQuantity;
 
-    public ScannedDataModel(int idFile, String barCode, String name, Float quantity) {
+    public ScannedDataModel(int idFile,int posId, String barCode, String name, Float quantity) {
         mIdFile = idFile;
         mBarCode = barCode;
         mName = name;
         mQuantity = quantity;
+        mPosId = posId;
     }
 
     public int getIdFile() {

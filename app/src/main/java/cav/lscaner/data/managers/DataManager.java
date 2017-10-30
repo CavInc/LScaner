@@ -101,6 +101,7 @@ public class DataManager{
         while (cursor.moveToNext()){
             rec.add(new ScannedDataModel(
                     cursor.getInt(cursor.getColumnIndex("head_id")),
+                    cursor.getInt(cursor.getColumnIndex("pos_id")),
                     cursor.getString(cursor.getColumnIndex("barcode")),
                     cursor.getString(cursor.getColumnIndex("name")),
                     cursor.getFloat(cursor.getColumnIndex("quantity"))
