@@ -68,6 +68,12 @@ public class DBConnect {
         database.insertWithOnConflict(DBHelper.SCAN_TABLE_SPEC,null,values,SQLiteDatabase.CONFLICT_REPLACE);
         close();
     }
+    // удалили позицию в файле
+    public void delScannedPosition(int idFile,int posId){
+        open();
+        database.delete(DBHelper.SCAN_TABLE_SPEC,"head_id="+idFile+" and pos_id="+posId,null);
+        close();
+    }
 
     // поиск по списку товаров
     public StoreProductModel searchStore(String barcode){

@@ -1,5 +1,7 @@
 package cav.lscaner.ui.activity;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -149,8 +151,40 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
         ScannedDataModel model = (ScannedDataModel) adapterView.getItemAtPosition(position);
         selectId = model.getPosId();
         SelectScanDialog dialog = new SelectScanDialog();
+        dialog.setOnSelectScanDialogListener(mScanDialogListener);
         dialog.show(getSupportFragmentManager(),"SD");
         return true;
+    }
+
+    SelectScanDialog.SelectScanDialogListener mScanDialogListener = new SelectScanDialog.SelectScanDialogListener() {
+        @Override
+        public void selectedItem(int item) {
+            if (item == R.id.ss_dialog_del_item){
+                deleteRecord(idFile,selectId);
+            }
+
+            if (item == R.id.ss_dialog_edit_item){
+
+            }
+
+        }
+    };
+
+    private void deleteRecord(final int selIdFile, final int position) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Удаление")
+                .setMessage("Удаляем ? Вы уверены ?")
+                .setPositiveButton(R.string.button_ok,new DialogInterface.OnClickListener(){
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int witch) {
+                        //TODO добавить удаление файла выгрузки с SD
+                        mDataManager.getDB().delScannedPosition(selIdFile,position);
+                        updateUI();
+                    }
+                })
+                .setNegativeButton(R.string.button_cancel,null)
+                .create();
+        builder.show();
     }
 
 }
