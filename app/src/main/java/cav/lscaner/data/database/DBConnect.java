@@ -35,13 +35,16 @@ public class DBConnect {
         return database.query(DBHelper.SCAN_TABLE,new String [] {"id","name_file","date","time"},null,null,null,null,"date");
     }
 
-    public void addFileName(String name,String date,String time){
+    public void addFileName(String name,String date,String time,int idFile){
         open();
         ContentValues values = new ContentValues();
         values.put("name_file",name);
         values.put("date",date);
         values.put("time",time);
-        database.insert(DBHelper.SCAN_TABLE,null,values);
+        if (idFile != -1) {
+            values.put("id",idFile);
+        }
+        database.insertWithOnConflict(DBHelper.SCAN_TABLE,null,values,SQLiteDatabase.CONFLICT_REPLACE);
         close();
     }
 

@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +15,7 @@ import android.widget.EditText;
 import cav.lscaner.R;
 
 public class AddEditNameFileDialog extends DialogFragment implements View.OnClickListener{
+    private static final String EDIT_NAME = "EDIT_NAME";
     private AddEditNameFileDialog INSTANSE = null;
 
     private AddEditNameFileListener mListener;
@@ -22,6 +24,8 @@ public class AddEditNameFileDialog extends DialogFragment implements View.OnClic
     private Button mOkBt;
 
     private EditText mName;
+
+    private String nameFile;
 
     @Override
     public void onClick(View view) {
@@ -43,9 +47,21 @@ public class AddEditNameFileDialog extends DialogFragment implements View.OnClic
         public void changeName(String value);
     }
 
-    public static AddEditNameFileDialog newInstance(){
+    public static AddEditNameFileDialog newInstance(String name){
+        Bundle args = new Bundle();
+        args.putString(EDIT_NAME,name);
         AddEditNameFileDialog dialog = new AddEditNameFileDialog();
+        dialog.setArguments(args);
         return dialog;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments()!= null) {
+            nameFile = getArguments().getString(EDIT_NAME);
+        }
+
     }
 
     @NonNull
@@ -59,6 +75,8 @@ public class AddEditNameFileDialog extends DialogFragment implements View.OnClic
 
         mCancelBt.setOnClickListener(this);
         mOkBt.setOnClickListener(this);
+
+        mName.setText(nameFile);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("Имя файла документа").setView(v);

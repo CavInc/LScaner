@@ -19,6 +19,7 @@ import java.util.ArrayList;
 
 import cav.lscaner.R;
 import cav.lscaner.data.managers.DataManager;
+import cav.lscaner.data.models.ScannedDataModel;
 import cav.lscaner.data.models.ScannedFileModel;
 import cav.lscaner.ui.adapter.ScannedFileAdapter;
 import cav.lscaner.ui.dialogs.AddEditNameFileDialog;
@@ -34,6 +35,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private DataManager mDataManager;
 
     private ScannedFileAdapter mFileAdapter;
+
+    private boolean newRecord = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,7 +102,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View view) {
         if (view.getId() == R.id.main_fab) {
-            AddEditNameFileDialog dialog = AddEditNameFileDialog.newInstance();
+            newRecord = true;
+            AddEditNameFileDialog dialog = AddEditNameFileDialog.newInstance("");
             dialog.setAddEditNameFileListener(mAddEditNameFileListener);
             dialog.show(getSupportFragmentManager(),"AddFile");
         }
@@ -111,26 +115,27 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         public void changeName(String value) {
             String cdate = Func.getNowDate("yyyy-MM-dd");
             String ctime = Func.getNowTime();
-            mDataManager.getDB().addFileName(value,cdate,ctime);
+            int pos = -1;
+            if (!newRecord) pos = selModel.getId();
+            mDataManager.getDB().addFileName(value,cdate,ctime,pos);
             updateUI();
         }
     };
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-
         Intent intent = new Intent(this,ScanActivity.class);
         intent.putExtra(ConstantManager.SELECTED_FILE,mFileAdapter.getItem(position).getId());
         intent.putExtra(ConstantManager.SELECTED_FILE_NAME,mFileAdapter.getItem(position).getName());
         startActivity(intent);
     }
 
-    private int selIdFile;
+    private ScannedFileModel selModel = null;
 
     @Override
     public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long id) {
-        ScannedFileModel model = (ScannedFileModel) adapterView.getItemAtPosition(position);
-        selIdFile = model.getId();
+        selModel = (ScannedFileModel) adapterView.getItemAtPosition(position);
+
         SelectMainDialog dialog = new SelectMainDialog();
         dialog.setSelectMainDialogListener(mSelectMainDialogListener);
         dialog.show(getFragmentManager(),"SELECT_DIALOG");
@@ -142,11 +147,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         public void selectedItem(int index) {
             if (index == R.id.dialog_del_item) {
                 // удаляем
-                deleteRecord(selIdFile);
+                deleteRecord(selModel.getId());
             }
             if (index == R.id.dialog_edit_item) {
                 // редактируем заголовок
-                Toast.makeText(MainActivity.this,"А тут будет диалог редактирования заголовка файла",Toast.LENGTH_LONG).show();
+                //Toast.makeText(MainActivity.this,"А тут будет диалог редактирования заголовка файла",Toast.LENGTH_LONG).show();
+                newRecord = false;
+                AddEditNameFileDialog dialog = AddEditNameFileDialog.newInstance(selModel.getName());
+                dialog.setAddEditNameFileListener(mAddEditNameFileListener);
+                dialog.show(getSupportFragmentManager(),"UpdateFile");
             }
             if (index == R.id.dialog_send_item) {
                 // отправляем наружу
@@ -175,7 +184,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 .setNegativeButton(R.string.button_cancel,null)
                 .create();
         builder.show();
-
     }
 
 }
