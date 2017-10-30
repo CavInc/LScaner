@@ -82,7 +82,8 @@ public class QueryQuantityDialog extends DialogFragment{
                         }
 
                     }
-                });
+                })
+                .setNegativeButton(R.string.button_cancel,null);
 
         mQuantity.requestFocus();
 
