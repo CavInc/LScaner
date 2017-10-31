@@ -132,7 +132,7 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
                     product = new StoreProductModel(mBar,"Новый");
                 }
                 if (!scaleFlg) {
-                    QueryQuantityDialog dialod = QueryQuantityDialog.newInstans(product.getName(), qq, 0f);
+                    QueryQuantityDialog dialod = QueryQuantityDialog.newInstans(product.getName(), 0f, 0f);
                     dialod.setQuantityChangeListener(mQuantityChangeListener);
                     dialod.show(getSupportFragmentManager(), "QQ");
                 } else {

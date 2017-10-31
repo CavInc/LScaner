@@ -37,8 +37,14 @@ public class QueryQuantityDialog extends DialogFragment implements View.OnClickL
     public void onClick(View view) {
         if (view.getId() == R.id.qq_bt_ok) {
             if (mQuantityChangeListener != null){
-                Float qq = Float.valueOf(mQuantity.getText().toString());
-                mQuantityChangeListener.changeQuantity(mOldQuantity+qq);
+                Float qq;
+                if (mQuantity.getText().length()!=0) {
+                    qq = Float.valueOf(mQuantity.getText().toString());
+                } else {
+                    qq = 1f;
+                }
+                mQuantityChangeListener.changeQuantity(mOldQuantity + qq);
+
             }
 
             dismiss();
@@ -92,7 +98,7 @@ public class QueryQuantityDialog extends DialogFragment implements View.OnClickL
         } else {
             mName.setText("Новый");
         }
-        if (mGetQuantity != null) {
+        if (mGetQuantity != null && mGetQuantity !=0) {
             mQuantity.setText(String.valueOf(mGetQuantity));
         }
 
