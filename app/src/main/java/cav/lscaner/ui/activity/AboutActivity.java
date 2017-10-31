@@ -2,6 +2,7 @@ package cav.lscaner.ui.activity;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -29,6 +30,8 @@ public class AboutActivity extends AppCompatActivity {
         mDeviceId.setText(deviceID.substring(deviceID.length()-8));
         //mDeviceId.setText(deviceID);
 
+        mSerialCode.setOnEditorActionListener(mEditorActionListener);
+
         setupToolbar();
     }
 
@@ -46,4 +49,14 @@ public class AboutActivity extends AppCompatActivity {
         }
         return true;
     }
+
+    TextView.OnEditorActionListener mEditorActionListener = new TextView.OnEditorActionListener() {
+        @Override
+        public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+            if (keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
+
+            }
+            return false;
+        }
+    };
 }

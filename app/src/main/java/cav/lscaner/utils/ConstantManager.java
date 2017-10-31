@@ -9,4 +9,5 @@ public interface ConstantManager{
     String SCALE_SIZE = "SCALE_SIZE";
     String STORE_FILE_NAME = "STORE_FILE_NAME";
     String SELECTED_FILE_NAME = "SELECTED_FILE_NAME";
+    String DEMO_VERSION = "DEMO_VERSION";
 }

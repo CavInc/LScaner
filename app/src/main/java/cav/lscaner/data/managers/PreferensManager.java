@@ -75,4 +75,9 @@ public class PreferensManager {
         editor.putString(ConstantManager.STORE_FILE_NAME,name);
         editor.apply();
     }
+
+    // возврат демо версии
+    public boolean getDemo(){
+        return mSharedPreferences.getBoolean(ConstantManager.DEMO_VERSION,true);
+    }
 }
