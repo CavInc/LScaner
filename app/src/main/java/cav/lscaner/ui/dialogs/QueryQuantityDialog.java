@@ -43,12 +43,16 @@ public class QueryQuantityDialog extends DialogFragment implements View.OnClickL
             dismiss();
         }
         if (view.getId() == R.id.qq_bt_cancel){
+            if (mQuantityChangeListener != null) {
+                mQuantityChangeListener.cancelButton();
+            }
             dismiss();
         }
     }
 
     public interface QuantityChangeListener {
         public void changeQuantity (Float quantity);
+        public void cancelButton();
     }
 
     public static QueryQuantityDialog newInstans(String name,Float qunatity,Float oldQuantity,boolean editFlg){
@@ -122,9 +126,15 @@ public class QueryQuantityDialog extends DialogFragment implements View.OnClickL
                 .setNegativeButton(R.string.button_cancel,null);
                 */
 
-        mQuantity.requestFocus();
+        //mQuantity.requestFocus();
 
         return builder.create();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        mQuantity.requestFocus();
     }
 
     public void setQuantityChangeListener (QuantityChangeListener listener){
