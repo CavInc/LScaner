@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -38,21 +39,7 @@ public class QueryQuantityDialog extends DialogFragment implements View.OnClickL
     @Override
     public void onClick(View view) {
         if (view.getId() == R.id.qq_bt_ok) {
-            if (mQuantityChangeListener != null){
-                Float qq;
-                if (mQuantity.getText().length()!=0) {
-                    qq = Float.valueOf(mQuantity.getText().toString());
-                } else {
-                    qq = 1f;
-                }
-                if (mEditFlg) {
-                    mQuantityChangeListener.changeQuantity(qq);
-                } else {
-                    mQuantityChangeListener.changeQuantity(mOldQuantity + qq);
-                }
-
-            }
-
+            storeQuantiy();
             dismiss();
         }
         if (view.getId() == R.id.qq_bt_cancel){
@@ -94,6 +81,8 @@ public class QueryQuantityDialog extends DialogFragment implements View.OnClickL
         mName = (TextView) v.findViewById(R.id.qq_title);
         mQuantity = (EditText) v.findViewById(R.id.qq_quantity);
         mOldQuantityTV = (TextView) v.findViewById(R.id.qq_old_quantity);
+
+        mQuantity.setOnEditorActionListener(mEditorActionListener);
 
         mCancelBt = (Button) v.findViewById(R.id.qq_bt_cancel);
         mOkBt = (Button) v.findViewById(R.id.qq_bt_ok);
@@ -140,5 +129,31 @@ public class QueryQuantityDialog extends DialogFragment implements View.OnClickL
 
     public void setQuantityChangeListener (QuantityChangeListener listener){
         mQuantityChangeListener = listener;
+    }
+    TextView.OnEditorActionListener mEditorActionListener = new TextView.OnEditorActionListener() {
+        @Override
+        public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+            if (keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER){
+                storeQuantiy();
+                dismiss();
+            }
+            return true;
+        }
+    };
+
+    private void storeQuantiy (){
+        if (mQuantityChangeListener != null){
+            Float qq;
+            if (mQuantity.getText().length()!=0) {
+                qq = Float.valueOf(mQuantity.getText().toString());
+            } else {
+                qq = 1f;
+            }
+            if (mEditFlg) {
+                mQuantityChangeListener.changeQuantity(qq);
+            } else {
+                mQuantityChangeListener.changeQuantity(mOldQuantity + qq);
+            }
+        }
     }
 }

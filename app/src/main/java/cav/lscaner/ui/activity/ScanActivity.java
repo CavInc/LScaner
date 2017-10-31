@@ -107,6 +107,7 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
         public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
             Log.d("SA",textView.getText().toString());
             mBar = textView.getText().toString();
+            if (mBar.length() == 0) return false;
             qq = 1f;
             posID = -1;
             boolean scaleFlg = false;
