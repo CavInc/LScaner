@@ -161,6 +161,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 // отправляем наружу
                 if (!mDataManager.isOnline()){
                     // показываем что нет сети
+                    //showNoNetwork();
                     return;
                 }
                 // показываем окно с выбором куда отправлять
