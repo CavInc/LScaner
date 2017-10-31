@@ -37,7 +37,7 @@ public class AddEditNameFileDialog extends DialogFragment implements View.OnClic
             }
             dismiss();
         }
-        if (view.getId() == R.id.dialog_file_bt_ok) {
+        if (view.getId() == R.id.dialog_file_bt_cancel) {
             dismiss();
         }
 

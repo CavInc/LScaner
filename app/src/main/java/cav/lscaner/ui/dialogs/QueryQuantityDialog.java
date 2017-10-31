@@ -20,6 +20,7 @@ public class QueryQuantityDialog extends DialogFragment implements View.OnClickL
     private static final String POSITION_NAME = "POSITION_NAME";
     private static final String POSITION_QUANTITY = "POSITION_QUANTITY";
     private static final String POSITION_OLD_QUANTITY = "POSUTUIN_OLD_QUANTITY";
+    private static final String EDIT_FLG = "EDIT_FLG";
 
     private TextView mName;
     private EditText mQuantity;
@@ -30,6 +31,7 @@ public class QueryQuantityDialog extends DialogFragment implements View.OnClickL
     private String mGetName;
     private Float mGetQuantity;
     private Float mOldQuantity;
+    private Boolean mEditFlg;
 
     private QuantityChangeListener mQuantityChangeListener;
 
@@ -43,7 +45,11 @@ public class QueryQuantityDialog extends DialogFragment implements View.OnClickL
                 } else {
                     qq = 1f;
                 }
-                mQuantityChangeListener.changeQuantity(mOldQuantity + qq);
+                if (mEditFlg) {
+                    mQuantityChangeListener.changeQuantity(qq);
+                } else {
+                    mQuantityChangeListener.changeQuantity(mOldQuantity + qq);
+                }
 
             }
 
@@ -58,11 +64,12 @@ public class QueryQuantityDialog extends DialogFragment implements View.OnClickL
         public void changeQuantity (Float quantity);
     }
 
-    public static QueryQuantityDialog newInstans(String name,Float qunatity,Float oldQuantity){
+    public static QueryQuantityDialog newInstans(String name,Float qunatity,Float oldQuantity,boolean editFlg){
         Bundle args = new Bundle();
         args.putString(POSITION_NAME,name);
         args.putFloat(POSITION_QUANTITY,qunatity);
         args.putFloat(POSITION_OLD_QUANTITY,oldQuantity);
+        args.putBoolean(EDIT_FLG,editFlg);
         QueryQuantityDialog dialog = new QueryQuantityDialog();
         dialog.setArguments(args);
         return dialog;
@@ -75,6 +82,7 @@ public class QueryQuantityDialog extends DialogFragment implements View.OnClickL
             mGetName = getArguments().getString(POSITION_NAME,"");
             mGetQuantity = getArguments().getFloat(POSITION_QUANTITY);
             mOldQuantity = getArguments().getFloat(POSITION_OLD_QUANTITY);
+            mEditFlg = getArguments().getBoolean(EDIT_FLG);
         }
     }
 

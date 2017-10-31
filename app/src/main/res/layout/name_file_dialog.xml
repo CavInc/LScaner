@@ -7,6 +7,8 @@
     <EditText
         android:id="@+id/dialog_file_name"
         android:hint="Имя файла"
+        android:singleLine="true"
+        android:maxLines="1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
     <LinearLayout

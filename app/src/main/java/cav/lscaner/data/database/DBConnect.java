@@ -57,7 +57,6 @@ public class DBConnect {
     // добавили позицию в файл
     public void addScannedPositon(int idFile,String barcode,Float quantity,int position){
         open();
-
         if (position == -1) {
             Cursor cursor = database.rawQuery("select max(pos_id)+1 as pos from " + DBHelper.SCAN_TABLE_SPEC + " where head_id=" + idFile, null);
             cursor.moveToFirst();
