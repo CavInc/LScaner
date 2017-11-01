@@ -1,11 +1,16 @@
 package cav.lscaner.utils;
 
 import android.content.Context;
+import android.util.Log;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import cav.lscaner.data.managers.DataManager;
+import cav.lscaner.data.models.ScannedDataModel;
 
 public class WorkInFile {
 //http://startandroid.ru/ru/uroki/vse-uroki-spiskom/138-urok-75-hranenie-dannyh-rabota-s-fajlami.html
@@ -25,8 +30,26 @@ public class WorkInFile {
     }
 
     // сохраняет файл на ...
-    public void saveFile(String fname, DataManager manager){
+    public void saveFile(int idFile,String fname, DataManager manager){
+        if (manager.isExternalStorageWritable()){
+            String delim = manager.getPreferensManager().getDelimiterStoreFile();
+            String path = manager.getStorageAppPath();
+            Log.d("WC",path);
+            File outfile = new File(path,fname);
+            ArrayList<ScannedDataModel> models = manager.getScannedData(idFile);
 
+            try {
+                BufferedWriter bw = new BufferedWriter(new FileWriter(outfile));
+                for (ScannedDataModel l : models){
+                    bw.write(l.getBarCode()+delim+l.getQuantity()+"\r\n");
+                }
+                bw.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+
+        }
 
     }
 
