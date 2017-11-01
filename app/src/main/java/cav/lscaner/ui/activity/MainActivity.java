@@ -162,7 +162,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 // отправляем наружу
                 if (!mDataManager.isOnline()){
                     // показываем что нет сети
-                    //showNoNetwork();
+                    showNoNetwork();
                    // return;
                 }
                 // сохраняем файл
@@ -175,6 +175,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         }
     };
+
+    // показываем что нет сети.
+    private void showNoNetwork() {
+
+    }
 
     private void deleteRecord(final int selIdFile) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
