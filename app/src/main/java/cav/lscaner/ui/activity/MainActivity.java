@@ -171,12 +171,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 // показываем окно с выбором куда отправлять
                 Toast.makeText(MainActivity.this,"А тут будет диалог спрашивающий куда отправить",Toast.LENGTH_LONG).show();
-                DropBoxRequest request = new DropBoxRequest();
-                try {
-                    request.testApi();
-                } catch (DbxException e) {
-
-                }
             }
         }
     };
