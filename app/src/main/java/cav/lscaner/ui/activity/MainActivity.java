@@ -21,6 +21,7 @@ import cav.lscaner.R;
 import cav.lscaner.data.managers.DataManager;
 import cav.lscaner.data.models.ScannedDataModel;
 import cav.lscaner.data.models.ScannedFileModel;
+import cav.lscaner.data.network.googledrive.GDRequest;
 import cav.lscaner.ui.adapter.ScannedFileAdapter;
 import cav.lscaner.ui.dialogs.AddEditNameFileDialog;
 import cav.lscaner.ui.dialogs.SelectMainDialog;
@@ -30,6 +31,7 @@ import cav.lscaner.utils.WorkInFile;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener,AdapterView.OnItemClickListener,AdapterView.OnItemLongClickListener{
 
+    private static final String TAG = "MAIN";
     private FloatingActionButton mFAB;
     private ListView mListView;
 
@@ -171,6 +173,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 // показываем окно с выбором куда отправлять
                 Toast.makeText(MainActivity.this,"А тут будет диалог спрашивающий куда отправить",Toast.LENGTH_LONG).show();
+                GDRequest gd = new GDRequest(MainActivity.this);
+                if (!gd.isGooglePlayServicesAvailable()) {
+                    Log.d(TAG,"НО СЕРВИСЕ");
+                }
+
             }
         }
     };
