@@ -10,4 +10,5 @@ public interface ConstantManager{
     String STORE_FILE_NAME = "STORE_FILE_NAME";
     String SELECTED_FILE_NAME = "SELECTED_FILE_NAME";
     String DEMO_VERSION = "DEMO_VERSION";
+    String REGISTRY_NUMBER = "REGISTRY_NUMBER";
 }

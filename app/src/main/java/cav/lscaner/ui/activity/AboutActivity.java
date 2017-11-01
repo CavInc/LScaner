@@ -2,6 +2,7 @@ package cav.lscaner.ui.activity;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.widget.EditText;
@@ -32,6 +33,10 @@ public class AboutActivity extends AppCompatActivity {
 
         mSerialCode.setOnEditorActionListener(mEditorActionListener);
 
+        if (mDataManager.getPreferensManager().getRegistrationNumber() != null){
+            mSerialCode.setText(mDataManager.getPreferensManager().getRegistrationNumber());
+        }
+
         setupToolbar();
     }
 
@@ -54,7 +59,10 @@ public class AboutActivity extends AppCompatActivity {
         @Override
         public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
             if (keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
+                // проверяем тот ли номер
+                Log.d("AA","Enter");
 
+                return true;
             }
             return false;
         }
