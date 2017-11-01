@@ -5,14 +5,11 @@ import android.content.DialogInterface;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -44,7 +41,7 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
 
     private String mFileName;
 
-    private boolean newRecord = true;
+    private boolean editRecord = false;
 
 
     @Override
@@ -110,10 +107,11 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
         public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
             Log.d("SA",textView.getText().toString());
             mBar = textView.getText().toString();
+            if (mBar.length() == 0) return true;
             qq = 1f;
             posID = -1;
             boolean scaleFlg = false;
-            newRecord = true;
+            editRecord = false;
             // выкидываем EAN 8 так как его весовым у нас быть не может
             if (prefixScale.contains(mBar.substring(0,2)) && mBar.length() == 13){
                 Log.d("SA","SCALE KODE");
@@ -132,7 +130,7 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
                     product = new StoreProductModel(mBar,"Новый");
                 }
                 if (!scaleFlg) {
-                    QueryQuantityDialog dialod = QueryQuantityDialog.newInstans(product.getName(), 0f, 0f);
+                    QueryQuantityDialog dialod = QueryQuantityDialog.newInstans(product.getName(), 0f, 0f,editRecord);
                     dialod.setQuantityChangeListener(mQuantityChangeListener);
                     dialod.show(getSupportFragmentManager(), "QQ");
                 } else {
@@ -142,7 +140,7 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
             } else {
                 Float qq = mDataModels.get(l).getQuantity();
                 posID = mDataModels.get(l).getPosId();
-                QueryQuantityDialog dialod = QueryQuantityDialog.newInstans(mDataModels.get(l).getName(),1f,qq);
+                QueryQuantityDialog dialod = QueryQuantityDialog.newInstans(mDataModels.get(l).getName(),0f,qq,editRecord);
                 dialod.setQuantityChangeListener(mQuantityChangeListener);
                 dialod.show(getSupportFragmentManager(),"QQ");
             }
@@ -160,6 +158,11 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
                 mBarCode.requestFocus();
             }
 
+        }
+
+        @Override
+        public void cancelButton() {
+            mBarCode.requestFocus();
         }
     };
 
@@ -182,11 +185,12 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
             }
 
             if (item == R.id.ss_dialog_edit_item){
-                newRecord = false;
+                editRecord = true;
                 posID = selModel.getPosId();
+                mBar = selModel.getBarCode();
                 QueryQuantityDialog dialog = QueryQuantityDialog.newInstans(selModel.getName(),
                         selModel.getQuantity(),
-                        selModel.getQuantity());
+                        selModel.getQuantity(),editRecord);
                 dialog.setQuantityChangeListener(mQuantityChangeListener);
                 dialog.show(getSupportFragmentManager(),"EDITSD");
             }

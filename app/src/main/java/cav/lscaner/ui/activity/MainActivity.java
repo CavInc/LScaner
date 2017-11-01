@@ -26,6 +26,7 @@ import cav.lscaner.ui.dialogs.AddEditNameFileDialog;
 import cav.lscaner.ui.dialogs.SelectMainDialog;
 import cav.lscaner.utils.ConstantManager;
 import cav.lscaner.utils.Func;
+import cav.lscaner.utils.WorkInFile;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener,AdapterView.OnItemClickListener,AdapterView.OnItemLongClickListener{
 
@@ -161,14 +162,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 // отправляем наружу
                 if (!mDataManager.isOnline()){
                     // показываем что нет сети
-                    //showNoNetwork();
-                    return;
+                    showNoNetwork();
+                   // return;
                 }
+                // сохраняем файл
+                WorkInFile workInFile = new WorkInFile();
+                workInFile.saveFile(selModel.getId(),selModel.getName(),mDataManager);
+
                 // показываем окно с выбором куда отправлять
                 Toast.makeText(MainActivity.this,"А тут будет диалог спрашивающий куда отправить",Toast.LENGTH_LONG).show();
             }
         }
     };
+
+    // показываем что нет сети.
+    private void showNoNetwork() {
+
+    }
 
     private void deleteRecord(final int selIdFile) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);

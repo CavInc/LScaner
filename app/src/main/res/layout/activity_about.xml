@@ -43,6 +43,8 @@
         android:hint="Регистрационный номер"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:maxLines="1"
+        android:lines="1"
         android:textColor="@android:color/black"
         android:layout_below="@+id/ab_code_head"
         android:layout_marginBottom="@dimen/activity_vertical_margin"/>

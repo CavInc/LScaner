@@ -77,6 +77,16 @@ public class DataManager{
         return path.getPath();
     }
 
+    /* Checks if external storage is available for read and write */
+    public boolean isExternalStorageWritable() {
+        String state = Environment.getExternalStorageState();
+        if (Environment.MEDIA_MOUNTED.equals(state)) {
+            return true;
+        }
+        return false;
+    }
+
+
     // =============================== запросы к базе данных =======================================
     // запрос списка файлов
     public ArrayList<ScannedFileModel> getScannedFile(){
