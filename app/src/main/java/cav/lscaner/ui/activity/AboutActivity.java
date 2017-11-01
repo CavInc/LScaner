@@ -58,13 +58,10 @@ public class AboutActivity extends AppCompatActivity {
     TextView.OnEditorActionListener mEditorActionListener = new TextView.OnEditorActionListener() {
         @Override
         public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-            if (keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
                 // проверяем тот ли номер
                 Log.d("AA","Enter");
 
                 return true;
-            }
-            return false;
         }
     };
 }
