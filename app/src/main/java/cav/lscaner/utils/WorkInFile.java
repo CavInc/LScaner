@@ -15,6 +15,8 @@ import cav.lscaner.data.models.ScannedDataModel;
 public class WorkInFile {
 //http://startandroid.ru/ru/uroki/vse-uroki-spiskom/138-urok-75-hranenie-dannyh-rabota-s-fajlami.html
 
+    private String savedFile;
+
     public File getLocalAppFile(Context context,String fileName){
         return new File(context.getFilesDir(),fileName);
     }
@@ -47,10 +49,12 @@ public class WorkInFile {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
-
+            savedFile = outfile.toString();
         }
 
     }
 
+    public String getSavedFile() {
+        return savedFile;
+    }
 }
