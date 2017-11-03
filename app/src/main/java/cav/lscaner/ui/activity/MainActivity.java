@@ -375,7 +375,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     .getString(PREF_ACCOUNT_NAME, null);
             if (accountName != null) {
                 mCredential.setSelectedAccountName(accountName);
-               // getResultsFromApi();
+                getResultsFromApi();
 
             } else {
                 // Start a dialog from which the user can choose an account
