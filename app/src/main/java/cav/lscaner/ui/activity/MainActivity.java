@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.icu.text.LocaleDisplayNames;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -194,7 +195,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 if (!mDataManager.isOnline()){
                     // показываем что нет сети
                     showNoNetwork();
-                   // return;
+                    return;
                 }
                 // сохраняем файл
                 WorkInFile workInFile = new WorkInFile();
@@ -438,7 +439,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             mService = new com.google.api.services.drive.Drive.Builder(
                     transport, jsonFactory, credential)
-                    .setApplicationName("Drive API Android Quickstart")
+                    .setApplicationName("LScanner")
                     .build();
 
         }
@@ -449,6 +450,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             filePath = new java.io.File(fn);
 
             File fileMetadata = new File();
+            fileMetadata.setMimeType("application/vnd.google-apps.spreadsheet");
             fileMetadata.setDescription("Scanned file");
             fileMetadata.setName(filePath.getName());
 
@@ -540,6 +542,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         @Override
         protected void onCancelled() {
+            if (mLastError != null) {
+                if (mLastError instanceof GooglePlayServicesAvailabilityIOException) {
+                    showGooglePlayServicesAvailabilityErrorDialog(
+                            ((GooglePlayServicesAvailabilityIOException) mLastError)
+                                    .getConnectionStatusCode());
+                }else if (mLastError instanceof UserRecoverableAuthIOException) {
+                    startActivityForResult(
+                            ((UserRecoverableAuthIOException) mLastError).getIntent(),
+                            MainActivity.REQUEST_AUTHORIZATION);
+
+                } else {
+                    Log.d(TAG,"Error "+mLastError);
+
+                }
+            } else {
+                Log.d(TAG,"Request cancelled.");
+            }
             /*
             if (mLastError != null) {
 
@@ -567,7 +586,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 .setCancelable(false)
                                 .setNegativeButton("Close", new DialogInterface.OnClickListener() {
                                     @Override
-                                    public void onClick(DialogInterface dialog, int which) {
+                                   public void onClick(DialogInterface dialog, int which) {
                                         dialog.cancel();
                                     }
                                 });
