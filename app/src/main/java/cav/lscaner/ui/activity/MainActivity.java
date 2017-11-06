@@ -8,9 +8,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.icu.text.LocaleDisplayNames;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -36,8 +33,10 @@ import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.util.ExponentialBackOff;
+import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.DriveScopes;
 import com.google.api.services.drive.model.File;
+import com.google.api.services.drive.model.FileList;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -117,6 +116,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     Toast.LENGTH_LONG).show();
             directionGD = READ_FILE;
             Log.d(TAG,mDataManager.getPreferensManager().getStoreFileName());
+            requestData();
         }
         if (item.getItemId() == R.id.menu_about) {
             Intent intent = new Intent(this,AboutActivity.class);
@@ -125,6 +125,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         return true;
     }
+
 
     private void updateUI(){
         ArrayList<ScannedFileModel> model = mDataManager.getScannedFile();
@@ -222,6 +223,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     };
 
     private void pushGD() {
+        // создаем аккаунт и запрашиваем всякое. через OAuth2
+        mCredential = GoogleAccountCredential.usingOAuth2(
+                getApplicationContext(), Arrays.asList(SCOPES))
+                .setBackOff(new ExponentialBackOff());
+
+        // работаем с API
+        getResultsFromApi();
+    }
+
+    private void requestData() {
         // создаем аккаунт и запрашиваем всякое. через OAuth2
         mCredential = GoogleAccountCredential.usingOAuth2(
                 getApplicationContext(), Arrays.asList(SCOPES))
@@ -333,7 +344,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         } else if (mCredential.getSelectedAccountName() == null) {
             chooseAccount();
         } else {
-            new SendRequestTask(mCredential,storeFileFullName).execute();
+            if (directionGD == WRITE_FILE) {
+                new SendRequestTask(mCredential, storeFileFullName).execute();
+            } else {
+                new RequestDataTask(mCredential,mDataManager.getPreferensManager().getStoreFileName()).execute();
+            }
         }
     }
 
@@ -663,18 +678,67 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         private Exception mLastError = null;
         private com.google.api.services.drive.Drive mService = null;
 
-        public RequestDataTask(GoogleAccountCredential credential, String fn){
+        private String fn = null;
 
+        public RequestDataTask(GoogleAccountCredential credential, String fn){
+            this.fn = fn;
+
+            HttpTransport transport = AndroidHttp.newCompatibleTransport();
+            JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
+
+            mService = new com.google.api.services.drive.Drive.Builder(
+                    transport, jsonFactory, credential)
+                    .setApplicationName("LScanner")
+                    .build();
         }
 
         @Override
         protected Void doInBackground(Void... voids) {
+            // получили список файлов
+            List fileList = null;
+            try {
+                fileList = getList();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+/*
+11-06 17:55:57.794 15065-15118/cav.lscaner.debug I/System.out: {"id":"1NvD0NCnsggYQSJW5q9ydYFO_FIPY52pGvW-tnQRA9bY","kind":"drive#file","mimeType":"application/vnd.google-apps.spreadsheet","name":"Miks.txt"}
+11-06 17:56:00.088 1002-1044/? D/hwcomposer: hw_composer sent 161 syncs in 60s
+11-06 17:56:01.985 15065-15118/cav.lscaner.debug I/System.out: class com.google.api.services.drive.model.File
+11-06 17:56:11.911 15065-15118/cav.lscaner.debug I/System.out: {"id":"0Bx8MRn8JeHSvYkhEcTZwMmdOV00","kind":"drive#file","mimeType":"text/plain","name":"testdb.txt"}
+11-06 17:57:31.813 15065-15118/cav.lscaner.debug I/System.out: {"id":"1SSMhVb41fGQEOsssGXuK-q7aEOrVJscVOglwqSo6MzU","kind":"drive#file","mimeType":"application/vnd.google-apps.document","name":"сериники"}
+11-06 17:57:31.813 15065-15118/cav.lscaner.debug I/System.out: class com.google.api.services.drive.model.File
+11-06 17:57:31.813 15065-15118/cav.lscaner.debug I/System.out: {"id":"1FTFZNM-JX7eYOTBwglzItDiBJXMzCpZEEaxA5D_Cy6A","kind":"drive#file","mimeType":"application/vnd.google-apps.document","name":"hello-traypy"}
+11-06 17:57:31.813 15065-15118/cav.lscaner.debug I/System.out: class com.google.api.services.drive.model.File
+11-06 17:57:31.813 15065-15118/cav.lscaner.debug I/System.out: {"id":"1pUDkOO63CK_qIypHZp9taRBz6BfxML3pO0oqeEzF_dg","kind":"drive#file","mimeType":"application/vnd.google-apps.document","name":"Всяка лажа. Набитая в бугле"}
+
+         */
+            //http://javaprogrammernotes.blogspot.ru/2013/01/drive-api-2.html
+
+            for (Object l:fileList){
+                File lx = (File) l;
+                System.out.println(l.getClass());
+                System.out.println(lx.getId()+" "+lx.getName()+" "+lx.getDescription());
+            }
+
+
             return null;
         }
 
         @Override
         protected void onPostExecute(Void aVoid) {
 
+        }
+
+        private List getList() throws IOException {
+            List rec = new ArrayList();
+            Drive.Files.List listRequest = mService.files().list();
+            do {
+                FileList fList = listRequest.execute();
+                rec.addAll(fList.getFiles());
+                listRequest.setPageToken(fList.getNextPageToken());
+            }while (listRequest.getPageToken() != null && listRequest.getPageToken().length() > 0);
+            return rec;
         }
 
     }
