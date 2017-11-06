@@ -197,6 +197,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     showNoNetwork();
                     return;
                 }
+                getPermisionStorage(); // запрос разрешения на SD
                 // сохраняем файл
                 WorkInFile workInFile = new WorkInFile();
                 workInFile.saveFile(selModel.getId(),selModel.getName(),mDataManager);
@@ -309,6 +310,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     static final int REQUEST_GOOGLE_PLAY_SERVICES = 1002;
     static final int REQUEST_PERMISSION_GET_ACCOUNTS = 1003;
 
+    static final int REQUEST_PERMISSINO_WRITE_STORAGE = 1004;
+
     private static final String PREF_ACCOUNT_NAME = "accountName";
     private static final String[] SCOPES = { DriveScopes.DRIVE_METADATA_READONLY,DriveScopes.DRIVE_FILE };
 
@@ -394,6 +397,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    // запрос разрешения на SD
+    @AfterPermissionGranted(REQUEST_PERMISSINO_WRITE_STORAGE)
+    private void getPermisionStorage(){
+        if (!EasyPermissions.hasPermissions(this,Manifest.permission.WRITE_EXTERNAL_STORAGE)){
+            EasyPermissions.requestPermissions(this,"This app needs to access your SD",
+                    REQUEST_PERMISSINO_WRITE_STORAGE,Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        }
+    }
+
 
     /**
      * Respond to requests for permissions at runtime for API 23 and above.
@@ -452,7 +464,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             File fileMetadata = new File();
             fileMetadata.setMimeType("application/vnd.google-apps.spreadsheet");
             fileMetadata.setDescription("Scanned file");
-            fileMetadata.setName(filePath.getName());
+            String fname = filePath.getName();
+            if (fname.toUpperCase().indexOf(".TXT") == -1){ fname = fname+".txt";}
+            fileMetadata.setName(fname);
 
             FileContent mediaContent = new FileContent("text/csv", filePath);
 
