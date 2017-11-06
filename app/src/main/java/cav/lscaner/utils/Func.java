@@ -46,4 +46,9 @@ public class Func {
         return res.substring(0,res.length()-1);
     }
 
+    // проверка на валидность серийного номера
+    public static boolean checkSerialNumber(String serialNumber){
+       return false;
+    }
+
 }

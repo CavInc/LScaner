@@ -222,20 +222,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     };
 
     private void pushGD() {
+        // создаем аккаунт и запрашиваем всякое. через OAuth2
         mCredential = GoogleAccountCredential.usingOAuth2(
                 getApplicationContext(), Arrays.asList(SCOPES))
                 .setBackOff(new ExponentialBackOff());
 
+        // работаем с API
         getResultsFromApi();
     }
 
     // показываем что нет сети.
     private void showNoNetwork() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(R.string.app_name)
                 .setMessage("No network connection available")
                 .setCancelable(false)
-                .setNegativeButton("Close", new DialogInterface.OnClickListener() {
+                .setNegativeButton(R.string.button_close, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.cancel();
@@ -245,6 +247,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         alert.show();
     }
 
+    // Удаляем запись
     private void deleteRecord(final int selIdFile) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Удаление")
@@ -378,6 +381,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         dialog.show();
     }
 
+    // запрос разрешения на работу с акаунтами
     @AfterPermissionGranted(REQUEST_PERMISSION_GET_ACCOUNTS)
     private void chooseAccount() {
         if (EasyPermissions.hasPermissions(
@@ -653,6 +657,28 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             */
         }
     }
+
+    // класс для чтения данных
+    class RequestDataTask extends AsyncTask<Void, Void, Void> {
+        private Exception mLastError = null;
+        private com.google.api.services.drive.Drive mService = null;
+
+        public RequestDataTask(GoogleAccountCredential credential, String fn){
+
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+
+        }
+
+    }
+
 
 
 }
