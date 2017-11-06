@@ -60,6 +60,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         EasyPermissions.PermissionCallbacks{
 
     private static final String TAG = "MAIN";
+    private static final int WRITE_FILE = 1012;
+    private static final int READ_FILE = 1010;
     private FloatingActionButton mFAB;
     private ListView mListView;
 
@@ -70,6 +72,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private boolean newRecord = true;
 
     private String storeFileFullName;
+
+    private int directionGD = WRITE_FILE ;// что делаем с файлом
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,6 +115,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Toast.makeText(MainActivity.this,
                     "А тут будет диалог спрашивающий откуда взять файл (имя файла в настройка)",
                     Toast.LENGTH_LONG).show();
+            directionGD = READ_FILE;
+            Log.d(TAG,mDataManager.getPreferensManager().getStoreFileName());
         }
         if (item.getItemId() == R.id.menu_about) {
             Intent intent = new Intent(this,AboutActivity.class);
@@ -198,6 +204,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     return;
                 }
                 getPermisionStorage(); // запрос разрешения на SD
+                directionGD = WRITE_FILE;
                 // сохраняем файл
                 WorkInFile workInFile = new WorkInFile();
                 workInFile.saveFile(selModel.getId(),selModel.getName(),mDataManager);
@@ -205,7 +212,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 storeFileFullName = workInFile.getSavedFile();
 
                 // показываем окно с выбором куда отправлять
-                Toast.makeText(MainActivity.this,"А тут будет диалог спрашивающий куда отправить",Toast.LENGTH_LONG).show();
+                // Toast.makeText(MainActivity.this,"А тут будет диалог спрашивающий куда отправить",Toast.LENGTH_LONG).show();
                 // вызов отправки
                 pushGD();
 
@@ -550,6 +557,35 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         @Override
         protected void onPostExecute(Void aVoid) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+            builder.setTitle(R.string.app_name)
+                    .setMessage("Загружен файл :"+fn)
+                    .setCancelable(false)
+                    .setNegativeButton(R.string.button_ok, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+
+                        }
+                    })
+                    .create();
+            builder.show();
+
+            /*
+            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+            builder.setTitle(R.string.app_name)
+                    .setMessage("Загружен файл :"+"File ID: " + defAppSettings.getString("GD_FILE","")
+                            +" file :"+defAppSettings.getString("GD_NAME",""))
+                    .setCancelable(false)
+                    .setNegativeButton("Close",new DialogInterface.OnClickListener(){
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                        }
+                    });
+            AlertDialog alert = builder.create();
+            alert.show();
+             */
+
             //resend = false;
             //count_fail_resend = 0;
         }
