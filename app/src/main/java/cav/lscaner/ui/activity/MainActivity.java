@@ -61,6 +61,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private static final String TAG = "MAIN";
     private static final int WRITE_FILE = 1012;
     private static final int READ_FILE = 1010;
+
+    private final int MAX_DEMO_REC = 2;
+
     private FloatingActionButton mFAB;
     private ListView mListView;
 
@@ -73,6 +76,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private String storeFileFullName;
 
     private int directionGD = WRITE_FILE ;// что делаем с файлом
+
+    private boolean demo = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,6 +99,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onResume() {
         super.onResume();
+        demo = mDataManager.getPreferensManager().getDemo();
         updateUI();
     }
 

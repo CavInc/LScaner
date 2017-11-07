@@ -26,6 +26,8 @@ import cav.lscaner.ui.dialogs.SelectScanDialog;
 import cav.lscaner.utils.ConstantManager;
 
 public class ScanActivity extends AppCompatActivity implements AdapterView.OnItemLongClickListener{
+    private final int MAX_REC = 10;  // количество записей в демо версии
+
     private EditText mBarCode;
     private ListView mListView;
 

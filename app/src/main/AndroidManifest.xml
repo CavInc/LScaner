@@ -28,6 +28,7 @@
         <activity android:name=".ui.activity.SettingActivity">
         </activity>
         <activity android:name=".ui.activity.AboutActivity"
+                  android:screenOrientation="portrait"
             android:label="О программе">
         </activity>
     </application>
