@@ -29,6 +29,9 @@ import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccoun
 import com.google.api.client.googleapis.extensions.android.gms.auth.GooglePlayServicesAvailabilityIOException;
 import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
 import com.google.api.client.http.FileContent;
+import com.google.api.client.http.GenericUrl;
+import com.google.api.client.http.HttpRequest;
+import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
@@ -37,8 +40,12 @@ import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.DriveScopes;
 import com.google.api.services.drive.model.File;
 import com.google.api.services.drive.model.FileList;
+import com.google.api.services.drive.model.Permission;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -685,6 +692,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         private com.google.api.services.drive.Drive mService = null;
 
         private String fn = null;
+        private java.io.File filePath;
 
         public RequestDataTask(GoogleAccountCredential credential, String fn){
             this.fn = fn;
@@ -700,6 +708,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         @Override
         protected Void doInBackground(Void... voids) {
+            String path = mDataManager.getStorageAppPath();
+            filePath = new java.io.File(path,fn);
+
             // получили список файлов
             List fileList = null;
             try {
@@ -720,14 +731,52 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
          */
             //http://javaprogrammernotes.blogspot.ru/2013/01/drive-api-2.html
+            String fileId = null;
+            String fileName = null;
 
             for (Object l:fileList){
                 File lx = (File) l;
                 System.out.println(l.getClass());
                 System.out.println(lx.getId()+" "+lx.getName()+" "+lx.getDescription());
+                if (lx.getName().equals(fn)){
+                    fileId = lx.getId();
+                    fileName = lx.getName();
+                    System.out.println(lx.getVersion());
+                    break;
+                }
             }
+            if (fileId != null) {
+                //mService.files().
 
+                Log.d(TAG,"НАШЛИ :"+fileId);
+                try {
+                    final FileOutputStream outputStream = new FileOutputStream(filePath);
+                    mService.files().get(fileId).setQuotaUser("cavinc20@gmail.com").executeMediaAndDownloadTo(outputStream);
+                    /*
+                    final String finalWebContentLink = webContentLink;
+                    Thread th = new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                InputStream mInput = mService.getRequestFactory().buildGetRequest(new GenericUrl(finalWebContentLink)).execute().getContent();
+                                byte[] mBuffer = new byte[1024];
+                                int mLength;
+                                while ((mLength = mInput.read(mBuffer)) > 0) {
+                                    outputStream.write(mBuffer,0,mLength);
+                                }
+                                outputStream.flush();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
 
+                        }
+                    });
+                    th.start();
+                    */
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
             return null;
         }
 

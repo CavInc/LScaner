@@ -97,4 +97,8 @@ public class PreferensManager {
         editor.putString(ConstantManager.REGISTRY_NUMBER,reg);
         editor.apply();
     }
+
+    // сохраняем id файла
+
+
 }
