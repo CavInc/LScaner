@@ -49,7 +49,9 @@ public class Func {
     }
 
     // проверка на валидность серийного номера
-    public static boolean checkSerialNumber(String serialNumber){
+    public static boolean checkSerialNumber(String serialNumber,String deviceID){
+        String mx = md5(deviceID);
+        System.out.println(mx);
        return false;
     }
 
