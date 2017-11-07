@@ -751,7 +751,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Log.d(TAG,"НАШЛИ :"+fileId);
                 try {
                     final FileOutputStream outputStream = new FileOutputStream(filePath);
-                    mService.files().get(fileId).setQuotaUser("cavinc20@gmail.com").executeMediaAndDownloadTo(outputStream);
+                    mService.files().get(fileId).setOauthToken("401488464395-2hrh0guleo0teacpaou0qi3nie8c4dto.apps.googleusercontent.com").executeMediaAndDownloadTo(outputStream);
                     /*
                     final String finalWebContentLink = webContentLink;
                     Thread th = new Thread(new Runnable() {
