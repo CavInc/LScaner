@@ -81,6 +81,12 @@ public class PreferensManager {
         return mSharedPreferences.getBoolean(ConstantManager.DEMO_VERSION,true);
     }
 
+    public void setDemo(boolean mode){
+        SharedPreferences.Editor editor = mSharedPreferences.edit();
+        editor.putBoolean(ConstantManager.DEMO_VERSION,mode);
+        editor.apply();
+    }
+
     // показывает регестриционный номер
     public String getRegistrationNumber(){
         return mSharedPreferences.getString(ConstantManager.REGISTRY_NUMBER,null);

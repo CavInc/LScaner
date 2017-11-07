@@ -10,12 +10,15 @@ import android.widget.TextView;
 
 import cav.lscaner.R;
 import cav.lscaner.data.managers.DataManager;
+import cav.lscaner.utils.Func;
 
 public class AboutActivity extends AppCompatActivity {
 
     private DataManager mDataManager;
     private TextView mDeviceId;
     private EditText mSerialCode;
+
+    private String deviceId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,8 +30,9 @@ public class AboutActivity extends AppCompatActivity {
         mDeviceId = (TextView) findViewById(R.id.ab_device_code);
         mSerialCode = (EditText) findViewById(R.id.ab_code_et);
 
-        String deviceID = mDataManager.getAndroidID();
-        mDeviceId.setText(deviceID.substring(deviceID.length()-8));
+        deviceId = mDataManager.getAndroidID();
+        deviceId = deviceId.substring(deviceId.length()-8);
+        mDeviceId.setText(deviceId);
         //mDeviceId.setText(deviceID);
 
         mSerialCode.setOnEditorActionListener(mEditorActionListener);
@@ -58,10 +62,16 @@ public class AboutActivity extends AppCompatActivity {
     TextView.OnEditorActionListener mEditorActionListener = new TextView.OnEditorActionListener() {
         @Override
         public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-                // проверяем тот ли номер
-                Log.d("AA","Enter");
-
-                return true;
+            // проверяем тот ли номер
+            String x = textView.getText().toString();
+            if (Func.checkSerialNumber(x,deviceId) ) {
+                // сохраняем серийник и флаг что не недемо
+                mDataManager.getPreferensManager().setRegistrationNumber(x);
+                mDataManager.getPreferensManager().setDemo(false);
+            } else {
+                mDataManager.getPreferensManager().setDemo(false);
+            }
+            return false;
         }
     };
 }
