@@ -347,7 +347,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     static final int REQUEST_PERMISSINO_WRITE_STORAGE = 1004;
 
     private static final String PREF_ACCOUNT_NAME = "accountName";
-    private static final String[] SCOPES = { DriveScopes.DRIVE_METADATA_READONLY,DriveScopes.DRIVE_FILE };
+    private static final String[] SCOPES = { DriveScopes.DRIVE_METADATA_READONLY,
+            DriveScopes.DRIVE_FILE,DriveScopes.DRIVE_APPDATA,DriveScopes.DRIVE};
 
     // обрабатываем весь цикл для GD
 
@@ -751,8 +752,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Log.d(TAG,"НАШЛИ :"+fileId);
                 try {
                     final FileOutputStream outputStream = new FileOutputStream(filePath);
-                    mService.files().get(fileId).setOauthToken("401488464395-2hrh0guleo0teacpaou0qi3nie8c4dto.apps.googleusercontent.com").executeMediaAndDownloadTo(outputStream);
+                    mService.files().get(fileId).executeMediaAndDownloadTo(outputStream);
                     /*
+                    .setOauthToken("401488464395-2hrh0guleo0teacpaou0qi3nie8c4dto.apps.googleusercontent.com")
                     final String finalWebContentLink = webContentLink;
                     Thread th = new Thread(new Runnable() {
                         @Override
