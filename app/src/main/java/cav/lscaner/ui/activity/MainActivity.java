@@ -753,6 +753,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 try {
                     final FileOutputStream outputStream = new FileOutputStream(filePath);
                     mService.files().get(fileId).executeMediaAndDownloadTo(outputStream);
+                    WorkInFile workInFile = new WorkInFile();
+                    workInFile.loadProductFile(fn,mDataManager);
                     /*
                     .setOauthToken("401488464395-2hrh0guleo0teacpaou0qi3nie8c4dto.apps.googleusercontent.com")
                     final String finalWebContentLink = webContentLink;

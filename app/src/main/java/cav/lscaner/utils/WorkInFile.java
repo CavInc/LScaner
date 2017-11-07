@@ -3,8 +3,11 @@ package cav.lscaner.utils;
 import android.content.Context;
 import android.util.Log;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -56,5 +59,34 @@ public class WorkInFile {
 
     public String getSavedFile() {
         return savedFile;
+    }
+
+    public void loadProductFile(String fname,DataManager manager){
+        // проверяем доступность SD
+        if (!manager.isExternalStorageWritable()) return;
+        String delim = manager.getPreferensManager().getDelimiterStoreFile();
+        String path = manager.getStorageAppPath();
+        Log.d("LC",path);
+        File stFile = new File(path,fname);
+
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(stFile));
+            String str = "";
+            String[] lm;
+            // читаем содержимое
+            while ((str = br.readLine()) != null) {
+                Log.d("LC STR :", str);
+                if (str.length() != 0) {
+                    lm = str.split(delim);
+                    System.out.println(lm);
+                    manager.getDB().addStore(lm[0],lm[2]);
+                }
+            }
+            br.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return;
+        }
+
     }
 }
