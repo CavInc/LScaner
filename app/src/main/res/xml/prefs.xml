@@ -29,5 +29,12 @@
             android:title="Разделитель полей"
             android:defaultValue="#"
             android:summary="#"/>
+        <ListPreference
+            android:key="file_code"
+            android:title="Кодировка файла обмена"
+            android:entries="@array/code_entries"
+            android:entryValues="@array/code_entry_values"
+            android:defaultValue="WIN-1251"
+            android:summary=""/>
     </PreferenceCategory>
 </PreferenceScreen>

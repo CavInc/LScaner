@@ -97,6 +97,18 @@ public class PreferensManager {
         editor.putString(ConstantManager.REGISTRY_NUMBER,reg);
         editor.apply();
     }
+    // кодировка файла
+
+    public int getCodeFile(){
+        return mSharedPreferences.getInt(ConstantManager.CODE_FILE,1);
+    }
+
+    public void setCodeFile(int code){
+        SharedPreferences.Editor editor = mSharedPreferences.edit();
+        editor.putInt(ConstantManager.CODE_FILE,code);
+        editor.apply();
+
+    }
 
     // сохраняем id файла
 

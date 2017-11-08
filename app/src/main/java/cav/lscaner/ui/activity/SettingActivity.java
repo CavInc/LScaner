@@ -2,9 +2,11 @@ package cav.lscaner.ui.activity;
 
 import android.os.Bundle;
 import android.preference.EditTextPreference;
+import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -20,6 +22,8 @@ public class SettingActivity extends PreferenceActivity {
 
     private EditTextPreference mFileDelimeter;
     private EditTextPreference mScalePrefix;
+
+    private ListPreference mCodeFile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +43,14 @@ public class SettingActivity extends PreferenceActivity {
 
         mFileDelimeter = (EditTextPreference) findPreference("file_delimiter");
         mFileDelimeter.setOnPreferenceChangeListener(mChangeListener);
+
+        mCodeFile = (ListPreference) findPreference("file_code");
+        mCodeFile.setOnPreferenceChangeListener(mChangeListener);
+
+        int code = mDataManager.getPreferensManager().getCodeFile();
+        String[] hL = getResources().getStringArray(R.array.code_entries);
+        mCodeFile.setSummary(hL[code-1]);
+
 
         mScaleSize.setSummary(String.valueOf(mDataManager.getPreferensManager().getSizeScale()));
         mFileDelimeter.setSummary(mDataManager.getPreferensManager().getDelimiterStoreFile());
@@ -85,6 +97,12 @@ public class SettingActivity extends PreferenceActivity {
                 String l = (String) o;
                 mScalePrefix.setSummary(l);
                 mDataManager.getPreferensManager().setScalePrefix(l);
+            }
+            if (preference.getKey().equals("file_code")){
+                String l = (String) o;
+                mDataManager.getPreferensManager().setCodeFile(Integer.valueOf(l));
+                String[] hL = getResources().getStringArray(R.array.code_entries);
+                mCodeFile.setSummary(hL[Integer.valueOf(l)-1]);
             }
             return true;
         }
