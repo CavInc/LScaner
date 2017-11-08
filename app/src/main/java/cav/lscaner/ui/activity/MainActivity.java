@@ -55,6 +55,7 @@ import cav.lscaner.data.managers.DataManager;
 import cav.lscaner.data.models.ScannedFileModel;
 import cav.lscaner.ui.adapter.ScannedFileAdapter;
 import cav.lscaner.ui.dialogs.AddEditNameFileDialog;
+import cav.lscaner.ui.dialogs.DemoDialog;
 import cav.lscaner.ui.dialogs.SelectMainDialog;
 import cav.lscaner.utils.ConstantManager;
 import cav.lscaner.utils.Func;
@@ -162,9 +163,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View view) {
         if (view.getId() == R.id.main_fab) {
             newRecord = true;
-            AddEditNameFileDialog dialog = AddEditNameFileDialog.newInstance("");
-            dialog.setAddEditNameFileListener(mAddEditNameFileListener);
-            dialog.show(getSupportFragmentManager(),"AddFile");
+            int rec_count = mDataManager.getDB().getCountFile();
+            if (demo && (rec_count+1)>2) {
+                Log.d(TAG,"DEMO");
+                new DemoDialog().show(getSupportFragmentManager(),"DEMO");
+            } else {
+                Log.d(TAG,"NO DEMO");
+                AddEditNameFileDialog dialog = AddEditNameFileDialog.newInstance("");
+                dialog.setAddEditNameFileListener(mAddEditNameFileListener);
+                dialog.show(getSupportFragmentManager(), "AddFile");
+            }
         }
 
     }
@@ -597,7 +605,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         protected void onPostExecute(Void aVoid) {
             AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
             builder.setTitle(R.string.app_name)
-                    .setMessage("Загружен файл :"+fn)
+                    .setMessage("Выгружен файл  :"+fn)
                     .setCancelable(false)
                     .setNegativeButton(R.string.button_ok, new DialogInterface.OnClickListener() {
                         @Override
@@ -724,19 +732,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             } catch (IOException e) {
                 e.printStackTrace();
                 mLastError = e;
+                cancel(true);
+                return null;
             }
-/*
-11-06 17:55:57.794 15065-15118/cav.lscaner.debug I/System.out: {"id":"1NvD0NCnsggYQSJW5q9ydYFO_FIPY52pGvW-tnQRA9bY","kind":"drive#file","mimeType":"application/vnd.google-apps.spreadsheet","name":"Miks.txt"}
-11-06 17:56:00.088 1002-1044/? D/hwcomposer: hw_composer sent 161 syncs in 60s
-11-06 17:56:01.985 15065-15118/cav.lscaner.debug I/System.out: class com.google.api.services.drive.model.File
-11-06 17:56:11.911 15065-15118/cav.lscaner.debug I/System.out: {"id":"0Bx8MRn8JeHSvYkhEcTZwMmdOV00","kind":"drive#file","mimeType":"text/plain","name":"testdb.txt"}
-11-06 17:57:31.813 15065-15118/cav.lscaner.debug I/System.out: {"id":"1SSMhVb41fGQEOsssGXuK-q7aEOrVJscVOglwqSo6MzU","kind":"drive#file","mimeType":"application/vnd.google-apps.document","name":"сериники"}
-11-06 17:57:31.813 15065-15118/cav.lscaner.debug I/System.out: class com.google.api.services.drive.model.File
-11-06 17:57:31.813 15065-15118/cav.lscaner.debug I/System.out: {"id":"1FTFZNM-JX7eYOTBwglzItDiBJXMzCpZEEaxA5D_Cy6A","kind":"drive#file","mimeType":"application/vnd.google-apps.document","name":"hello-traypy"}
-11-06 17:57:31.813 15065-15118/cav.lscaner.debug I/System.out: class com.google.api.services.drive.model.File
-11-06 17:57:31.813 15065-15118/cav.lscaner.debug I/System.out: {"id":"1pUDkOO63CK_qIypHZp9taRBz6BfxML3pO0oqeEzF_dg","kind":"drive#file","mimeType":"application/vnd.google-apps.document","name":"Всяка лажа. Набитая в бугле"}
 
-         */
             //http://javaprogrammernotes.blogspot.ru/2013/01/drive-api-2.html
             String fileId = null;
             String fileName = null;
@@ -762,6 +761,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 } catch (IOException e) {
                     e.printStackTrace();
                     mLastError = e;
+                    cancel(true);
+                    return null;
                 }
             }
             return null;
@@ -786,7 +787,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         @Override
         protected void onCancelled() {
             if (mLastError != null) {
+                if (mLastError instanceof GooglePlayServicesAvailabilityIOException) {
+                    showGooglePlayServicesAvailabilityErrorDialog(
+                            ((GooglePlayServicesAvailabilityIOException) mLastError)
+                                    .getConnectionStatusCode());
+                }else if (mLastError instanceof UserRecoverableAuthIOException) {
+                    startActivityForResult(
+                            ((UserRecoverableAuthIOException) mLastError).getIntent(),
+                            MainActivity.REQUEST_AUTHORIZATION);
 
+                } else {
+                    Log.d(TAG,"Error "+mLastError);
+
+                }
+            } else {
+                Log.d(TAG,"Request cancelled.");
             }
         }
 

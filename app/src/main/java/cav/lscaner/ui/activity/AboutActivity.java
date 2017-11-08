@@ -69,7 +69,7 @@ public class AboutActivity extends AppCompatActivity {
                 mDataManager.getPreferensManager().setRegistrationNumber(x);
                 mDataManager.getPreferensManager().setDemo(false);
             } else {
-                mDataManager.getPreferensManager().setDemo(false);
+                mDataManager.getPreferensManager().setDemo(true);
             }
             return false;
         }

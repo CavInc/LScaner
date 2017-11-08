@@ -111,4 +111,19 @@ public class DBConnect {
         database.delete(DBHelper.SCAN_TABLE_SPEC,"head_id="+idFile,null);
         close();
     }
+
+    // количество файлов в базе
+    public int getCountFile(){
+        open();
+        Cursor cursor = database.rawQuery("select count(1) from "+DBHelper.SCAN_TABLE,null);
+        cursor.moveToFirst();
+        int res = cursor.getInt(0);
+        close();
+        return res;
+    }
+
+    // количество записей в базе
+    public int getCountRecInFile(int idFile){
+        return 0;
+    }
 }
