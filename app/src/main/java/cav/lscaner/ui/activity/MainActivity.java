@@ -107,6 +107,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onResume() {
         super.onResume();
         demo = mDataManager.getPreferensManager().getDemo();
+        getPermisionStorage(); // запрос разрешения на SD
         updateUI();
     }
 
@@ -222,14 +223,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     showNoNetwork();
                     return;
                 }
-                getPermisionStorage(); // запрос разрешения на SD
+
                 directionGD = WRITE_FILE;
                 // сохраняем файл
-                WorkInFile workInFile = new WorkInFile();
+                WorkInFile workInFile = new WorkInFile(mDataManager.getPreferensManager().getCodeFile());
                 workInFile.saveFile(selModel.getId(),selModel.getName(),mDataManager);
                 Log.d(TAG,workInFile.getSavedFile());
                 storeFileFullName = workInFile.getSavedFile();
-
                 // показываем окно с выбором куда отправлять
                 // Toast.makeText(MainActivity.this,"А тут будет диалог спрашивающий куда отправить",Toast.LENGTH_LONG).show();
                 // вызов отправки
@@ -723,6 +723,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 fileList = getList();
             } catch (IOException e) {
                 e.printStackTrace();
+                mLastError = e;
             }
 /*
 11-06 17:55:57.794 15065-15118/cav.lscaner.debug I/System.out: {"id":"1NvD0NCnsggYQSJW5q9ydYFO_FIPY52pGvW-tnQRA9bY","kind":"drive#file","mimeType":"application/vnd.google-apps.spreadsheet","name":"Miks.txt"}
@@ -742,12 +743,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             for (Object l:fileList){
                 File lx = (File) l;
-                System.out.println(l.getClass());
                 System.out.println(lx.getId()+" "+lx.getName()+" "+lx.getDescription());
                 if (lx.getName().equals(fn)){
                     fileId = lx.getId();
                     fileName = lx.getName();
-                    System.out.println(lx.getVersion());
                     break;
                 }
             }
@@ -758,32 +757,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 try {
                     final FileOutputStream outputStream = new FileOutputStream(filePath);
                     mService.files().get(fileId).executeMediaAndDownloadTo(outputStream);
-                    WorkInFile workInFile = new WorkInFile();
+                    WorkInFile workInFile = new WorkInFile(mDataManager.getPreferensManager().getCodeFile());
                     workInFile.loadProductFile(fn,mDataManager);
-                    /*
-                    .setOauthToken("401488464395-2hrh0guleo0teacpaou0qi3nie8c4dto.apps.googleusercontent.com")
-                    final String finalWebContentLink = webContentLink;
-                    Thread th = new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            try {
-                                InputStream mInput = mService.getRequestFactory().buildGetRequest(new GenericUrl(finalWebContentLink)).execute().getContent();
-                                byte[] mBuffer = new byte[1024];
-                                int mLength;
-                                while ((mLength = mInput.read(mBuffer)) > 0) {
-                                    outputStream.write(mBuffer,0,mLength);
-                                }
-                                outputStream.flush();
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-
-                        }
-                    });
-                    th.start();
-                    */
                 } catch (IOException e) {
                     e.printStackTrace();
+                    mLastError = e;
                 }
             }
             return null;
@@ -791,7 +769,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         @Override
         protected void onPostExecute(Void aVoid) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+            builder.setTitle(R.string.app_name)
+                    .setMessage("Скачан файл с товаром:"+fn)
+                    .setCancelable(false)
+                    .setNegativeButton(R.string.button_ok, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
 
+                        }
+                    })
+                    .create();
+            builder.show();
+        }
+
+        @Override
+        protected void onCancelled() {
+            if (mLastError != null) {
+
+            }
         }
 
         private List getList() throws IOException {

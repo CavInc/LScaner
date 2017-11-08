@@ -6,10 +6,12 @@ import android.util.Log;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 
 import cav.lscaner.data.managers.DataManager;
@@ -17,6 +19,20 @@ import cav.lscaner.data.models.ScannedDataModel;
 
 public class WorkInFile {
 //http://startandroid.ru/ru/uroki/vse-uroki-spiskom/138-urok-75-hranenie-dannyh-rabota-s-fajlami.html
+
+    private String codeStr;
+
+    public WorkInFile(Integer codeFile){
+        switch (codeFile){
+            case 1:
+                codeStr="windows-1251";
+                break;
+            case 2:
+                codeStr="UTF-8";
+                break;
+        }
+
+    }
 
     private String savedFile;
 
@@ -46,7 +62,8 @@ public class WorkInFile {
             try {
                 BufferedWriter bw = new BufferedWriter(new FileWriter(outfile));
                 for (ScannedDataModel l : models){
-                    bw.write(l.getBarCode()+delim+l.getQuantity()+"\r\n");
+                    String cls = new String((l.getBarCode()+delim+l.getQuantity()).getBytes("UTF-8"),codeStr);
+                    bw.write(cls+"\r\n");
                 }
                 bw.close();
             } catch (IOException e) {
@@ -66,11 +83,14 @@ public class WorkInFile {
         if (!manager.isExternalStorageWritable()) return;
         String delim = manager.getPreferensManager().getDelimiterStoreFile();
         String path = manager.getStorageAppPath();
-        Log.d("LC",path);
+        //Log.d("LC",path);
         File stFile = new File(path,fname);
 
         try {
-            BufferedReader br = new BufferedReader(new FileReader(stFile));
+            InputStreamReader inputStreamReader = new InputStreamReader(
+                    new FileInputStream(stFile),codeStr);
+            //BufferedReader br = new BufferedReader(new FileReader(stFile));
+            BufferedReader br = new BufferedReader(inputStreamReader);
             String str = "";
             String[] lm;
             // читаем содержимое
@@ -78,7 +98,6 @@ public class WorkInFile {
                 Log.d("LC STR :", str);
                 if (str.length() != 0) {
                     lm = str.split(delim);
-                    System.out.println(lm);
                     manager.getDB().addStore(lm[0],lm[2]);
                 }
             }
