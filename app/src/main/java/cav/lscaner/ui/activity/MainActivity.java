@@ -515,7 +515,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             filePath = new java.io.File(fn);
 
             File fileMetadata = new File();
-            fileMetadata.setMimeType("application/vnd.google-apps.spreadsheet");
+            //fileMetadata.setMimeType("application/vnd.google-apps.spreadsheet");
+            fileMetadata.setMimeType("text/plain");
             fileMetadata.setDescription("Scanned file");
             String fname = filePath.getName();
             if (fname.toUpperCase().indexOf(".TXT") == -1){ fname = fname+".txt";}
@@ -605,7 +606,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         protected void onPostExecute(Void aVoid) {
             AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
             builder.setTitle(R.string.app_name)
-                    .setMessage("Выгружен файл  :"+fn)
+                    .setMessage("Выгружен файл :")
                     .setCancelable(false)
                     .setNegativeButton(R.string.button_ok, new DialogInterface.OnClickListener() {
                         @Override

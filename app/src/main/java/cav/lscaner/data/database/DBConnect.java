@@ -94,6 +94,14 @@ public class DBConnect {
         return model;
     }
 
+    // очистить списко товаров
+
+    public void deleteStore(){
+        open();
+        database.delete(DBHelper.STORE_PRODUCT,null,null);
+        close();
+    }
+
     // добавить в список товаров
     public void addStore(String barcode,String name){
         open();

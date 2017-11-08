@@ -86,6 +86,9 @@ public class WorkInFile {
         //Log.d("LC",path);
         File stFile = new File(path,fname);
 
+        // удаляем старые данные
+        manager.getDB().deleteStore();
+
         try {
             InputStreamReader inputStreamReader = new InputStreamReader(
                     new FileInputStream(stFile),codeStr);
@@ -95,7 +98,7 @@ public class WorkInFile {
             String[] lm;
             // читаем содержимое
             while ((str = br.readLine()) != null) {
-                Log.d("LC STR :", str);
+                //Log.d("LC STR :", str);
                 if (str.length() != 0) {
                     lm = str.split(delim);
                     manager.getDB().addStore(lm[0],lm[2]);
