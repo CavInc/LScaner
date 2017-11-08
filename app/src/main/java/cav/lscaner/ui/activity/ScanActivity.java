@@ -21,6 +21,7 @@ import cav.lscaner.data.managers.DataManager;
 import cav.lscaner.data.models.ScannedDataModel;
 import cav.lscaner.data.models.StoreProductModel;
 import cav.lscaner.ui.adapter.ScannedListAdapter;
+import cav.lscaner.ui.dialogs.DemoDialog;
 import cav.lscaner.ui.dialogs.QueryQuantityDialog;
 import cav.lscaner.ui.dialogs.SelectScanDialog;
 import cav.lscaner.utils.ConstantManager;
@@ -44,6 +45,8 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
     private String mFileName;
 
     private boolean editRecord = false;
+    private boolean demo = true;
+    private int countRecord = 0;
 
 
     @Override
@@ -66,6 +69,11 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
         mBarCode.setOnEditorActionListener(mEditorActionListener);
 
         mListView.setOnItemLongClickListener(this);
+
+        demo = mDataManager.getPreferensManager().getDemo();
+        if (demo) {
+            countRecord = mDataManager.getDB().getCountRecInFile(idFile);
+        }
 
         setupToolBar();
         updateUI();
@@ -107,6 +115,11 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
     TextView.OnEditorActionListener mEditorActionListener = new TextView.OnEditorActionListener() {
         @Override
         public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+            if (demo && countRecord >=10 ) {
+                new DemoDialog().show(getSupportFragmentManager(),"DEMO");
+                return false;
+            }
+
             Log.d("SA",textView.getText().toString());
             mBar = textView.getText().toString();
             if (mBar.length() == 0) return true;
@@ -137,6 +150,7 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
                     dialod.show(getSupportFragmentManager(), "QQ");
                 } else {
                     mDataManager.getDB().addScannedPositon(idFile, mBar, qq,-1);
+                    countRecord +=1;
                     updateUI(); // TODO передалать заполнение через добавление в адаптер
                 }
             } else {
@@ -156,6 +170,7 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
         public void changeQuantity(Float quantity) {
             if (quantity!=0){
                 mDataManager.getDB().addScannedPositon(idFile,mBar,quantity,posID);
+                if (!editRecord) countRecord += 1;
                 updateUI(); // TODO передалать заполнение через добавление в адаптер
                 mBarCode.requestFocus();
             }
@@ -206,8 +221,8 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
                 .setPositiveButton(R.string.button_ok,new DialogInterface.OnClickListener(){
                     @Override
                     public void onClick(DialogInterface dialogInterface, int witch) {
-                        //TODO добавить удаление файла выгрузки с SD
                         mDataManager.getDB().delScannedPosition(selIdFile,position);
+                        countRecord -=1;
                         updateUI();
                     }
                 })

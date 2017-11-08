@@ -132,6 +132,11 @@ public class DBConnect {
 
     // количество записей в базе
     public int getCountRecInFile(int idFile){
-        return 0;
+        open();
+        Cursor cursor = database.rawQuery("select count(1) from "+DBHelper.SCAN_TABLE_SPEC+" where head_id ="+idFile,null);
+        cursor.moveToFirst();
+        int res = cursor.getInt(0);
+        close();
+        return res;
     }
 }
