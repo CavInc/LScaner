@@ -124,11 +124,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             startActivity(intent);
         }
         if (item.getItemId() == R.id.menu_refresh){
+            /*
             Toast.makeText(MainActivity.this,
                     "А тут будет диалог спрашивающий откуда взять файл (имя файла в настройка)",
-                    Toast.LENGTH_LONG).show();
+                    Toast.LENGTH_LONG).show();*/
+            if (!mDataManager.isOnline()){
+                // показываем что нет сети
+                showNoNetwork();
+                return false;
+            }
             directionGD = READ_FILE;
-            Log.d(TAG,mDataManager.getPreferensManager().getStoreFileName());
             requestData();
         }
         if (item.getItemId() == R.id.menu_about) {

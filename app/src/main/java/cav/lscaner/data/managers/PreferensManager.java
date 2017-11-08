@@ -67,7 +67,7 @@ public class PreferensManager {
     }
 
     public String getStoreFileName(){
-        return mSharedPreferences.getString(ConstantManager.STORE_FILE_NAME,null);
+        return mSharedPreferences.getString(ConstantManager.STORE_FILE_NAME,"db.txt"); // дефолтовое имя определенное заказчиком
     }
 
     public void setStoreFileName(String name){
