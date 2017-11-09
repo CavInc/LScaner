@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -114,56 +115,58 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
 
     TextView.OnEditorActionListener mEditorActionListener = new TextView.OnEditorActionListener() {
         @Override
-        public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+        public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
+            if ((keyEvent != null && (keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER))
+                    || actionId == EditorInfo.IME_ACTION_DONE){
 
-
-
-            if (demo && countRecord >=10 ) {
-                new DemoDialog().show(getSupportFragmentManager(),"DEMO");
-                return false;
-            }
-
-            Log.d("SA",textView.getText().toString());
-            mBar = textView.getText().toString();
-            if (mBar.length() == 0) return true;
-            qq = 1f;
-            posID = -1;
-            boolean scaleFlg = false;
-            editRecord = false;
-            // выкидываем EAN 8 так как его весовым у нас быть не может
-            if (prefixScale.contains(mBar.substring(0,2)) && mBar.length() == 13){
-                Log.d("SA","SCALE KODE");
-                String lq = mBar.substring(sizeScale,mBar.length()-1);
-                lq = lq.substring(0,2)+"."+lq.substring(2);
-                mBar = mBar.substring(0,sizeScale);
-                qq = Float.parseFloat(lq);
-                scaleFlg = true;
-            }
-
-            int l = mDataModels.indexOf(new ScannedDataModel(-1,-1,mBar,"", 0.0f));
-            if (l == -1) {
-                // нифига не нашли в уже добавленых смотрим в базе
-                StoreProductModel product = mDataManager.getDB().searchStore(mBar);
-                if (product == null) {
-                    product = new StoreProductModel(mBar,"Новый");
+                if (demo && countRecord >=10 ) {
+                    new DemoDialog().show(getSupportFragmentManager(),"DEMO");
+                    return false;
                 }
-                if (!scaleFlg) {
-                    QueryQuantityDialog dialod = QueryQuantityDialog.newInstans(product.getName(), 0f, 0f,editRecord);
-                    dialod.setQuantityChangeListener(mQuantityChangeListener);
-                    dialod.show(getSupportFragmentManager(), "QQ");
+
+                Log.d("SA",textView.getText().toString());
+                mBar = textView.getText().toString();
+                if (mBar.length() == 0) return true;
+                qq = 1f;
+                posID = -1;
+                boolean scaleFlg = false;
+                editRecord = false;
+                // выкидываем EAN 8 так как его весовым у нас быть не может
+                if (prefixScale.contains(mBar.substring(0,2)) && mBar.length() == 13){
+                    Log.d("SA","SCALE KODE");
+                    String lq = mBar.substring(sizeScale,mBar.length()-1);
+                    lq = lq.substring(0,2)+"."+lq.substring(2);
+                    mBar = mBar.substring(0,sizeScale);
+                    qq = Float.parseFloat(lq);
+                    scaleFlg = true;
+                }
+
+                int l = mDataModels.indexOf(new ScannedDataModel(-1,-1,mBar,"", 0.0f));
+                if (l == -1) {
+                    // нифига не нашли в уже добавленых смотрим в базе
+                    StoreProductModel product = mDataManager.getDB().searchStore(mBar);
+                    if (product == null) {
+                        product = new StoreProductModel(mBar,"Новый");
+                    }
+                    if (!scaleFlg) {
+                        QueryQuantityDialog dialod = QueryQuantityDialog.newInstans(product.getName(), 0f, 0f,editRecord);
+                        dialod.setQuantityChangeListener(mQuantityChangeListener);
+                        dialod.show(getSupportFragmentManager(), "QQ");
+                    } else {
+                        mDataManager.getDB().addScannedPositon(idFile, mBar, qq,-1);
+                        countRecord +=1;
+                        updateUI(); // TODO передалать заполнение через добавление в адаптер
+                    }
                 } else {
-                    mDataManager.getDB().addScannedPositon(idFile, mBar, qq,-1);
-                    countRecord +=1;
-                    updateUI(); // TODO передалать заполнение через добавление в адаптер
+                    Float qq = mDataModels.get(l).getQuantity();
+                    posID = mDataModels.get(l).getPosId();
+                    QueryQuantityDialog dialod = QueryQuantityDialog.newInstans(mDataModels.get(l).getName(),0f,qq,editRecord);
+                    dialod.setQuantityChangeListener(mQuantityChangeListener);
+                    dialod.show(getSupportFragmentManager(),"QQ");
                 }
-            } else {
-                Float qq = mDataModels.get(l).getQuantity();
-                posID = mDataModels.get(l).getPosId();
-                QueryQuantityDialog dialod = QueryQuantityDialog.newInstans(mDataModels.get(l).getName(),0f,qq,editRecord);
-                dialod.setQuantityChangeListener(mQuantityChangeListener);
-                dialod.show(getSupportFragmentManager(),"QQ");
+                mBarCode.setText("");
+                return true;
             }
-            mBarCode.setText("");
             return false;
         }
     };
