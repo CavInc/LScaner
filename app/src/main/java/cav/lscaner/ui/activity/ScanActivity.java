@@ -115,6 +115,9 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
     TextView.OnEditorActionListener mEditorActionListener = new TextView.OnEditorActionListener() {
         @Override
         public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+
+
+
             if (demo && countRecord >=10 ) {
                 new DemoDialog().show(getSupportFragmentManager(),"DEMO");
                 return false;
