@@ -97,13 +97,16 @@ public class WorkInFile {
             String str = "";
             String[] lm;
             // читаем содержимое
+            manager.getDB().open();
             while ((str = br.readLine()) != null) {
                 //Log.d("LC STR :", str);
                 if (str.length() != 0) {
                     lm = str.split(delim);
-                    manager.getDB().addStore(lm[0],lm[2]);
+                    //manager.getDB().addStore(lm[0],lm[2]);
+                    manager.getDB().addStoreMulti(lm[0],lm[2]);
                 }
             }
+            manager.getDB().close();
             br.close();
         } catch (Exception e) {
             e.printStackTrace();

@@ -111,6 +111,13 @@ public class DBConnect {
         database.insertWithOnConflict(DBHelper.STORE_PRODUCT,null,values,SQLiteDatabase.CONFLICT_REPLACE);
         close();
     }
+    // добавить в список товаров в мульти режиме
+    public void addStoreMulti(String barcode,String name){
+        ContentValues values = new ContentValues();
+        values.put("barcode",barcode);
+        values.put("name",name);
+        database.insert(DBHelper.STORE_PRODUCT,null,values);
+    }
 
     //Удалить файл
     public void deleteFile(int idFile){

@@ -606,7 +606,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         protected void onPostExecute(Void aVoid) {
             AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
             builder.setTitle(R.string.app_name)
-                    .setMessage("Выгружен файл :")
+                    .setMessage("Выгружен файл ....")
                     .setCancelable(false)
                     .setNegativeButton(R.string.button_ok, new DialogInterface.OnClickListener() {
                         @Override
@@ -743,10 +743,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             for (Object l:fileList){
                 File lx = (File) l;
-                System.out.println(lx.getId()+" "+lx.getName()+" "+lx.getDescription());
-                if (lx.getName().equals(fn)){
+                //System.out.println(lx.getId()+" "+lx.getName()+" "+lx.getDescription());
+                //Log.d(TAG,lx.getName().toUpperCase()+" "+fn.toUpperCase()+" "+lx.getName().toUpperCase().equals(fn.toUpperCase()));
+                if (lx.getName().toUpperCase().equals(fn.toUpperCase())){
                     fileId = lx.getId();
-                    fileName = lx.getName();
+                    //fileName = lx.getName();
                     break;
                 }
             }
