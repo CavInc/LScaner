@@ -20,7 +20,16 @@ public class Func {
         Calendar c = Calendar.getInstance();
         int h = c.get(Calendar.HOUR_OF_DAY);
         int m = c.get(Calendar.MINUTE);
-        return String.valueOf(h)+":"+String.valueOf(m);
+        return formatTime(h,m);
+    }
+
+    // собираем строку
+    public static String formatTime(int hour,int minute){
+        String h = String.valueOf(hour);
+        String m = String.valueOf(minute);
+        if (h.length()!=2) h = "0"+h;
+        if (m.length()!=2) m = "0"+m;
+        return h+":"+m;
     }
 
     public static String getDateToStr(Date date, String mask){
