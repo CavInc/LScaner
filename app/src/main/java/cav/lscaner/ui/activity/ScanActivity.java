@@ -158,11 +158,21 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
                         updateUI(); // TODO передалать заполнение через добавление в адаптер
                     }
                 } else {
-                    Float qq = mDataModels.get(l).getQuantity();
-                    posID = mDataModels.get(l).getPosId();
-                    QueryQuantityDialog dialod = QueryQuantityDialog.newInstans(mDataModels.get(l).getName(),0f,qq,editRecord);
-                    dialod.setQuantityChangeListener(mQuantityChangeListener);
-                    dialod.show(getSupportFragmentManager(),"QQ");
+                    if (!scaleFlg) {
+                        Float qq = mDataModels.get(l).getQuantity();
+                        posID = mDataModels.get(l).getPosId();
+                        QueryQuantityDialog dialod = QueryQuantityDialog.newInstans(mDataModels.get(l).getName(), 0f, qq, editRecord);
+                        dialod.setQuantityChangeListener(mQuantityChangeListener);
+                        dialod.show(getSupportFragmentManager(), "QQ");
+                    } else {
+                        Float oldqq = mDataModels.get(l).getQuantity();
+                        posID = mDataModels.get(l).getPosId();
+                        qq = qq+oldqq;
+                        mDataManager.getDB().addScannedPositon(idFile, mBar, qq,posID);
+                        countRecord +=1;
+                        updateUI(); // TODO передалать заполнение через добавление в адаптер
+                    }
+
                 }
                 mBarCode.setText("");
                 return true;
