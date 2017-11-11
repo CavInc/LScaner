@@ -103,7 +103,9 @@ public class WorkInFile {
                 if (str.length() != 0) {
                     lm = str.split(delim);
                     //manager.getDB().addStore(lm[0],lm[2]);
-                    manager.getDB().addStoreMulti(lm[0],lm[2]);
+                    if (lm[0].length()!=0) {
+                        manager.getDB().addStoreMulti(lm[0], lm[2]);
+                    }
                 }
             }
             manager.getDB().close();

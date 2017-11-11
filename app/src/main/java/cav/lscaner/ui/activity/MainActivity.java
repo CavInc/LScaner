@@ -311,10 +311,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
                 if (resultCode != RESULT_OK) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
                     builder.setTitle(R.string.app_name)
-                            .setMessage("This app requires Google Play Services. Please install " +
-                                    "Google Play Services on your device and relaunch this app.")
+                            .setMessage("Для этого приложения требуются сервисы Google Play. Пожалуйста, установите " +
+                                    "Службы Google Play на вашем устройстве и перезапустите это приложение.")
                             .setCancelable(false)
-                            .setNegativeButton("Close",new DialogInterface.OnClickListener(){
+                            .setNegativeButton(R.string.button_close,new DialogInterface.OnClickListener(){
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     dialog.cancel();
@@ -445,7 +445,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
             // Request the GET_ACCOUNTS permission via a user dialog
             EasyPermissions.requestPermissions(
                     this,
-                    "This app needs to access your Google account (via Contacts).",
+                    "Это приложение должно получить доступ к вашей учетной записи Google (через контакты).",
                     REQUEST_PERMISSION_GET_ACCOUNTS,
                     Manifest.permission.GET_ACCOUNTS);
         }
@@ -455,7 +455,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
     @AfterPermissionGranted(REQUEST_PERMISSINO_WRITE_STORAGE)
     private void getPermisionStorage(){
         if (!EasyPermissions.hasPermissions(this,Manifest.permission.WRITE_EXTERNAL_STORAGE)){
-            EasyPermissions.requestPermissions(this,"This app needs to access your SD",
+            EasyPermissions.requestPermissions(this,"Это приложение должно получить доступ к вашему SD",
                     REQUEST_PERMISSINO_WRITE_STORAGE,Manifest.permission.WRITE_EXTERNAL_STORAGE);
         }
     }
