@@ -48,6 +48,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import cav.lscaner.R;
@@ -63,7 +64,7 @@ import cav.lscaner.utils.WorkInFile;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener,AdapterView.OnItemClickListener,AdapterView.OnItemLongClickListener,
+public class MainActivity extends BaseActivity implements View.OnClickListener,AdapterView.OnItemClickListener,AdapterView.OnItemLongClickListener,
         EasyPermissions.PermissionCallbacks{
 
     private static final String TAG = "MAIN";
@@ -272,7 +273,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void showNoNetwork() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(R.string.app_name)
-                .setMessage("No network connection available")
+                .setMessage(R.string.no_network)
                 .setCancelable(false)
                 .setNegativeButton(R.string.button_close, new DialogInterface.OnClickListener() {
                     @Override
@@ -651,7 +652,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 } else {
                     Log.d(TAG,"Error "+mLastError);
-
+                    ErrorDialog(mLastError);
                 }
             } else {
                 Log.d(TAG,"Request cancelled.");
@@ -726,6 +727,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             String path = mDataManager.getStorageAppPath();
             filePath = new java.io.File(path,fn);
 
+            System.out.println(new Date());
+
             // получили список файлов
             List fileList = null;
             try {
@@ -755,9 +758,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 //mService.files().
 
                 Log.d(TAG,"НАШЛИ :"+fileId);
+                System.out.println(new Date());
                 try {
                     final FileOutputStream outputStream = new FileOutputStream(filePath);
                     mService.files().get(fileId).executeMediaAndDownloadTo(outputStream);
+                    System.out.println(new Date());
                     WorkInFile workInFile = new WorkInFile(mDataManager.getPreferensManager().getCodeFile());
                     workInFile.loadProductFile(fn,mDataManager);
                 } catch (IOException e) {
@@ -771,7 +776,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
 
         @Override
+        protected void onPreExecute() {
+            showProgress();
+        }
+
+        @Override
         protected void onPostExecute(Void aVoid) {
+            hideProgress();
+            System.out.println(new Date());
+
             AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
             builder.setTitle(R.string.app_name)
                     .setMessage("Скачан файл с товаром:"+fn)
@@ -800,7 +813,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 } else {
                     Log.d(TAG,"Error "+mLastError);
-
+                    ErrorDialog(mLastError);
                 }
             } else {
                 Log.d(TAG,"Request cancelled.");
@@ -818,6 +831,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             return rec;
         }
 
+    }
+
+    public void ErrorDialog(Exception e){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Ошибка")
+                .setMessage(e.getLocalizedMessage())
+                .setNegativeButton(R.string.button_close,null).create();
+        builder.show();
     }
 
 

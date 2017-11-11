@@ -4,6 +4,7 @@
     <string name="button_cancel">Отмена</string>
     <string name="action_settings">Настройки</string>
     <string name="button_close">Закрыть</string>
+    <string name="no_network">Нет подключения к сети</string>
 
     <string-array name="code_entries">
         <item>WIN-1251</item>

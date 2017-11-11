@@ -3,6 +3,8 @@
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
+              android:paddingRight="4dp"
+              android:paddingLeft="4dp"
               android:layout_marginBottom="@dimen/activity_vertical_margin"
     >
     <LinearLayout
@@ -26,7 +28,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/gray"/>
+        android:background="@color/app_orange_normal"/>
     <LinearLayout
         android:id="@+id/ss_dialog_del_item"
         android:orientation="horizontal"
