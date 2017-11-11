@@ -4,6 +4,8 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:layout_marginBottom="@dimen/activity_vertical_margin"
+              android:paddingLeft="4dp"
+              android:paddingRight="4dp"
     >
     <LinearLayout
         android:id="@+id/dialog_send_item"
@@ -26,7 +28,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/gray"/>
+        android:background="@color/app_orange_normal"/>
     <LinearLayout
         android:id="@+id/dialog_edit_item"
         android:orientation="horizontal"
@@ -48,7 +50,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/gray"/>
+        android:background="@color/app_orange_normal"/>
     <LinearLayout
         android:id="@+id/dialog_del_item"
         android:orientation="horizontal"
