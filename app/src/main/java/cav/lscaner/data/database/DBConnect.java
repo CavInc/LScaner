@@ -25,6 +25,11 @@ public class DBConnect {
             database.close();
         }
     }
+
+    public SQLiteDatabase getDatabase() {
+        return database;
+    }
+
     public boolean isOpen(){
         return database.isOpen();
     }

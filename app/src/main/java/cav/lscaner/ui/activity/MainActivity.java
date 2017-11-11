@@ -727,7 +727,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
             String path = mDataManager.getStorageAppPath();
             filePath = new java.io.File(path,fn);
 
-            System.out.println(new Date());
+            //System.out.println(new Date());
 
             // получили список файлов
             List fileList = null;
@@ -758,11 +758,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
                 //mService.files().
 
                 Log.d(TAG,"НАШЛИ :"+fileId);
-                System.out.println(new Date());
+               // System.out.println(new Date());
                 try {
                     final FileOutputStream outputStream = new FileOutputStream(filePath);
                     mService.files().get(fileId).executeMediaAndDownloadTo(outputStream);
-                    System.out.println(new Date());
+                    //System.out.println(new Date());
                     WorkInFile workInFile = new WorkInFile(mDataManager.getPreferensManager().getCodeFile());
                     workInFile.loadProductFile(fn,mDataManager);
                 } catch (IOException e) {
@@ -783,7 +783,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
         @Override
         protected void onPostExecute(Void aVoid) {
             hideProgress();
-            System.out.println(new Date());
+           // System.out.println(new Date());
 
             AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
             builder.setTitle(R.string.app_name)

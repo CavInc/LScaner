@@ -1,6 +1,7 @@
 package cav.lscaner.utils;
 
 import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import java.io.BufferedReader;
@@ -98,15 +99,22 @@ public class WorkInFile {
             String[] lm;
             // читаем содержимое
             manager.getDB().open();
-            while ((str = br.readLine()) != null) {
-                //Log.d("LC STR :", str);
-                if (str.length() != 0) {
-                    lm = str.split(delim);
-                    //manager.getDB().addStore(lm[0],lm[2]);
-                    if (lm[0].length()!=0) {
-                        manager.getDB().addStoreMulti(lm[0], lm[2]);
+            SQLiteDatabase db = manager.getDB().getDatabase();
+            db.beginTransaction();
+            try {
+                while ((str = br.readLine()) != null) {
+                    //Log.d("LC STR :", str);
+                    if (str.length() != 0) {
+                        lm = str.split(delim);
+                        //manager.getDB().addStore(lm[0],lm[2]);
+                        if (lm[0].length() != 0) {
+                            manager.getDB().addStoreMulti(lm[0], lm[2]);
+                        }
                     }
                 }
+                db.setTransactionSuccessful();
+            }finally {
+                db.endTransaction();
             }
             manager.getDB().close();
             br.close();
