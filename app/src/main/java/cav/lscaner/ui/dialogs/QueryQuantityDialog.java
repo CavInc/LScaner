@@ -102,7 +102,8 @@ public class QueryQuantityDialog extends DialogFragment implements View.OnClickL
             mName.setText("Новый");
         }
         if (mGetQuantity != null && mGetQuantity !=0) {
-            mQuantity.setText(String.valueOf(mGetQuantity));
+            //mQuantity.setText(String.valueOf(mGetQuantity));
+            mQuantity.setHint(String.valueOf(mGetQuantity));
         }
 
         if (mOldQuantity == 0) {
