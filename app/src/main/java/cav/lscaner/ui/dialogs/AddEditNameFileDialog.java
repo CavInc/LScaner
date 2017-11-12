@@ -7,10 +7,12 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import cav.lscaner.R;
 
@@ -42,6 +44,19 @@ public class AddEditNameFileDialog extends DialogFragment implements View.OnClic
         }
 
     }
+
+    TextView.OnEditorActionListener mNameActionListener = new TextView.OnEditorActionListener() {
+        @Override
+        public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+            if (mName.getText().length()!=0) {
+                if (mListener != null) {
+                    mListener.changeName(mName.getText().toString());
+                }
+            }
+            dismiss();
+            return false;
+        }
+    };
 
     public interface AddEditNameFileListener {
         public void changeName(String value);
@@ -78,6 +93,8 @@ public class AddEditNameFileDialog extends DialogFragment implements View.OnClic
 
         mName.setText(nameFile);
 
+        mName.setOnEditorActionListener(mNameActionListener);
+
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("Имя файла документа").setView(v);
                 /*
@@ -99,4 +116,6 @@ public class AddEditNameFileDialog extends DialogFragment implements View.OnClic
     public void setAddEditNameFileListener(AddEditNameFileListener listener){
         mListener = listener;
     }
+
+
 }
