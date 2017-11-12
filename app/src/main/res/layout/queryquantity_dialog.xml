@@ -20,7 +20,8 @@
         android:inputType="numberDecimal"
         android:imeOptions="actionDone"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:nextFocusDown="@+id/qq_bt_ok"/>
     <TextView
         android:id="@+id/qq_old_quantity"
         android:text="00 - старое количество"
