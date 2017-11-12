@@ -76,6 +76,9 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
             countRecord = mDataManager.getDB().getCountRecInFile(idFile);
         }
 
+        // хз
+        mListView.setOnFocusChangeListener(mOnFocusChangeListener);
+
         setupToolBar();
         updateUI();
 
@@ -118,6 +121,7 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
         public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
             if ((keyEvent != null && (keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER))
                     || actionId == EditorInfo.IME_ACTION_DONE){
+                Log.d("SA KEY", "EVENT KEY ");
 
                 if (demo && countRecord >=10 ) {
                     new DemoDialog().show(getSupportFragmentManager(),"DEMO");
@@ -175,7 +179,7 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
 
                 }
                 mBarCode.setText("");
-                return true;
+                return false;
             }
             return false;
         }
@@ -246,5 +250,12 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
                 .create();
         builder.show();
     }
+
+    View.OnFocusChangeListener mOnFocusChangeListener = new View.OnFocusChangeListener() {
+        @Override
+        public void onFocusChange(View view, boolean status) {
+            Log.d("SC па",view.toString());
+        }
+    };
 
 }
