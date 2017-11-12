@@ -254,7 +254,8 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
     View.OnFocusChangeListener mOnFocusChangeListener = new View.OnFocusChangeListener() {
         @Override
         public void onFocusChange(View view, boolean status) {
-            Log.d("SC па",view.toString());
+            Log.d("SA па","Change focus - "+status);
+            mBarCode.requestFocus();
         }
     };
 

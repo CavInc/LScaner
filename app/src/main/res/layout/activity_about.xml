@@ -14,7 +14,7 @@
             android:layout_gravity="top"
             android:src="@drawable/logonewfull"
             android:layout_width="wrap_content"
-            android:layout_height="317px"/>
+            android:layout_height="@dimen/height_about_logo"/>
     <View
         android:id="@+id/ab_spliter"
         android:layout_width="match_parent"
