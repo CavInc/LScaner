@@ -1,5 +1,6 @@
 package cav.lscaner.utils;
 
+import java.math.BigDecimal;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
@@ -89,6 +90,22 @@ public class Func {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public static BigDecimal roundUp(double value, int digits){
+        return new BigDecimal(""+value).setScale(digits, BigDecimal.ROUND_HALF_UP);
+    }
+
+    public static BigDecimal roundUp(float value, int digits){
+        return new BigDecimal(""+value).setScale(digits, BigDecimal.ROUND_HALF_UP);
+    }
+
+    public static float round(float number, int scale) {
+        int pow = 10;
+        for (int i = 1; i < scale; i++)
+            pow *= 10;
+        float tmp = number * pow;
+        return (float) (int) ((tmp - (int) tmp) >= 0.5f ? tmp + 1 : tmp) / pow;
     }
 
 }

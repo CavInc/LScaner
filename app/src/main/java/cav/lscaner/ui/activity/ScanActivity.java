@@ -26,6 +26,7 @@ import cav.lscaner.ui.dialogs.DemoDialog;
 import cav.lscaner.ui.dialogs.QueryQuantityDialog;
 import cav.lscaner.ui.dialogs.SelectScanDialog;
 import cav.lscaner.utils.ConstantManager;
+import cav.lscaner.utils.Func;
 
 public class ScanActivity extends AppCompatActivity implements AdapterView.OnItemLongClickListener{
     private final int MAX_REC = 10;  // количество записей в демо версии
@@ -172,6 +173,7 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
                         Float oldqq = mDataModels.get(l).getQuantity();
                         posID = mDataModels.get(l).getPosId();
                         qq = qq+oldqq;
+                        qq = Func.round(qq,3);
                         mDataManager.getDB().addScannedPositon(idFile, mBar, qq,posID);
                         countRecord +=1;
                         updateUI(); // TODO передалать заполнение через добавление в адаптер
