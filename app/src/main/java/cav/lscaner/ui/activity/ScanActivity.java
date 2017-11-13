@@ -122,14 +122,14 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
         public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
             if ((keyEvent != null && (keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER))
                     || actionId == EditorInfo.IME_ACTION_DONE){
-                Log.d("SA KEY", "EVENT KEY ");
+                //Log.d("SA KEY", "EVENT KEY ");
 
                 if (demo && countRecord >=10 ) {
                     new DemoDialog().show(getSupportFragmentManager(),"DEMO");
                     return false;
                 }
 
-                Log.d("SA",textView.getText().toString());
+               // Log.d("SA",textView.getText().toString());
                 mBar = textView.getText().toString();
                 if (mBar.length() == 0) return true;
                 qq = 1f;
@@ -138,7 +138,7 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
                 editRecord = false;
                 // выкидываем EAN 8 так как его весовым у нас быть не может
                 if (prefixScale.contains(mBar.substring(0,2)) && mBar.length() == 13){
-                    Log.d("SA","SCALE KODE");
+                   // Log.d("SA","SCALE KODE");
                     String lq = mBar.substring(sizeScale,mBar.length()-1);
                     lq = lq.substring(0,2)+"."+lq.substring(2);
                     mBar = mBar.substring(0,sizeScale);
@@ -256,7 +256,7 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
     View.OnFocusChangeListener mOnFocusChangeListener = new View.OnFocusChangeListener() {
         @Override
         public void onFocusChange(View view, boolean status) {
-            Log.d("SA па","Change focus - "+status);
+           // Log.d("SA па","Change focus - "+status);
             mBarCode.requestFocus();
         }
     };

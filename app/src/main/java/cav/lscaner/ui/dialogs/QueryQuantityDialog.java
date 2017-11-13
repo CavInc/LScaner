@@ -149,7 +149,7 @@ public class QueryQuantityDialog extends DialogFragment implements View.OnClickL
         public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
             if ((keyEvent != null && (keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER))
                     || actionId == EditorInfo.IME_ACTION_DONE){
-                Log.d("SA KEY", " qq EVENT KEY ");
+               // Log.d("SA KEY", " qq EVENT KEY ");
                 storeQuantiy();
                 dismiss();
             }

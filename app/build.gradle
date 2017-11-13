@@ -19,7 +19,7 @@ android {
             versionNameSuffix "-debug"
         }
         release {
-            minifyEnabled true
+            minifyEnabled false
             shrinkResources true
             zipAlignEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
@@ -30,10 +30,10 @@ android {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
-    compile('com.google.api-client:google-api-client-android:1.22.0') {
+    compile('com.google.api-client:google-api-client-android:1.23.0') {
         exclude group: 'org.apache.httpcomponents'
     }
-    compile('com.google.apis:google-api-services-drive:v3-rev52-1.22.0') {
+    compile('com.google.apis:google-api-services-drive:v3-rev90-1.23.0') {
         exclude group: 'org.apache.httpcomponents'
     }
     compile 'com.android.support:appcompat-v7:25.3.1'
