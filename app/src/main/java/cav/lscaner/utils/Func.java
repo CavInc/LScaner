@@ -1,5 +1,7 @@
 package cav.lscaner.utils;
 
+import com.google.api.client.util.DateTime;
+
 import java.math.BigDecimal;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -36,6 +38,14 @@ public class Func {
     public static String getDateToStr(Date date, String mask){
         SimpleDateFormat format = new SimpleDateFormat(mask);
         return format.format(date);
+    }
+
+    public static String getDateTimeToStr(DateTime date,String mask){
+        long ml = date.getValue();
+        Date xm = new Date(ml);
+
+        SimpleDateFormat format = new SimpleDateFormat(mask);
+        return format.format(xm);
     }
 
     public static Date getStrToDate(String date,String mask){

@@ -711,6 +711,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
         private String fn = null;
         private java.io.File filePath;
 
+        private DateTime createDate;
+        private DateTime modifidDate;
+
         public RequestDataTask(GoogleAccountCredential credential, String fn){
             this.fn = fn;
 
@@ -752,6 +755,16 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
                 if (lx.getName().toUpperCase().equals(fn.toUpperCase())){
                     fileId = lx.getId();
                     //fileName = lx.getName();
+                    try {
+                        File fxm = mService.files().get(fileId).setFields("createdTime,modifiedTime").execute();
+                        createDate = fxm.getCreatedTime();
+                        modifidDate = fxm.getModifiedTime();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        mLastError = e;
+                        cancel(true);
+                        return null;
+                    }
                     break;
                 }
             }
@@ -788,7 +801,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
 
             AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
             builder.setTitle(R.string.app_name)
-                    .setMessage("Скачан файл с товаром:"+fn)
+                    .setMessage("Скачан файл с товаром:"+fn+"\nсозданный : "+Func.getDateTimeToStr(createDate,"dd.MM.yyyy HH:mm")
+                            +"\nи измененный : "+Func.getDateTimeToStr(modifidDate,"dd.MM.yyyy HH:mm"))
                     .setCancelable(false)
                     .setNegativeButton(R.string.button_ok, new DialogInterface.OnClickListener() {
                         @Override
