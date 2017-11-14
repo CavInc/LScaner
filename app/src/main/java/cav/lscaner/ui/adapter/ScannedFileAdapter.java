@@ -1,6 +1,7 @@
 package cav.lscaner.ui.adapter;
 
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,6 +36,7 @@ public class ScannedFileAdapter extends ArrayAdapter<ScannedFileModel> {
             holder.mName = (TextView) row.findViewById(R.id.sd_file_name);
             holder.mDate = (TextView) row.findViewById(R.id.sd_file_date);
             holder.mTime = (TextView) row.findViewById(R.id.sd_file_time);
+            holder.mType = (TextView) row.findViewById(R.id.sd_file_type);
             row.setTag(holder);
         }else{
             holder = (ViewHolder)row.getTag();
@@ -44,6 +46,14 @@ public class ScannedFileAdapter extends ArrayAdapter<ScannedFileModel> {
         holder.mName.setText(record.getName());
         holder.mDate.setText(Func.getDateToStr(record.getCreateDate(),"dd.MM.yyyy"));
         holder.mTime.setText(record.getTime());
+        if (record.getType() == 0 ){
+            holder.mType.setText("Товар");
+            holder.mType.setTextColor(ContextCompat.getColor(getContext(),R.color.app_green));
+
+        } else {
+            holder.mType.setText("ЕГАИС");
+            holder.mType.setTextColor(ContextCompat.getColor(getContext(),R.color.app_blue));
+        }
         return row;
     }
 
@@ -56,6 +66,7 @@ public class ScannedFileAdapter extends ArrayAdapter<ScannedFileModel> {
         public TextView mName;
         public TextView mDate;
         public TextView mTime;
+        public TextView mType;
 
     }
 }

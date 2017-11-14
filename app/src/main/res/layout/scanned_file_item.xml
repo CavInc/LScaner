@@ -31,6 +31,10 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"/>
     </LinearLayout>
-
-
+    <TextView
+        android:id="@+id/sd_file_type"
+        android:text="Тип файла"
+        android:textSize="18sp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
 </LinearLayout>
