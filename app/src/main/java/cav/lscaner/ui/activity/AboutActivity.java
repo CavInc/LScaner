@@ -8,6 +8,7 @@ import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import cav.lscaner.BuildConfig;
 import cav.lscaner.R;
 import cav.lscaner.data.managers.DataManager;
 import cav.lscaner.utils.Func;
@@ -46,6 +47,7 @@ public class AboutActivity extends AppCompatActivity {
         }
 
         // TODO добавить информацию о версии
+       mVersion.setText("Версия : "+BuildConfig.VERSION_NAME);
 
 
         setupToolbar();
