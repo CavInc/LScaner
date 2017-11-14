@@ -20,6 +20,8 @@ public class AboutActivity extends AppCompatActivity {
 
     private String deviceId;
 
+    private TextView mVersion;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,6 +31,8 @@ public class AboutActivity extends AppCompatActivity {
 
         mDeviceId = (TextView) findViewById(R.id.ab_device_code);
         mSerialCode = (EditText) findViewById(R.id.ab_code_et);
+
+        mVersion = (TextView) findViewById(R.id.ab_version);
 
         deviceId = mDataManager.getAndroidID();
         deviceId = deviceId.substring(deviceId.length()-8);
@@ -40,6 +44,9 @@ public class AboutActivity extends AppCompatActivity {
         if (mDataManager.getPreferensManager().getRegistrationNumber() != null){
             mSerialCode.setText(mDataManager.getPreferensManager().getRegistrationNumber());
         }
+
+        // TODO добавить информацию о версии
+
 
         setupToolbar();
     }

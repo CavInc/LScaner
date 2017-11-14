@@ -33,9 +33,18 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/activity_vertical_margin"/>
     <TextView
+        android:id="@+id/ab_version"
+        android:layout_below="@+id/ab_mess"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textStyle="bold"
+        android:textColor="@android:color/black"
+        android:text="Версия "/>
+    <TextView
         android:id="@+id/ab_code_head"
         android:text="Код активации:"
-        android:layout_below="@+id/ab_mess"
+        android:layout_below="@+id/ab_version"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
     <EditText
