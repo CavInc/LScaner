@@ -97,7 +97,8 @@ public class DataManager{
             rec.add(new ScannedFileModel(cursor.getInt(cursor.getColumnIndex("id")),
                     cursor.getString(cursor.getColumnIndex("name_file")),
                     Func.getStrToDate(cursor.getString(cursor.getColumnIndex("date")),"yyyy-MM-dd"),
-                    cursor.getString(cursor.getColumnIndex("time"))));
+                    cursor.getString(cursor.getColumnIndex("time")),
+                    cursor.getInt(cursor.getColumnIndex("type"))));
         }
         mDB.close();
         return rec;

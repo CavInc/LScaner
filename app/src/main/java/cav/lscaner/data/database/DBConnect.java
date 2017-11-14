@@ -37,15 +37,18 @@ public class DBConnect {
     //-------------------- Запросы к базе ------------------------------
 
     public Cursor getScannedFile(){
-        return database.query(DBHelper.SCAN_TABLE,new String [] {"id","name_file","date","time"},null,null,null,null,"date");
+        return database.query(DBHelper.SCAN_TABLE,
+                new String [] {"id","name_file","date","time","type"},
+                null,null,null,null,"date");
     }
 
-    public void addFileName(String name,String date,String time,int idFile){
+    public void addFileName(String name,String date,String time,int idFile,int type_file){
         open();
         ContentValues values = new ContentValues();
         values.put("name_file",name);
         values.put("date",date);
         values.put("time",time);
+        values.put("type",type_file);
         if (idFile != -1) {
             values.put("id",idFile);
         }

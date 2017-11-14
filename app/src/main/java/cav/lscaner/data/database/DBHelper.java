@@ -32,13 +32,17 @@ public class DBHelper extends SQLiteOpenHelper {
         if (oldVersion < 1 ){
             db.execSQL("create table "+STORE_PRODUCT+"("+
                     "barcode text not null primary key,"+
-                    "name text)");
+                    "name text,"+
+                    "articul text,"+
+                    "price float default 0,"+"" +
+                    "egais text)");
 
             db.execSQL("create table "+SCAN_TABLE+"("+
                     "id integer not null primary key AUTOINCREMENT," +
                     "name_file text,"+
-                    "date text,"+"" +
-                    "time text)");
+                    "date text,"+
+                    "time text,"+
+                    "type integer default 0)"); // 0 - товары 1 -егаис
 
             db.execSQL("create table "+SCAN_TABLE_SPEC+"("+
                     "head_id integer not null,"+

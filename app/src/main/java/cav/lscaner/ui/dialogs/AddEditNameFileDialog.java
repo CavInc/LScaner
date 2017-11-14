@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioButton;
 import android.widget.TextView;
 
 import cav.lscaner.R;
@@ -29,14 +30,13 @@ public class AddEditNameFileDialog extends DialogFragment implements View.OnClic
 
     private String nameFile;
 
+    private RadioButton mTovar;
+    private RadioButton mEGAIS;
+
     @Override
     public void onClick(View view) {
         if (view.getId() == R.id.dialog_file_bt_ok){
-            if (mName.getText().length()!=0) {
-                if (mListener != null) {
-                    mListener.changeName(mName.getText().toString());
-                }
-            }
+            resultReturn();
             dismiss();
         }
         if (view.getId() == R.id.dialog_file_bt_cancel) {
@@ -48,18 +48,28 @@ public class AddEditNameFileDialog extends DialogFragment implements View.OnClic
     TextView.OnEditorActionListener mNameActionListener = new TextView.OnEditorActionListener() {
         @Override
         public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-            if (mName.getText().length()!=0) {
-                if (mListener != null) {
-                    mListener.changeName(mName.getText().toString());
-                }
-            }
+            resultReturn();
             dismiss();
             return false;
         }
     };
 
+    private void resultReturn(){
+        if (mName.getText().length()!=0) {
+            if (mListener != null) {
+                int type = 0;
+                if (mTovar.isChecked()) {
+                    type = 0;
+                }else {
+                    type = 1;
+                }
+                mListener.changeName(mName.getText().toString(),type);
+            }
+        }
+    }
+
     public interface AddEditNameFileListener {
-        public void changeName(String value);
+        public void changeName(String value,int type_file);
     }
 
     public static AddEditNameFileDialog newInstance(String name){
@@ -87,6 +97,9 @@ public class AddEditNameFileDialog extends DialogFragment implements View.OnClic
         mName = (EditText) v.findViewById(R.id.dialog_file_name);
         mCancelBt = (Button) v.findViewById(R.id.dialog_file_bt_cancel);
         mOkBt = (Button) v.findViewById(R.id.dialog_file_bt_ok);
+
+        mTovar = (RadioButton) v.findViewById(R.id.dialog_tovar);
+        mEGAIS = (RadioButton) v.findViewById(R.id.dialog_egais);
 
         mCancelBt.setOnClickListener(this);
         mOkBt.setOnClickListener(this);

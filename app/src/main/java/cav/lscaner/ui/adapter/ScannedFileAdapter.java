@@ -56,5 +56,6 @@ public class ScannedFileAdapter extends ArrayAdapter<ScannedFileModel> {
         public TextView mName;
         public TextView mDate;
         public TextView mTime;
+
     }
 }

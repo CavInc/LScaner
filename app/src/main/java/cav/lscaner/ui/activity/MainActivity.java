@@ -181,12 +181,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
 
     private AddEditNameFileDialog.AddEditNameFileListener mAddEditNameFileListener = new AddEditNameFileDialog.AddEditNameFileListener() {
         @Override
-        public void changeName(String value) {
+        public void changeName(String value, int type_file) {
             String cdate = Func.getNowDate("yyyy-MM-dd");
             String ctime = Func.getNowTime();
             int pos = -1;
             if (!newRecord) pos = selModel.getId();
-            mDataManager.getDB().addFileName(value,cdate,ctime,pos);
+            mDataManager.getDB().addFileName(value,cdate,ctime,pos,type_file);
             updateUI();
         }
     };
