@@ -3,6 +3,7 @@ package cav.lscaner.utils;
 import com.google.api.client.util.DateTime;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
@@ -117,5 +118,18 @@ public class Func {
         float tmp = number * pow;
         return (float) (int) ((tmp - (int) tmp) >= 0.5f ? tmp + 1 : tmp) / pow;
     }
+
+    // 20N00001CGUMZYCB99J1NKN31105001000056NQQMS5VP4HTF5SB46ZSQQJD8BNJP891
+    // 22N00000XOKBM724XT22N0S41008003008626KE949YKAWNGY007FGGV2N0ER26EY6TJ
+
+    // выделяет алко код
+    public static String toEGAISAlcoCode(String pdf417){
+        String verPCEgais = pdf417.substring(0,2);
+        String rawCode = pdf417.substring(3,19);
+        BigInteger big = new BigInteger(rawCode, 36);
+        return String.format("%019d",big);
+    }
+
+
 
 }
