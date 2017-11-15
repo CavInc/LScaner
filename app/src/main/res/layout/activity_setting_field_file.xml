@@ -11,6 +11,7 @@
     tools:context="cav.lscaner.ui.activity.SettingFieldFileActivity">
     <TextView
         android:id="@+id/sff_msg"
+        android:text="Укажите номера столбцов из которых будет братся информация"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
     <GridLayout
@@ -24,6 +25,8 @@
             android:id="@+id/sff_barcode"
             android:inputType="numberDecimal"
             android:imeOptions="actionNext"
+            android:textStyle="bold"
+            android:textSize="20sp"
             android:layout_gravity="right"/>
         <TextView
             android:text="Наименование"/>
@@ -31,6 +34,8 @@
             android:id="@+id/sff_name"
             android:inputType="numberDecimal"
             android:imeOptions="actionNext"
+            android:textStyle="bold"
+            android:textSize="20sp"
             android:layout_gravity="right"/>
         <TextView
             android:text="Код товара"/>
@@ -38,6 +43,8 @@
             android:id="@+id/sff_code"
             android:inputType="numberDecimal"
             android:imeOptions="actionNext"
+            android:textStyle="bold"
+            android:textSize="20sp"
             android:layout_gravity="right"/>
         <TextView
             android:text="Цена"/>
@@ -45,6 +52,8 @@
             android:id="@+id/sff_price"
             android:imeOptions="actionNext"
             android:inputType="number"
+            android:textStyle="bold"
+            android:textSize="20sp"
             android:layout_gravity="right"/>
         <TextView
             android:text="Код Егаис"/>
@@ -52,6 +61,8 @@
             android:id="@+id/sff_egais"
             android:inputType="number"
             android:imeOptions="actionDone"
+            android:textStyle="bold"
+            android:textSize="20sp"
             android:layout_gravity="right"/>
     </GridLayout>
 

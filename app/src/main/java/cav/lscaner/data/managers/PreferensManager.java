@@ -2,14 +2,23 @@ package cav.lscaner.data.managers;
 
 import android.content.SharedPreferences;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import cav.lscaner.data.models.FileFieldModel;
 import cav.lscaner.utils.ConstantManager;
 import cav.lscaner.utils.LScanerApp;
 
 public class PreferensManager {
+    private static final String FIELD_BARCODE = "FIELD_BARCODE";
+    private static final String FIELD_NAME = "FIELD_NAME";
+    private static final String FIELD_ARTICUL = "FILED_ARTICUL";
+    private static final String FIELD_PRICE = "FIELD_PRICE";
+    private static final String FIELD_EGAIS = "FIELD_EGAIS";
     private SharedPreferences mSharedPreferences;
 
     public PreferensManager() {
@@ -111,6 +120,28 @@ public class PreferensManager {
     }
 
     // сохраняем id файла
+
+    // настроки полей
+    public FileFieldModel getFieldFileModel(){
+        FileFieldModel md = new FileFieldModel(
+                mSharedPreferences.getInt(FIELD_BARCODE,1),
+                mSharedPreferences.getInt(FIELD_NAME,3),
+                mSharedPreferences.getInt(FIELD_ARTICUL,-1),
+                mSharedPreferences.getInt(FIELD_PRICE,-1),
+                mSharedPreferences.getInt(FIELD_EGAIS,1)
+        );
+        return md;
+    }
+
+    public void setFieldFileModel(FileFieldModel field){
+        SharedPreferences.Editor editor = mSharedPreferences.edit();
+        editor.putInt(FIELD_BARCODE,field.getBar());
+        editor.putInt(FIELD_NAME,field.getName());
+        editor.putInt(FIELD_ARTICUL,field.getArticul());
+        editor.putInt(FIELD_PRICE,field.getPrice());
+        editor.putInt(FIELD_EGAIS,field.getEGAIS());
+        editor.apply();
+    }
 
 
 }
