@@ -10,7 +10,7 @@ android {
         targetSdkVersion 25
         versionCode 11
         versionName "2.0"
-        project.ext.set("archivesBaseName", "LScaner-" + defaultConfig.versionName);
+        project.ext.set("archivesBaseName", "LScanerV-" + defaultConfig.versionName);
         resConfigs "en", "ru"
     }
     buildTypes {
