@@ -36,12 +36,6 @@
             android:entryValues="@array/code_entry_values"
             android:defaultValue="WIN-1251"
             android:summary=""/>
-        <PreferenceScreen
-            android:title="Настройки полей файла">
-            <Preference
-                android:widgetLayout="@layout/pref_button"
-                />
-        </PreferenceScreen>
     </PreferenceCategory>
 
 </PreferenceScreen>

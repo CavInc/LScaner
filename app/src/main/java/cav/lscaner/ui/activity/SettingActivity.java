@@ -12,13 +12,12 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
 import android.widget.LinearLayout;
 
 import cav.lscaner.R;
 import cav.lscaner.data.managers.DataManager;
 
-public class SettingActivity extends PreferenceActivity implements View.OnClickListener{
+public class SettingActivity extends PreferenceActivity {
     private DataManager mDataManager;
 
     private EditTextPreference mScaleSize;
@@ -28,8 +27,6 @@ public class SettingActivity extends PreferenceActivity implements View.OnClickL
     private EditTextPreference mScalePrefix;
 
     private ListPreference mCodeFile;
-
-    private Button mButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +53,6 @@ public class SettingActivity extends PreferenceActivity implements View.OnClickL
         int code = mDataManager.getPreferensManager().getCodeFile();
         String[] hL = getResources().getStringArray(R.array.code_entries);
         mCodeFile.setSummary(hL[code-1]);
-
 
         mScaleSize.setSummary(String.valueOf(mDataManager.getPreferensManager().getSizeScale()));
         mFileDelimeter.setSummary(mDataManager.getPreferensManager().getDelimiterStoreFile());
