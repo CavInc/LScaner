@@ -200,6 +200,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
         Intent intent = new Intent(this,ScanActivity.class);
         intent.putExtra(ConstantManager.SELECTED_FILE,mFileAdapter.getItem(position).getId());
         intent.putExtra(ConstantManager.SELECTED_FILE_NAME,mFileAdapter.getItem(position).getName());
+        intent.putExtra(ConstantManager.SELECTED_FILE_TYPE,mFileAdapter.getItem(position).getType());
         startActivity(intent);
     }
 

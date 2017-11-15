@@ -5,6 +5,8 @@ import android.content.DialogInterface;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.InputFilter;
+import android.text.InputType;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
@@ -49,6 +51,7 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
     private boolean editRecord = false;
     private boolean demo = true;
     private int countRecord = 0;
+    private int fileType = 0;
 
 
     @Override
@@ -63,6 +66,7 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
 
         idFile = getIntent().getIntExtra(ConstantManager.SELECTED_FILE,-1);
         mFileName = getIntent().getStringExtra(ConstantManager.SELECTED_FILE_NAME);
+        fileType = getIntent().getIntExtra(ConstantManager.SELECTED_FILE_TYPE,ConstantManager.FILE_TYPE_PRODUCT);
 
         mBarCode = (EditText) findViewById(R.id.barcode_et);
 
@@ -75,6 +79,12 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
         demo = mDataManager.getPreferensManager().getDemo();
         if (demo) {
             countRecord = mDataManager.getDB().getCountRecInFile(idFile);
+        }
+
+        if (fileType == ConstantManager.FILE_TYPE_EGAIS) {
+            mBarCode.setInputType(InputType.TYPE_CLASS_TEXT);
+            mBarCode.setFilters(new InputFilter[] {
+                    new InputFilter.LengthFilter(68)});
         }
 
         // хз
@@ -136,20 +146,36 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
                 posID = -1;
                 boolean scaleFlg = false;
                 editRecord = false;
-                // выкидываем EAN 8 так как его весовым у нас быть не может
-                if (prefixScale.contains(mBar.substring(0,2)) && mBar.length() == 13){
-                   // Log.d("SA","SCALE KODE");
-                    String lq = mBar.substring(sizeScale,mBar.length()-1);
-                    lq = lq.substring(0,2)+"."+lq.substring(2);
-                    mBar = mBar.substring(0,sizeScale);
-                    qq = Float.parseFloat(lq);
-                    scaleFlg = true;
+
+                if (fileType == ConstantManager.FILE_TYPE_EGAIS){
+                    if (mBar.startsWith("1")) {
+                        // марка ФСМ
+                        mBarCode.setText("");
+                        return false;
+                    }
+                    mBar = Func.toEGAISAlcoCode(mBar);
+                } else {
+                    // выкидываем EAN 8 так как его весовым у нас быть не может
+                    if (prefixScale.contains(mBar.substring(0,2)) && mBar.length() == 13){
+                        // Log.d("SA","SCALE KODE");
+                        String lq = mBar.substring(sizeScale,mBar.length()-1);
+                        lq = lq.substring(0,2)+"."+lq.substring(2);
+                        mBar = mBar.substring(0,sizeScale);
+                        qq = Float.parseFloat(lq);
+                        scaleFlg = true;
+                    }
                 }
 
                 int l = mDataModels.indexOf(new ScannedDataModel(-1,-1,mBar,"", 0.0f));
                 if (l == -1) {
                     // нифига не нашли в уже добавленых смотрим в базе
-                    StoreProductModel product = mDataManager.getDB().searchStore(mBar);
+                    StoreProductModel product = null;
+                    if (fileType == ConstantManager.FILE_TYPE_EGAIS) {
+                        product = mDataManager.getDB().searchStoreEgais(mBar);
+                    } else {
+                        product = mDataManager.getDB().searchStore(mBar);
+                    }
+
                     if (product == null) {
                         product = new StoreProductModel(mBar,"Новый");
                     }
@@ -178,10 +204,8 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
                         countRecord +=1;
                         updateUI(); // TODO передалать заполнение через добавление в адаптер
                     }
-
                 }
                 mBarCode.setText("");
-                return false;
             }
             return false;
         }

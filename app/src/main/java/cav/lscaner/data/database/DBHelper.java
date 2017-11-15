@@ -37,6 +37,8 @@ public class DBHelper extends SQLiteOpenHelper {
                     "price float default 0,"+"" +
                     "egais text)");
 
+            db.execSQL("CREATE INDEX \""+STORE_PRODUCT+"_EA\" on "+STORE_PRODUCT+" (egais ASC)");
+
             db.execSQL("create table "+SCAN_TABLE+"("+
                     "id integer not null primary key AUTOINCREMENT," +
                     "name_file text,"+

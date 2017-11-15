@@ -102,6 +102,15 @@ public class DBConnect {
         return model;
     }
 
+    // поиск по АЛКОКОДУ
+    public StoreProductModel searchStoreEgais(String alcocode){
+        StoreProductModel model = null;
+        open();
+
+        close();
+        return model;
+    }
+
     // очистить списко товаров
 
     public void deleteStore(){
