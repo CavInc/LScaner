@@ -16,6 +16,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 
 import cav.lscaner.data.managers.DataManager;
+import cav.lscaner.data.models.FileFieldModel;
 import cav.lscaner.data.models.ScannedDataModel;
 
 public class WorkInFile {
@@ -89,6 +90,8 @@ public class WorkInFile {
 
         // удаляем старые данные
         manager.getDB().deleteStore();
+        // получили список номеров полей
+        FileFieldModel fieldFile = manager.getPreferensManager().getFieldFileModel();
 
         try {
             InputStreamReader inputStreamReader = new InputStreamReader(

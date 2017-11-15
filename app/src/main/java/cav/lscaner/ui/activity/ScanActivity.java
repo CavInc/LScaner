@@ -148,7 +148,7 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
                 editRecord = false;
 
                 if (fileType == ConstantManager.FILE_TYPE_EGAIS){
-                    if (mBar.startsWith("1")) {
+                    if (mBar.startsWith("1") || mBar.length() < 14) {
                         // марка ФСМ
                         mBarCode.setText("");
                         return false;
