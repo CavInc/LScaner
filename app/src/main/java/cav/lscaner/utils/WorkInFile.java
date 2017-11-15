@@ -108,8 +108,11 @@ public class WorkInFile {
                 while ((str = br.readLine()) != null) {
                     //Log.d("LC STR :", str);
                     if (str.length() != 0) {
+                        str = str.replaceAll(delim+delim,delim+" "+delim);
                         lm = str.split(delim);
                         //manager.getDB().addStore(lm[0],lm[2]);
+                        // обработать поля здесь или передать их в процедуру дальшн  ?
+                        // что делать с товаром без кода но с егаис маркой.
                         if (lm[0].length() != 0) {
                             manager.getDB().addStoreMulti(lm[0], lm[2]);
                         }
