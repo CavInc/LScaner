@@ -21,22 +21,38 @@
         <TextView
             android:text="Штрих-код"/>
         <EditText
+            android:id="@+id/sff_barcode"
+            android:inputType="numberDecimal"
+            android:imeOptions="actionNext"
             android:layout_gravity="right"/>
         <TextView
             android:text="Наименование"/>
         <EditText
+            android:id="@+id/sff_name"
+            android:inputType="numberDecimal"
+            android:imeOptions="actionNext"
             android:layout_gravity="right"/>
         <TextView
             android:text="Код товара"/>
         <EditText
+            android:id="@+id/sff_code"
+            android:inputType="numberDecimal"
+            android:imeOptions="actionNext"
             android:layout_gravity="right"/>
         <TextView
             android:text="Цена"/>
         <EditText
+            android:id="@+id/sff_price"
+            android:imeOptions="actionNext"
+            android:inputType="number"
             android:layout_gravity="right"/>
         <TextView
             android:text="Код Егаис"/>
-
+        <EditText
+            android:id="@+id/sff_egais"
+            android:inputType="number"
+            android:imeOptions="actionDone"
+            android:layout_gravity="right"/>
     </GridLayout>
 
 </RelativeLayout>

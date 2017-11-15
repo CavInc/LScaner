@@ -1,5 +1,6 @@
 package cav.lscaner.ui.activity;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
@@ -11,12 +12,13 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
 
 import cav.lscaner.R;
 import cav.lscaner.data.managers.DataManager;
 
-public class SettingActivity extends PreferenceActivity {
+public class SettingActivity extends PreferenceActivity implements View.OnClickListener{
     private DataManager mDataManager;
 
     private EditTextPreference mScaleSize;
@@ -26,6 +28,8 @@ public class SettingActivity extends PreferenceActivity {
     private EditTextPreference mScalePrefix;
 
     private ListPreference mCodeFile;
+
+    private Button mButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
