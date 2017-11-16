@@ -106,7 +106,12 @@ public class DBConnect {
     public StoreProductModel searchStoreEgais(String alcocode){
         StoreProductModel model = null;
         open();
-
+        Cursor cursor = database.query(DBHelper.STORE_PRODUCT,new String[]{"egais","name"},"egais='"+alcocode+"'",null,null,null,null);
+        cursor.moveToFirst();
+        if (cursor.getCount() != 0) {
+            model = new StoreProductModel(cursor.getString(cursor.getColumnIndex("egais")),
+                    cursor.getString(cursor.getColumnIndex("name")));
+        }
         close();
         return model;
     }

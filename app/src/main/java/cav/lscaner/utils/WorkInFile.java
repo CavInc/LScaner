@@ -133,6 +133,7 @@ public class WorkInFile {
                         } else {
                             egais = lm[fieldFile.getEGAIS()-1];
                         }
+                        //Log.d("WK",lm[fieldFile.getEGAIS()-1]);
                         if (lm[fieldFile.getBar()].length() != 0) {
                             //Log.d("WE",lm[fieldFile.getBar()-1]+lm[fieldFile.getName()-1]);
                             manager.getDB().addStoreMulti(lm[fieldFile.getBar()-1], lm[fieldFile.getName()-1],articul,price,egais);
