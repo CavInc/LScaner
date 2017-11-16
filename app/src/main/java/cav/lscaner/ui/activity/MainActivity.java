@@ -822,6 +822,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
         @Override
         protected void onCancelled() {
             if (mLastError != null) {
+                hideProgress();
                 if (mLastError instanceof GooglePlayServicesAvailabilityIOException) {
                     showGooglePlayServicesAvailabilityErrorDialog(
                             ((GooglePlayServicesAvailabilityIOException) mLastError)
