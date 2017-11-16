@@ -100,6 +100,9 @@ public class WorkInFile {
             BufferedReader br = new BufferedReader(inputStreamReader);
             String str = "";
             String[] lm;
+            String articul = null;
+            String egais = null;
+            Double price = 0.0;
             // читаем содержимое
             manager.getDB().open();
             SQLiteDatabase db = manager.getDB().getDatabase();
@@ -113,8 +116,24 @@ public class WorkInFile {
                         //manager.getDB().addStore(lm[0],lm[2]);
                         // обработать поля здесь или передать их в процедуру дальшн  ?
                         // что делать с товаром без кода но с егаис маркой.
-                        if (lm[0].length() != 0) {
-                            manager.getDB().addStoreMulti(lm[0], lm[2]);
+                        if (fieldFile.getArticul() == -1){
+                            articul ="";
+                        } else {
+                            articul = lm[fieldFile.getArticul()-1];
+                        }
+                        if (fieldFile.getPrice() == -1) {
+                            price = 0.0;
+                        } else {
+                            price = Double.valueOf(lm[fieldFile.getPrice()-1]);
+                        }
+                        if (fieldFile.getEGAIS() == -1) {
+                            egais = null;
+                        } else {
+                            egais = lm[fieldFile.getEGAIS()-1];
+                        }
+                        if (lm[fieldFile.getBar()].length() != 0) {
+                            //Log.d("WE",lm[fieldFile.getBar()-1]+lm[fieldFile.getName()-1]);
+                            manager.getDB().addStoreMulti(lm[fieldFile.getBar()-1], lm[fieldFile.getName()-1],articul,price,egais);
                         }
                     }
                 }

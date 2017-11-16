@@ -10,6 +10,8 @@ public class FileFieldModel implements Parcelable {
     private int mPrice;
     private int mEGAIS;
 
+    private int offset = 1;
+
     public FileFieldModel(int bar, int name, int articul, int price, int EGAIS) {
         mBar = bar;
         mName = name;
