@@ -15,6 +15,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
     <GridLayout
+        android:id="@+id/sff_grid_1"
         android:layout_below="@+id/sff_msg"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -25,8 +26,7 @@
             android:id="@+id/sff_barcode"
             android:inputType="numberDecimal"
             android:imeOptions="actionNext"
-            android:textStyle="bold"
-            android:textSize="20sp"
+            style="@style/setting_field_et"
             android:layout_gravity="right"/>
         <TextView
             android:text="Наименование"/>
@@ -34,8 +34,7 @@
             android:id="@+id/sff_name"
             android:inputType="numberDecimal"
             android:imeOptions="actionNext"
-            android:textStyle="bold"
-            android:textSize="20sp"
+            style="@style/setting_field_et"
             android:layout_gravity="right"/>
         <TextView
             android:text="Код товара"/>
@@ -43,8 +42,7 @@
             android:id="@+id/sff_code"
             android:inputType="numberDecimal"
             android:imeOptions="actionNext"
-            android:textStyle="bold"
-            android:textSize="20sp"
+            style="@style/setting_field_et"
             android:layout_gravity="right"/>
         <TextView
             android:text="Цена"/>
@@ -52,8 +50,7 @@
             android:id="@+id/sff_price"
             android:imeOptions="actionNext"
             android:inputType="number"
-            android:textStyle="bold"
-            android:textSize="20sp"
+            style="@style/setting_field_et"
             android:layout_gravity="right"/>
         <TextView
             android:text="Код Егаис"/>
@@ -61,9 +58,45 @@
             android:id="@+id/sff_egais"
             android:inputType="number"
             android:imeOptions="actionDone"
-            android:textStyle="bold"
-            android:textSize="20sp"
+            style="@style/setting_field_et"
             android:layout_gravity="right"/>
     </GridLayout>
-
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_below="@+id/sff_grid_1"
+        android:layout_marginTop="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:text="Укажите номера столбцов для выходного файла"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"/>
+        <GridLayout
+            android:columnCount="2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:text="Штрих-код"/>
+            <EditText
+                android:id="@+id/sf_out_bar"
+                android:inputType="number"
+                android:layout_gravity="right"
+                style="@style/setting_field_et"/>
+            <TextView
+                android:text="Кол.-во"/>
+            <EditText
+                android:id="@+id/sf_out_quantity"
+                android:inputType="number"
+                android:layout_gravity="right"
+                style="@style/setting_field_et"/>
+            <TextView
+                android:text="Цена"/>
+            <EditText
+                android:id="@+id/sf_out_price"
+                android:inputType="number"
+                android:layout_gravity="right"
+                style="@style/setting_field_et"/>
+        </GridLayout>
+    </LinearLayout>
 </RelativeLayout>

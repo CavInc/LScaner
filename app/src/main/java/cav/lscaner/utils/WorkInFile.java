@@ -109,7 +109,7 @@ public class WorkInFile {
             db.beginTransaction();
             try {
                 while ((str = br.readLine()) != null) {
-                    Log.d("LC STR :", str);
+                    //Log.d("LC STR :", str);
                     str = str.trim(); // добавить в V1 тоже
                     if (str.length() != 0) {
                         str = str.replaceAll(delim+delim,delim+" "+delim);
