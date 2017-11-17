@@ -8,6 +8,7 @@ import android.widget.EditText;
 
 import cav.lscaner.R;
 import cav.lscaner.data.managers.DataManager;
+import cav.lscaner.data.models.FieldOutFile;
 import cav.lscaner.data.models.FileFieldModel;
 
 public class SettingFieldFileActivity extends AppCompatActivity {
@@ -22,10 +23,12 @@ public class SettingFieldFileActivity extends AppCompatActivity {
 
     private EditText mOutBar;
     private EditText mOutQuantity;
+    private EditText mOutPrice;
 
     private DataManager mDataManager;
 
     private FileFieldModel mFileFieldModel;
+    private FieldOutFile mFieldOutFile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +46,11 @@ public class SettingFieldFileActivity extends AppCompatActivity {
         //mBasePrice;
         //mOstatok;
 
+        mOutBar = (EditText) findViewById(R.id.sf_out_bar);
+        mOutQuantity = (EditText) findViewById(R.id.sf_out_quantity);
+
         mFileFieldModel = mDataManager.getPreferensManager().getFieldFileModel();
+        mFieldOutFile = mDataManager.getPreferensManager().getFieldOutFile();
 
         if (mFileFieldModel.getBar() != -1) {
             mBar.setText(String.valueOf(mFileFieldModel.getBar()));
@@ -59,6 +66,17 @@ public class SettingFieldFileActivity extends AppCompatActivity {
         }
         if (mFileFieldModel.getEGAIS() != -1) {
             mEgais.setText(String.valueOf(mFileFieldModel.getEGAIS()));
+        }
+
+        // выходной файл
+        if (mFieldOutFile.getBarcode() != -1){
+            mOutBar.setText(String.valueOf(mFieldOutFile.getBarcode()));
+        }
+        if (mFieldOutFile.getQuantity() != -1){
+            mOutQuantity.setText(String.valueOf(mFieldOutFile.getQuantity()));
+        }
+        if (mFieldOutFile.getPrice() != -1){
+            mOutPrice.setText(String.valueOf(mFieldOutFile.getPrice()));
         }
 
         setupToolBar();

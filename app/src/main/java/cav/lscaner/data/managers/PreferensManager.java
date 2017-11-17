@@ -9,6 +9,7 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import cav.lscaner.data.models.FieldOutFile;
 import cav.lscaner.data.models.FileFieldModel;
 import cav.lscaner.utils.ConstantManager;
 import cav.lscaner.utils.LScanerApp;
@@ -19,6 +20,11 @@ public class PreferensManager {
     private static final String FIELD_ARTICUL = "FILED_ARTICUL";
     private static final String FIELD_PRICE = "FIELD_PRICE";
     private static final String FIELD_EGAIS = "FIELD_EGAIS";
+    private static final String FIELD_BASE_PRICE = "FIELD_BASE_PRICE";
+    private static final String FIELD_OSTATOK = "FIELD_OSTATOK";
+    private static final String FIELD_OUT_BARCODE = "FIELD_OUT_BARCODE";
+    private static final String FIELD_OUT_QUANTITY = "FIELD_OUT_QUANTITY";
+    private static final String FIELD_OUT_PRICE = "FIELD_OUT_PRICE";
     private SharedPreferences mSharedPreferences;
 
     public PreferensManager() {
@@ -128,7 +134,9 @@ public class PreferensManager {
                 mSharedPreferences.getInt(FIELD_NAME,3),
                 mSharedPreferences.getInt(FIELD_ARTICUL,-1),
                 mSharedPreferences.getInt(FIELD_PRICE,-1),
-                mSharedPreferences.getInt(FIELD_EGAIS,1)
+                mSharedPreferences.getInt(FIELD_EGAIS,-1),
+                mSharedPreferences.getInt(FIELD_BASE_PRICE,-1),
+                mSharedPreferences.getInt(FIELD_OSTATOK,-1)
         );
         return md;
     }
@@ -140,6 +148,27 @@ public class PreferensManager {
         editor.putInt(FIELD_ARTICUL,field.getArticul());
         editor.putInt(FIELD_PRICE,field.getPrice());
         editor.putInt(FIELD_EGAIS,field.getEGAIS());
+        editor.putInt(FIELD_BASE_PRICE,field.getBasePrice());
+        editor.putInt(FIELD_OSTATOK,field.getOstatok());
+        editor.apply();
+    }
+
+    // насройки полей выходного файла
+    public FieldOutFile getFieldOutFile(){
+        FieldOutFile md = new FieldOutFile(
+                mSharedPreferences.getInt(FIELD_OUT_BARCODE,1),
+                mSharedPreferences.getInt(FIELD_OUT_QUANTITY,2),
+                mSharedPreferences.getInt(FIELD_OUT_PRICE,-1)
+        );
+        return md;
+    }
+
+    public void setFieldOutFile (FieldOutFile field){
+        SharedPreferences.Editor editor = mSharedPreferences.edit();
+        editor.putInt(FIELD_OUT_BARCODE,field.getBarcode());
+        editor.putInt(FIELD_OUT_QUANTITY,field.getQuantity());
+        editor.putInt(FIELD_OUT_PRICE,field.getPrice());
+
         editor.apply();
     }
 

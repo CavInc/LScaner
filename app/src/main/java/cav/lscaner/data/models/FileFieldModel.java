@@ -9,8 +9,9 @@ public class FileFieldModel implements Parcelable {
     private int mArticul;
     private int mPrice;
     private int mEGAIS;
+    private int mBasePrice;
+    private int mOstatok;
 
-    private int offset = 1;
 
     public FileFieldModel(int bar, int name, int articul, int price, int EGAIS) {
         mBar = bar;
@@ -18,6 +19,16 @@ public class FileFieldModel implements Parcelable {
         mArticul = articul;
         mPrice = price;
         mEGAIS = EGAIS;
+    }
+
+    public FileFieldModel(int bar, int name, int articul, int price, int EGAIS, int basePrice, int ostatok) {
+        mBar = bar;
+        mName = name;
+        mArticul = articul;
+        mPrice = price;
+        mEGAIS = EGAIS;
+        mBasePrice = basePrice;
+        mOstatok = ostatok;
     }
 
     public FileFieldModel(Parcel parcel) {
@@ -66,6 +77,22 @@ public class FileFieldModel implements Parcelable {
 
     public void setEGAIS(int EGAIS) {
         mEGAIS = EGAIS;
+    }
+
+    public int getBasePrice() {
+        return mBasePrice;
+    }
+
+    public void setBasePrice(int basePrice) {
+        mBasePrice = basePrice;
+    }
+
+    public int getOstatok() {
+        return mOstatok;
+    }
+
+    public void setOstatok(int ostatok) {
+        mOstatok = ostatok;
     }
 
     public static final Creator<FileFieldModel> CREATOR = new Creator<FileFieldModel>(){
