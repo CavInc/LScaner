@@ -37,7 +37,7 @@ public class DBHelper extends SQLiteOpenHelper {
                     "price float default 0,"+
                     "egais text,"+
                     "baseprice float default 0,"+
-                    "ostatok float defaulut 0)");
+                    "ostatok float default 0)");
 
             db.execSQL("CREATE INDEX \""+STORE_PRODUCT+"_EA\" on "+STORE_PRODUCT+" (egais ASC)");
 
