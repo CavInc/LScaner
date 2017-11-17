@@ -242,7 +242,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
                 directionGD = WRITE_FILE;
                 // сохраняем файл
                 WorkInFile workInFile = new WorkInFile(mDataManager.getPreferensManager().getCodeFile());
-                workInFile.saveFile(selModel.getId(),selModel.getName(),mDataManager);
+                workInFile.saveFile(selModel.getId(),selModel.getName(),mDataManager,selModel.getType());
                 Log.d(TAG,workInFile.getSavedFile());
                 storeFileFullName = workInFile.getSavedFile();
                 // показываем окно с выбором куда отправлять

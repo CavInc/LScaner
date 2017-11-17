@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import cav.lscaner.data.models.StoreProductModel;
+import cav.lscaner.utils.ConstantManager;
 
 public class DBConnect {
 
@@ -56,9 +57,15 @@ public class DBConnect {
         close();
     }
 
-    public Cursor getScannedData(int idFile){
-        String sql="select sts.head_id,sts.barcode,sts.pos_id,sts.quantity,sp.name from "+DBHelper.SCAN_TABLE_SPEC+" sts \n" +
-                " left join "+DBHelper.STORE_PRODUCT+" sp on sts.barcode = sp.barcode where sts.head_id="+idFile+" order by sts.pos_id desc";
+    public Cursor getScannedData(int idFile,int mode){
+        String sql;
+        if (mode == ConstantManager.FILE_TYPE_PRODUCT) {
+            sql = "select sts.head_id,sts.barcode,sts.pos_id,sts.quantity,sp.name from " + DBHelper.SCAN_TABLE_SPEC + " sts \n" +
+                    " left join " + DBHelper.STORE_PRODUCT + " sp on sts.barcode = sp.barcode where sts.head_id=" + idFile + " order by sts.pos_id desc";
+        } else {
+            sql = "select sts.head_id,sts.barcode,sts.pos_id,sts.quantity,sp.name from " + DBHelper.SCAN_TABLE_SPEC + " sts \n" +
+                    " left join " + DBHelper.STORE_PRODUCT + " sp on sts.barcode = sp.egais where sts.head_id=" + idFile + " order by sts.pos_id desc";
+        }
         return database.rawQuery(sql,null);
     }
 

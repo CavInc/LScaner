@@ -17,6 +17,12 @@ public class SettingFieldFileActivity extends AppCompatActivity {
     private EditText mPrice;
     private EditText mEgais;
 
+    private EditText mBasePrice;
+    private EditText mOstatok;
+
+    private EditText mOutBar;
+    private EditText mOutQuantity;
+
     private DataManager mDataManager;
 
     private FileFieldModel mFileFieldModel;
@@ -33,6 +39,9 @@ public class SettingFieldFileActivity extends AppCompatActivity {
         mArticul = (EditText) findViewById(R.id.sff_code);
         mPrice = (EditText) findViewById(R.id.sff_price);
         mEgais = (EditText) findViewById(R.id.sff_egais);
+
+        //mBasePrice;
+        //mOstatok;
 
         mFileFieldModel = mDataManager.getPreferensManager().getFieldFileModel();
 

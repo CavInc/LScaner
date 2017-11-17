@@ -53,13 +53,13 @@ public class WorkInFile {
     }
 
     // сохраняет файл на ...
-    public void saveFile(int idFile,String fname, DataManager manager){
+    public void saveFile(int idFile,String fname, DataManager manager,int filetype){
         if (manager.isExternalStorageWritable()){
             String delim = manager.getPreferensManager().getDelimiterStoreFile();
             String path = manager.getStorageAppPath();
             Log.d("WC",path);
             File outfile = new File(path,fname);
-            ArrayList<ScannedDataModel> models = manager.getScannedData(idFile);
+            ArrayList<ScannedDataModel> models = manager.getScannedData(idFile,filetype);
 
             try {
                 BufferedWriter bw = new BufferedWriter(new FileWriter(outfile));

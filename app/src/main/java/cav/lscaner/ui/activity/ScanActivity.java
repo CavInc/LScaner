@@ -112,7 +112,7 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
     }
 
     private void updateUI(){
-        mDataModels = mDataManager.getScannedData(idFile);
+        mDataModels = mDataManager.getScannedData(idFile,fileType);
         if (mAdapter == null) {
             mAdapter = new ScannedListAdapter(this,R.layout.scanned_item,mDataModels);
             mListView.setAdapter(mAdapter);

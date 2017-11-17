@@ -105,10 +105,10 @@ public class DataManager{
     }
 
     // отсканированые данные
-    public ArrayList<ScannedDataModel> getScannedData(int idFile){
+    public ArrayList<ScannedDataModel> getScannedData(int idFile,int mode){
         ArrayList<ScannedDataModel> rec = new ArrayList<>();
         mDB.open();
-        Cursor cursor = mDB.getScannedData(idFile);
+        Cursor cursor = mDB.getScannedData(idFile,mode);
         while (cursor.moveToNext()){
             rec.add(new ScannedDataModel(
                     cursor.getInt(cursor.getColumnIndex("head_id")),

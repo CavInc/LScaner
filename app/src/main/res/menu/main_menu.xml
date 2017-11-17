@@ -7,7 +7,7 @@
         android:id="@+id/menu_setting"
         android:title="Настройки"/>
     <item android:id="@+id/menu_filefield_setting"
-        android:title="Настройки полей файла"/>
+        android:title="Настройки полей БД"/>
     <item
         android:id="@+id/menu_about"
         android:title="О программе"/>
