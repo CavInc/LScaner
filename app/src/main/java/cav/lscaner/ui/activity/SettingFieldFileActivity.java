@@ -43,8 +43,8 @@ public class SettingFieldFileActivity extends AppCompatActivity {
         mPrice = (EditText) findViewById(R.id.sff_price);
         mEgais = (EditText) findViewById(R.id.sff_egais);
 
-        //mBasePrice;
-        //mOstatok;
+        mBasePrice = (EditText) findViewById(R.id.sff_baseprice);
+        mOstatok = (EditText) findViewById(R.id.sff_ostatok);
 
         mOutBar = (EditText) findViewById(R.id.sf_out_bar);
         mOutQuantity = (EditText) findViewById(R.id.sf_out_quantity);
@@ -66,6 +66,13 @@ public class SettingFieldFileActivity extends AppCompatActivity {
         }
         if (mFileFieldModel.getEGAIS() != -1) {
             mEgais.setText(String.valueOf(mFileFieldModel.getEGAIS()));
+        }
+        if (mFileFieldModel.getBasePrice() != -1) {
+            mBasePrice.setText(String.valueOf(mFileFieldModel.getBasePrice()));
+        }
+
+        if (mFileFieldModel.getOstatok() != -1) {
+            mOstatok.setText(String.valueOf(mFileFieldModel.getOstatok()));
         }
 
         // выходной файл
@@ -127,6 +134,20 @@ public class SettingFieldFileActivity extends AppCompatActivity {
             mFileFieldModel.setEGAIS(Integer.parseInt(mEgais.getText().toString()));
 
         }
+        if (mBasePrice.getText().length() == 0) {
+            mFileFieldModel.setBasePrice(-1);
+        } else {
+            mFileFieldModel.setBasePrice(Integer.parseInt(mBasePrice.getText().toString()));
+        }
+
+        if (mOstatok.getText().length() == 0) {
+            mFileFieldModel.setOstatok(-1);
+        } else {
+            mFileFieldModel.setOstatok(Integer.parseInt(mOstatok.getText().toString()));
+        }
+
+
+
         mDataManager.getPreferensManager().setFieldFileModel(mFileFieldModel);
     }
 }
