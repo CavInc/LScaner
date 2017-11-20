@@ -228,6 +228,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="number"
+                    style="@style/setting_field_et"
                     android:layout_weight="2"/>
             </LinearLayout>
         </LinearLayout>
