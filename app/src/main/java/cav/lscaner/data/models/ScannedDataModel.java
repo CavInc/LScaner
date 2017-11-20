@@ -1,5 +1,7 @@
 package cav.lscaner.data.models;
 
+import cav.lscaner.utils.Func;
+
 /**
  * модель для данных сканирования
  */
@@ -29,6 +31,7 @@ public class ScannedDataModel {
         mQuantity = quantity;
         mArticul = articul;
         mPrice = price;
+        mSumm = Double.valueOf(Func.round((float) (quantity * price),2));
     }
 
     public int getIdFile() {

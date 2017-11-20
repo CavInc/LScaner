@@ -58,6 +58,7 @@ public class ScannedListAdapter extends ArrayAdapter<ScannedDataModel>{
             holder.mArticul.setText("Код : "+rec.getArticul());
         }
         holder.mPrice.setText("Цена : "+rec.getPrice());
+        holder.mSumma.setText("Сумма : "+rec.getSumm());
 
         return row;
     }

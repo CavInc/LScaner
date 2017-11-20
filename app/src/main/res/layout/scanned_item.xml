@@ -69,6 +69,7 @@
             android:id="@+id/sc_item_summa"
             android:text="Сумма"
             android:gravity="right"
+            android:textStyle="bold"
             android:textColor="@color/app_green"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
