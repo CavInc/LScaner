@@ -16,6 +16,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 
 import cav.lscaner.data.managers.DataManager;
+import cav.lscaner.data.models.FieldOutFile;
 import cav.lscaner.data.models.FileFieldModel;
 import cav.lscaner.data.models.ScannedDataModel;
 
@@ -57,6 +58,8 @@ public class WorkInFile {
         if (manager.isExternalStorageWritable()){
             String delim = manager.getPreferensManager().getDelimiterStoreFile();
             String path = manager.getStorageAppPath();
+            FieldOutFile fieldFile = manager.getPreferensManager().getFieldOutFile();
+
             Log.d("WC",path);
             File outfile = new File(path,fname);
             ArrayList<ScannedDataModel> models = manager.getScannedData(idFile,filetype);
@@ -64,7 +67,14 @@ public class WorkInFile {
             try {
                 BufferedWriter bw = new BufferedWriter(new FileWriter(outfile));
                 for (ScannedDataModel l : models){
-                    String cls = new String((l.getBarCode()+delim+l.getQuantity()).getBytes("UTF-8"),codeStr);
+                    String cls = null;
+                    if (filetype == ConstantManager.FILE_TYPE_EGAIS) {
+                        cls = l.getBarCode()+delim+l.getQuantity();
+                    } else {
+                        cls = getFieldStr(l,fieldFile,delim);
+
+                    }
+                    cls = new String(cls.getBytes("UTF-8"),codeStr);
                     bw.write(cls+"\r\n");
                 }
                 bw.close();
@@ -74,6 +84,31 @@ public class WorkInFile {
             savedFile = outfile.toString();
         }
 
+    }
+
+    private String getFieldStr(ScannedDataModel model, FieldOutFile fieldFile,String delim) {
+        String[] br = new String[4];
+        if (fieldFile.getBarcode() != -1){
+            br[fieldFile.getBarcode()-1] = model.getBarCode();
+        }
+        if (fieldFile.getQuantity() != -1) {
+            br[fieldFile.getQuantity()-1] = String.valueOf(model.getQuantity());
+        }
+        if (fieldFile.getArticul() != -1 && model.getArticul() != null) {
+            br[fieldFile.getArticul()-1] = model.getArticul();
+        }
+        if (fieldFile.getPrice() != -1) {
+            br[fieldFile.getPrice()-1] = String.valueOf(model.getPrice());
+        }
+        StringBuilder out = new StringBuilder();
+        for (int i = 0;i<br.length;i++){
+            if (br[i] != null) {
+                out.append(br[i]);
+            }
+            out.append(delim);
+        }
+
+        return out.toString();
     }
 
     public String getSavedFile() {
