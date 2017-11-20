@@ -4,11 +4,19 @@ public class FieldOutFile {
     private int mBarcode;
     private int mQuantity;
     private int mPrice;
+    private int mArticul;
 
     public FieldOutFile(int barcode, int quantity, int price) {
         mBarcode = barcode;
         mQuantity = quantity;
         mPrice = price;
+    }
+
+    public FieldOutFile(int barcode, int quantity, int price, int articul) {
+        mBarcode = barcode;
+        mQuantity = quantity;
+        mPrice = price;
+        mArticul = articul;
     }
 
     public int getBarcode() {
@@ -33,5 +41,13 @@ public class FieldOutFile {
 
     public void setPrice(int price) {
         mPrice = price;
+    }
+
+    public int getArticul() {
+        return mArticul;
+    }
+
+    public void setArticul(int articul) {
+        mArticul = articul;
     }
 }

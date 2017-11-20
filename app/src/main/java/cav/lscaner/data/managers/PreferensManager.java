@@ -25,6 +25,7 @@ public class PreferensManager {
     private static final String FIELD_OUT_BARCODE = "FIELD_OUT_BARCODE";
     private static final String FIELD_OUT_QUANTITY = "FIELD_OUT_QUANTITY";
     private static final String FIELD_OUT_PRICE = "FIELD_OUT_PRICE";
+    private static final String FIELD_OUT_ARTICUL = "FIELD_OUT_ARTICUL";
     private SharedPreferences mSharedPreferences;
 
     public PreferensManager() {
@@ -158,7 +159,8 @@ public class PreferensManager {
         FieldOutFile md = new FieldOutFile(
                 mSharedPreferences.getInt(FIELD_OUT_BARCODE,1),
                 mSharedPreferences.getInt(FIELD_OUT_QUANTITY,2),
-                mSharedPreferences.getInt(FIELD_OUT_PRICE,-1)
+                mSharedPreferences.getInt(FIELD_OUT_PRICE,-1),
+                mSharedPreferences.getInt(FIELD_OUT_ARTICUL,-1)
         );
         return md;
     }
@@ -168,7 +170,7 @@ public class PreferensManager {
         editor.putInt(FIELD_OUT_BARCODE,field.getBarcode());
         editor.putInt(FIELD_OUT_QUANTITY,field.getQuantity());
         editor.putInt(FIELD_OUT_PRICE,field.getPrice());
-
+        editor.putInt(FIELD_OUT_ARTICUL,field.getArticul());
         editor.apply();
     }
 

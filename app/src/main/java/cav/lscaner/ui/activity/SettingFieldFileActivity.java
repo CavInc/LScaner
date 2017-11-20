@@ -24,6 +24,8 @@ public class SettingFieldFileActivity extends AppCompatActivity {
     private EditText mOutBar;
     private EditText mOutQuantity;
     private EditText mOutPrice;
+    private EditText mOutArticul;
+
 
     private DataManager mDataManager;
 
@@ -48,6 +50,8 @@ public class SettingFieldFileActivity extends AppCompatActivity {
 
         mOutBar = (EditText) findViewById(R.id.sf_out_bar);
         mOutQuantity = (EditText) findViewById(R.id.sf_out_quantity);
+
+        mOutArticul = (EditText) findViewById(R.id.sf_out_articul);
 
         mFileFieldModel = mDataManager.getPreferensManager().getFieldFileModel();
         mFieldOutFile = mDataManager.getPreferensManager().getFieldOutFile();
@@ -84,6 +88,9 @@ public class SettingFieldFileActivity extends AppCompatActivity {
         }
         if (mFieldOutFile.getPrice() != -1){
             mOutPrice.setText(String.valueOf(mFieldOutFile.getPrice()));
+        }
+        if (mFieldOutFile.getArticul() != -1){
+            mOutArticul.setText(String.valueOf(mFieldOutFile.getArticul()));
         }
 
         setupToolBar();
