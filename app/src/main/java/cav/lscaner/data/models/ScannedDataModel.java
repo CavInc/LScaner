@@ -9,6 +9,9 @@ public class ScannedDataModel {
     private String mBarCode;
     private String mName;
     private Float mQuantity;
+    private String mArticul = null;
+    private Double mSumm = 0.0;
+    private Double mPrice = 0.0;
 
     public ScannedDataModel(int idFile,int posId, String barCode, String name, Float quantity) {
         mIdFile = idFile;
@@ -16,6 +19,16 @@ public class ScannedDataModel {
         mName = name;
         mQuantity = quantity;
         mPosId = posId;
+    }
+
+    public ScannedDataModel(int idFile, int posId, String barCode, String name, Float quantity, String articul, Double price) {
+        mIdFile = idFile;
+        mPosId = posId;
+        mBarCode = barCode;
+        mName = name;
+        mQuantity = quantity;
+        mArticul = articul;
+        mPrice = price;
     }
 
     public int getIdFile() {
@@ -36,6 +49,18 @@ public class ScannedDataModel {
 
     public int getPosId() {
         return mPosId;
+    }
+
+    public String getArticul() {
+        return mArticul;
+    }
+
+    public Double getSumm() {
+        return mSumm;
+    }
+
+    public Double getPrice() {
+        return mPrice;
     }
 
     @Override
