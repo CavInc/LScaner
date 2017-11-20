@@ -103,6 +103,8 @@ public class WorkInFile {
             String articul = null;
             String egais = null;
             Double price = 0.0;
+            Double baseprice = 0.0;
+            Float ostatok = 0.0f;
             // читаем содержимое
             manager.getDB().open();
             SQLiteDatabase db = manager.getDB().getDatabase();
@@ -133,10 +135,23 @@ public class WorkInFile {
                         } else {
                             egais = lm[fieldFile.getEGAIS()-1];
                         }
+                        if (fieldFile.getBasePrice() == -1) {
+                            baseprice = 0.0;
+                        } else {
+                            baseprice = Double.valueOf(lm[fieldFile.getBasePrice()-1]);
+                        }
+                        if (fieldFile.getOstatok() == -1) {
+                            ostatok = 0.0f;
+                        } else {
+                            ostatok = Float.valueOf(lm[fieldFile.getOstatok()-1]);
+                        }
+
                         //Log.d("WK",lm[fieldFile.getEGAIS()-1]);
                         if (lm[fieldFile.getBar()].length() != 0) {
                             //Log.d("WE",lm[fieldFile.getBar()-1]+lm[fieldFile.getName()-1]);
-                            manager.getDB().addStoreMulti(lm[fieldFile.getBar()-1], lm[fieldFile.getName()-1],articul,price,egais);
+                            manager.getDB().addStoreMulti(lm[fieldFile.getBar()-1],
+                                    lm[fieldFile.getName()-1],articul,price,egais,
+                                    baseprice,ostatok);
                         }
                     }
                 }

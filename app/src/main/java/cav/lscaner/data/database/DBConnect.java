@@ -141,13 +141,15 @@ public class DBConnect {
         close();
     }
     // добавить в список товаров в мульти режиме
-    public void addStoreMulti(String barcode,String name,String articul,Double price,String egais){
+    public void addStoreMulti(String barcode,String name,String articul,Double price,String egais,Double baseprice,Float ostatok){
         ContentValues values = new ContentValues();
         values.put("barcode",barcode);
         values.put("name",name);
         values.put("articul",articul);
         values.put("price",price);
         values.put("egais",egais);
+        values.put("baseprice",baseprice);
+        values.put("ostatok",ostatok);
         database.insert(DBHelper.STORE_PRODUCT,null,values);
     }
 
