@@ -50,6 +50,7 @@ public class SettingFieldFileActivity extends AppCompatActivity {
 
         mOutBar = (EditText) findViewById(R.id.sf_out_bar);
         mOutQuantity = (EditText) findViewById(R.id.sf_out_quantity);
+        mOutPrice = (EditText) findViewById(R.id.sf_out_price);
 
         mOutArticul = (EditText) findViewById(R.id.sf_out_articul);
 
@@ -92,7 +93,6 @@ public class SettingFieldFileActivity extends AppCompatActivity {
         if (mFieldOutFile.getArticul() != -1){
             mOutArticul.setText(String.valueOf(mFieldOutFile.getArticul()));
         }
-
         setupToolBar();
     }
 
@@ -153,8 +153,32 @@ public class SettingFieldFileActivity extends AppCompatActivity {
             mFileFieldModel.setOstatok(Integer.parseInt(mOstatok.getText().toString()));
         }
 
-
-
         mDataManager.getPreferensManager().setFieldFileModel(mFileFieldModel);
+
+        if (mOutBar.getText().length() == 0 ){
+            mFieldOutFile.setBarcode(-1);
+        } else {
+            mFieldOutFile.setBarcode(Integer.parseInt(mOutBar.getText().toString()));
+        }
+
+        if (mOutQuantity.getText().length() == 0 ){
+            mFieldOutFile.setQuantity(-1);
+        } else {
+            mFieldOutFile.setQuantity(Integer.parseInt(mOutQuantity.getText().toString()));
+        }
+
+        if (mOutArticul.getText().length() == 0) {
+            mFieldOutFile.setArticul(-1);
+        } else {
+            mFieldOutFile.setArticul(Integer.parseInt(mOutArticul.getText().toString()));
+        }
+
+        if (mOutPrice.getText().length() == 0 ){
+            mFieldOutFile.setPrice(-1);
+        } else {
+            mFieldOutFile.setPrice(Integer.parseInt(mOutPrice.getText().toString()));
+        }
+
+        mDataManager.getPreferensManager().setFieldOutFile(mFieldOutFile);
     }
 }
