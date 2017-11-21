@@ -5,6 +5,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import java.util.ArrayList;
+
 import cav.lscaner.data.models.StoreProductModel;
 import cav.lscaner.utils.ConstantManager;
 
@@ -108,6 +110,19 @@ public class DBConnect {
         close();
         return model;
     }
+    public ArrayList<StoreProductModel> searchStoreArray(String barcode){
+        ArrayList<StoreProductModel> rec = new ArrayList<>();
+        open();
+        Cursor cursor = database.query(DBHelper.STORE_PRODUCT,new String[]{"barcode","name","articul"},"barcode="+barcode,null,null,null,null);
+        while (cursor.moveToNext()){
+            rec.add(new StoreProductModel(cursor.getString(cursor.getColumnIndex("barcode")),
+                    cursor.getString(cursor.getColumnIndex("name")),
+                    cursor.getString(cursor.getColumnIndex("articul"))));
+
+        }
+        close();
+        return rec;
+    }
 
     // поиск по АЛКОКОДУ
     public StoreProductModel searchStoreEgais(String alcocode){
@@ -121,6 +136,18 @@ public class DBConnect {
         }
         close();
         return model;
+    }
+    public ArrayList<StoreProductModel> searchStoreEgaisArray(String alcocode){
+        ArrayList<StoreProductModel> rec = new ArrayList<>();
+        open();
+        Cursor cursor = database.query(DBHelper.STORE_PRODUCT,new String[]{"egais","name","articul"},"egais='"+alcocode+"'",null,null,null,null);
+        while (cursor.moveToNext()){
+            rec.add(new StoreProductModel(cursor.getString(cursor.getColumnIndex("egais")),
+                    cursor.getString(cursor.getColumnIndex("name")),
+                    cursor.getString(cursor.getColumnIndex("articul"))));
+        }
+        close();
+        return rec;
     }
 
     // очистить списко товаров

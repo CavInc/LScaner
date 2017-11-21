@@ -170,15 +170,32 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
                 if (l == -1) {
                     // нифига не нашли в уже добавленых смотрим в базе
                     StoreProductModel product = null;
+                    ArrayList<StoreProductModel> productArray;
                     if (fileType == ConstantManager.FILE_TYPE_EGAIS) {
-                        product = mDataManager.getDB().searchStoreEgais(mBar);
+                        //product = mDataManager.getDB().searchStoreEgais(mBar);
+                        productArray = mDataManager.getDB().searchStoreEgaisArray(mBar);
                     } else {
-                        product = mDataManager.getDB().searchStore(mBar);
+                        //product = mDataManager.getDB().searchStore(mBar);
+                        productArray = mDataManager.getDB().searchStoreArray(mBar);
                     }
 
+                    /*
                     if (product == null) {
                         product = new StoreProductModel(mBar,"Новый");
                     }
+                    */
+                    if (productArray == null){
+                        product = new StoreProductModel(mBar,"Новый");
+                    } else {
+                        if (productArray.size() ==1 ) {
+                            product = new StoreProductModel(mBar,productArray.get(0).getName());
+                        }
+                    }
+
+                    // если здесь не одна запись то а) показать а еще одно окно или же выбор в количестве.
+
+
+
                     if (!scaleFlg) {
                         QueryQuantityDialog dialod = QueryQuantityDialog.newInstans(product.getName(), 0f, 0f,editRecord);
                         dialod.setQuantityChangeListener(mQuantityChangeListener);
@@ -188,6 +205,7 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
                         countRecord +=1;
                         updateUI(); // TODO передалать заполнение через добавление в адаптер
                     }
+
                 } else {
                     if (!scaleFlg) {
                         Float qq = mDataModels.get(l).getQuantity();
