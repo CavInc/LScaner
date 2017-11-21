@@ -163,7 +163,7 @@ public class WorkInFile {
                         if (fieldFile.getPrice() == -1) {
                             price = 0.0;
                         } else {
-                            price = Double.valueOf(lm[fieldFile.getPrice()-1]);
+                            price = Double.valueOf(lm[fieldFile.getPrice()-1].replaceAll("\\s+",""));
                         }
                         if (fieldFile.getEGAIS() == -1) {
                             egais = null;

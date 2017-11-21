@@ -31,7 +31,8 @@ public class DBHelper extends SQLiteOpenHelper {
     private void updatedDB(SQLiteDatabase db,int oldVersion,int newVersion){
         if (oldVersion < 1 ){
             db.execSQL("create table "+STORE_PRODUCT+"("+
-                    "barcode text not null primary key,"+
+                    " id integer not null primary key AUTOINCREMENT,"+
+                    "barcode text,"+
                     "name text,"+
                     "articul text,"+
                     "price float default 0,"+
@@ -40,6 +41,7 @@ public class DBHelper extends SQLiteOpenHelper {
                     "ostatok float default 0)");
 
             db.execSQL("CREATE INDEX \""+STORE_PRODUCT+"_EA\" on "+STORE_PRODUCT+" (egais ASC)");
+            db.execSQL("CREATE INDEX \""+STORE_PRODUCT+"_BR\" on "+STORE_PRODUCT+" (barcode ASC)");
 
             db.execSQL("create table "+SCAN_TABLE+"("+
                     "id integer not null primary key AUTOINCREMENT," +
