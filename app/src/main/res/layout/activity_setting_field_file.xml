@@ -32,8 +32,7 @@
                     android:layout_height="wrap_content"
                     android:layout_width="match_parent"
                     android:layout_weight="1"
-                    android:text="Штрих-код"
-                    android:layout_gravity="fill_horizontal"/>
+                    android:text="Штрих-код"/>
                 <EditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -90,7 +89,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Цена розничная"/>
+                    android:text="Цена"/>
                 <EditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -193,7 +192,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Кол.-во"/>
+                    android:text="Кол-во"/>
                 <EditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
