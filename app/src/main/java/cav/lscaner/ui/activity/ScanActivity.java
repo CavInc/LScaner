@@ -220,7 +220,6 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
                 updateUI(); // TODO передалать заполнение через добавление в адаптер
                 mBarCode.requestFocus();
             }
-
         }
 
         @Override
