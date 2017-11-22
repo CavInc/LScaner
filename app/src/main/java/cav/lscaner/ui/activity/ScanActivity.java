@@ -127,6 +127,7 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
     private String mBar;
     private Float qq;
     private int posID;
+    private boolean scaleFlg = false;
 
     TextView.OnEditorActionListener mEditorActionListener = new TextView.OnEditorActionListener() {
         @Override
@@ -145,7 +146,7 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
                 if (mBar.length() == 0) return true;
                 qq = 1f;
                 posID = -1;
-                boolean scaleFlg = false;
+                scaleFlg = false;
                 editRecord = false;
 
                 if (fileType == ConstantManager.FILE_TYPE_EGAIS){
@@ -192,6 +193,7 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
                             product = new StoreProductModel(mBar,productArray.get(0).getName());
                         } else {
                             SelectItemsDialog dialog = SelectItemsDialog.newInstance(productArray);
+                            dialog.setOnSelectItemsChangeListener(mOnSelectItemsChangeListener);
                             dialog.show(getSupportFragmentManager(),"SI");
                             mBarCode.setText("");
                             return false;
@@ -200,7 +202,7 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
 
                     // если здесь не одна запись то а) показать а еще одно окно или же выбор в количестве.
 
-                    showQuantityQuery(scaleFlg,product);
+                    showQuantityQuery(product);
 
                     /*
                     if (!scaleFlg) {
@@ -238,7 +240,7 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
     };
 
     // показываем окно или же добавляем новую запсиь если код весовой
-    private void showQuantityQuery(boolean scaleFlg,StoreProductModel product){
+    private void showQuantityQuery(StoreProductModel product){
         if (!scaleFlg) {
             QueryQuantityDialog dialod = QueryQuantityDialog.newInstans(product.getName(), 0f, 0f,editRecord);
             dialod.setQuantityChangeListener(mQuantityChangeListener);
@@ -264,6 +266,13 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
         @Override
         public void cancelButton() {
             mBarCode.requestFocus();
+        }
+    };
+
+    SelectItemsDialog.OnSelectItemsChangeListener mOnSelectItemsChangeListener = new SelectItemsDialog.OnSelectItemsChangeListener() {
+        @Override
+        public void onSelectItem(StoreProductModel product) {
+            showQuantityQuery(product);
         }
     };
 
