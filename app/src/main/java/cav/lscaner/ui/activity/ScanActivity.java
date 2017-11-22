@@ -26,6 +26,7 @@ import cav.lscaner.data.models.StoreProductModel;
 import cav.lscaner.ui.adapter.ScannedListAdapter;
 import cav.lscaner.ui.dialogs.DemoDialog;
 import cav.lscaner.ui.dialogs.QueryQuantityDialog;
+import cav.lscaner.ui.dialogs.SelectItemsDialog;
 import cav.lscaner.ui.dialogs.SelectScanDialog;
 import cav.lscaner.utils.ConstantManager;
 import cav.lscaner.utils.Func;
@@ -189,13 +190,19 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
                     } else {
                         if (productArray.size() ==1 ) {
                             product = new StoreProductModel(mBar,productArray.get(0).getName());
+                        } else {
+                            SelectItemsDialog dialog = SelectItemsDialog.newInstance(productArray);
+                            dialog.show(getSupportFragmentManager(),"SI");
+                            mBarCode.setText("");
+                            return false;
                         }
                     }
 
                     // если здесь не одна запись то а) показать а еще одно окно или же выбор в количестве.
 
+                    showQuantityQuery(scaleFlg,product);
 
-
+                    /*
                     if (!scaleFlg) {
                         QueryQuantityDialog dialod = QueryQuantityDialog.newInstans(product.getName(), 0f, 0f,editRecord);
                         dialod.setQuantityChangeListener(mQuantityChangeListener);
@@ -205,6 +212,7 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
                         countRecord +=1;
                         updateUI(); // TODO передалать заполнение через добавление в адаптер
                     }
+                    */
 
                 } else {
                     if (!scaleFlg) {
@@ -228,6 +236,19 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
             return false;
         }
     };
+
+    // показываем окно или же добавляем новую запсиь если код весовой
+    private void showQuantityQuery(boolean scaleFlg,StoreProductModel product){
+        if (!scaleFlg) {
+            QueryQuantityDialog dialod = QueryQuantityDialog.newInstans(product.getName(), 0f, 0f,editRecord);
+            dialod.setQuantityChangeListener(mQuantityChangeListener);
+            dialod.show(getSupportFragmentManager(), "QQ");
+        } else {
+            mDataManager.getDB().addScannedPositon(idFile, mBar, qq,-1);
+            countRecord +=1;
+            updateUI(); // TODO передалать заполнение через добавление в адаптер
+        }
+    }
 
     QueryQuantityDialog.QuantityChangeListener mQuantityChangeListener = new QueryQuantityDialog.QuantityChangeListener(){
         @Override
