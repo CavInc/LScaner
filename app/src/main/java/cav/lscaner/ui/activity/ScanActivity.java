@@ -125,6 +125,7 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
     }
 
     private String mBar;
+    private String mArticul;
     private Float qq;
     private int posID;
     private boolean scaleFlg = false;
@@ -186,11 +187,11 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
                         product = new StoreProductModel(mBar,"Новый");
                     }
                     */
-                    if (productArray == null){
+                    if (productArray == null || productArray.size() == 0){
                         product = new StoreProductModel(mBar,"Новый");
                     } else {
                         if (productArray.size() ==1 ) {
-                            product = new StoreProductModel(mBar,productArray.get(0).getName());
+                            product = new StoreProductModel(mBar,productArray.get(0).getName(),productArray.get(0).getArticul());
                         } else {
                             SelectItemsDialog dialog = SelectItemsDialog.newInstance(productArray);
                             dialog.setOnSelectItemsChangeListener(mOnSelectItemsChangeListener);
@@ -219,16 +220,18 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
                 } else {
                     if (!scaleFlg) {
                         Float qq = mDataModels.get(l).getQuantity();
+                        mArticul = mDataModels.get(l).getArticul();
                         posID = mDataModels.get(l).getPosId();
                         QueryQuantityDialog dialod = QueryQuantityDialog.newInstans(mDataModels.get(l).getName(), 0f, qq, editRecord);
                         dialod.setQuantityChangeListener(mQuantityChangeListener);
                         dialod.show(getSupportFragmentManager(), "QQ");
                     } else {
                         Float oldqq = mDataModels.get(l).getQuantity();
+                        mArticul = mDataModels.get(l).getArticul();
                         posID = mDataModels.get(l).getPosId();
                         qq = qq+oldqq;
                         qq = Func.round(qq,3);
-                        mDataManager.getDB().addScannedPositon(idFile, mBar, qq,posID);
+                        mDataManager.getDB().addScannedPositon(idFile, mBar, qq,posID,mArticul);
                         countRecord +=1;
                         updateUI(); // TODO передалать заполнение через добавление в адаптер
                     }
@@ -246,7 +249,7 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
             dialod.setQuantityChangeListener(mQuantityChangeListener);
             dialod.show(getSupportFragmentManager(), "QQ");
         } else {
-            mDataManager.getDB().addScannedPositon(idFile, mBar, qq,-1);
+            mDataManager.getDB().addScannedPositon(idFile, mBar, qq,-1,product.getArticul());
             countRecord +=1;
             updateUI(); // TODO передалать заполнение через добавление в адаптер
         }
@@ -256,7 +259,7 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
         @Override
         public void changeQuantity(Float quantity) {
             if (quantity!=0){
-                mDataManager.getDB().addScannedPositon(idFile,mBar,quantity,posID);
+                mDataManager.getDB().addScannedPositon(idFile,mBar,quantity,posID,mArticul);
                 if (!editRecord) countRecord += 1;
                 updateUI(); // TODO передалать заполнение через добавление в адаптер
                 mBarCode.requestFocus();

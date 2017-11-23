@@ -54,8 +54,10 @@ public class DBHelper extends SQLiteOpenHelper {
                     "head_id integer not null,"+
                     "pos_id integer not null,"+
                     "barcode text not null,"+
+                    "articul text,"+
                     "quantity number default 0,"+
                     "primary key(head_id,pos_id,barcode))");
+            db.execSQL("CREATE INDEX \""+SCAN_TABLE_SPEC+"_BA\" on "+SCAN_TABLE_SPEC+" (barcode,articul)");
         }
 
     }

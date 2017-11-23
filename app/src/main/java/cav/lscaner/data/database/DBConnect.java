@@ -72,7 +72,7 @@ public class DBConnect {
     }
 
     // добавили позицию в файл
-    public void addScannedPositon(int idFile,String barcode,Float quantity,int position){
+    public void addScannedPositon(int idFile,String barcode,Float quantity,int position,String articul){
         open();
         if (position == -1) {
             Cursor cursor = database.rawQuery("select max(pos_id)+1 as pos from " + DBHelper.SCAN_TABLE_SPEC + " where head_id=" + idFile, null);
@@ -85,6 +85,7 @@ public class DBConnect {
         values.put("head_id",idFile);
         values.put("barcode",barcode);
         values.put("quantity",quantity);
+        values.put("articul",articul);
         values.put("pos_id", position);
         open();
         database.insertWithOnConflict(DBHelper.SCAN_TABLE_SPEC,null,values,SQLiteDatabase.CONFLICT_REPLACE);

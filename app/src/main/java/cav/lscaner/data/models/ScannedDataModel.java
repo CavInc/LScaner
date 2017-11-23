@@ -14,6 +14,7 @@ public class ScannedDataModel {
     private String mArticul = null;
     private Double mSumm = 0.0;
     private Double mPrice = 0.0;
+    private Double mOstatok = 0.0;
 
     public ScannedDataModel(int idFile,int posId, String barCode, String name, Float quantity) {
         mIdFile = idFile;
@@ -31,6 +32,18 @@ public class ScannedDataModel {
         mQuantity = quantity;
         mArticul = articul;
         mPrice = price;
+        mSumm = Double.valueOf(Func.round((float) (quantity * price),2));
+    }
+
+    public ScannedDataModel(int idFile, int posId, String barCode, String name, Float quantity, String articul, Double price, Double ostatok) {
+        mIdFile = idFile;
+        mPosId = posId;
+        mBarCode = barCode;
+        mName = name;
+        mQuantity = quantity;
+        mArticul = articul;
+        mPrice = price;
+        mOstatok = ostatok;
         mSumm = Double.valueOf(Func.round((float) (quantity * price),2));
     }
 
@@ -64,6 +77,10 @@ public class ScannedDataModel {
 
     public Double getPrice() {
         return mPrice;
+    }
+
+    public Double getOstatok() {
+        return mOstatok;
     }
 
     @Override
