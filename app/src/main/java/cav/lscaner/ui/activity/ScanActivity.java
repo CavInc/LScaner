@@ -245,6 +245,7 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
     // показываем окно или же добавляем новую запсиь если код весовой
     private void showQuantityQuery(StoreProductModel product){
         if (!scaleFlg) {
+            mArticul = product.getArticul();
             QueryQuantityDialog dialod = QueryQuantityDialog.newInstans(product.getName(), 0f, 0f,editRecord);
             dialod.setQuantityChangeListener(mQuantityChangeListener);
             dialod.show(getSupportFragmentManager(), "QQ");
