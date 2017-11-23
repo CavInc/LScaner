@@ -16,9 +16,11 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 
 import cav.lscaner.R;
+import cav.lscaner.utils.ConstantManager;
 
 public class AddEditNameFileDialog extends DialogFragment implements View.OnClickListener{
     private static final String EDIT_NAME = "EDIT_NAME";
+    private static final String EDIT_TYPE = "EDIT_TYPE";
     private AddEditNameFileDialog INSTANSE = null;
 
     private AddEditNameFileListener mListener;
@@ -32,6 +34,8 @@ public class AddEditNameFileDialog extends DialogFragment implements View.OnClic
 
     private RadioButton mTovar;
     private RadioButton mEGAIS;
+
+    private int type;
 
     @Override
     public void onClick(View view) {
@@ -72,9 +76,10 @@ public class AddEditNameFileDialog extends DialogFragment implements View.OnClic
         public void changeName(String value,int type_file);
     }
 
-    public static AddEditNameFileDialog newInstance(String name){
+    public static AddEditNameFileDialog newInstance(String name,int type){
         Bundle args = new Bundle();
         args.putString(EDIT_NAME,name);
+        args.putInt(EDIT_TYPE,type);
         AddEditNameFileDialog dialog = new AddEditNameFileDialog();
         dialog.setArguments(args);
         return dialog;
@@ -85,6 +90,7 @@ public class AddEditNameFileDialog extends DialogFragment implements View.OnClic
         super.onCreate(savedInstanceState);
         if (getArguments()!= null) {
             nameFile = getArguments().getString(EDIT_NAME);
+            type = getArguments().getInt(EDIT_TYPE);
         }
 
     }
@@ -100,6 +106,12 @@ public class AddEditNameFileDialog extends DialogFragment implements View.OnClic
 
         mTovar = (RadioButton) v.findViewById(R.id.dialog_tovar);
         mEGAIS = (RadioButton) v.findViewById(R.id.dialog_egais);
+
+        if (type == ConstantManager.FILE_TYPE_PRODUCT) {
+            mTovar.setChecked(true);
+        } else {
+            mEGAIS.setChecked(true);
+        }
 
         mCancelBt.setOnClickListener(this);
         mOkBt.setOnClickListener(this);

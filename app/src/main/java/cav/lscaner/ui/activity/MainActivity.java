@@ -175,7 +175,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
                 new DemoDialog().show(getSupportFragmentManager(),"DEMO");
             } else {
                 Log.d(TAG,"NO DEMO");
-                AddEditNameFileDialog dialog = AddEditNameFileDialog.newInstance("");
+                AddEditNameFileDialog dialog = AddEditNameFileDialog.newInstance("",0);
                 dialog.setAddEditNameFileListener(mAddEditNameFileListener);
                 dialog.show(getSupportFragmentManager(), "AddFile");
             }
@@ -227,7 +227,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
                 // редактируем заголовок
                 //Toast.makeText(MainActivity.this,"А тут будет диалог редактирования заголовка файла",Toast.LENGTH_LONG).show();
                 newRecord = false;
-                AddEditNameFileDialog dialog = AddEditNameFileDialog.newInstance(selModel.getName());
+                AddEditNameFileDialog dialog = AddEditNameFileDialog.newInstance(selModel.getName(),selModel.getType());
                 dialog.setAddEditNameFileListener(mAddEditNameFileListener);
                 dialog.show(getSupportFragmentManager(),"UpdateFile");
             }
