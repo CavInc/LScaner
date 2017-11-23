@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -60,7 +61,7 @@ public class WorkInFile {
             String path = manager.getStorageAppPath();
             FieldOutFile fieldFile = manager.getPreferensManager().getFieldOutFile();
 
-            Log.d("WC",path);
+            //Log.d("WC",path);
             File outfile = new File(path,fname);
             ArrayList<ScannedDataModel> models = manager.getScannedData(idFile,filetype);
 
@@ -72,7 +73,6 @@ public class WorkInFile {
                         cls = l.getBarCode()+delim+l.getQuantity();
                     } else {
                         cls = getFieldStr(l,fieldFile,delim);
-
                     }
                     cls = new String(cls.getBytes("UTF-8"),codeStr);
                     bw.write(cls+"\r\n");
@@ -100,12 +100,17 @@ public class WorkInFile {
         if (fieldFile.getPrice() != -1) {
             br[fieldFile.getPrice()-1] = String.valueOf(model.getPrice());
         }
+
+        int iMax = br.length - 1;
+
         StringBuilder out = new StringBuilder();
         for (int i = 0;i<br.length;i++){
             if (br[i] != null) {
                 out.append(br[i]);
             }
-            out.append(delim);
+            if (i!= iMax) {
+                out.append(delim);
+            }
         }
 
         return out.toString();
