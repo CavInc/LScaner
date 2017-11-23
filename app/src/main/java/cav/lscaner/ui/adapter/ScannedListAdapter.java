@@ -52,7 +52,7 @@ public class ScannedListAdapter extends ArrayAdapter<ScannedDataModel>{
         holder.mQuantity.setText(String.valueOf(rec.getQuantity()));
         holder.mBarcode.setText(rec.getBarCode());
         //holder.mPosId.setText(String.valueOf(rec.getPosId())); // крзиция
-        holder.mPosId.setText("Остаток :"+rec.getOstatok());
+        holder.mPosId.setText("Остаток: "+rec.getOstatok());
         if (rec.getArticul() == null || rec.getArticul().length() == 0 ){
             holder.mArticul.setVisibility(View.INVISIBLE);
         } else {

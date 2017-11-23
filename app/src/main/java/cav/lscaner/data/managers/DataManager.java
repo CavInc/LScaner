@@ -117,7 +117,8 @@ public class DataManager{
                     cursor.getString(cursor.getColumnIndex("name")),
                     cursor.getFloat(cursor.getColumnIndex("quantity")),
                     cursor.getString(cursor.getColumnIndex("articul")),
-                    cursor.getDouble(cursor.getColumnIndex("price"))
+                    cursor.getDouble(cursor.getColumnIndex("price")),
+                    cursor.getDouble(cursor.getColumnIndex("ostatok"))
             ));
 
         }
