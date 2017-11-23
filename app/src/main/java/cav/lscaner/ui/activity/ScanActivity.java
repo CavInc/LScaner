@@ -169,7 +169,58 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
                     }
                 }
 
-                int l = mDataModels.indexOf(new ScannedDataModel(-1,-1,mBar,"", 0.0f));
+                // ищем код и артикул в базе. (в основном артикул потому что иначе куй определим двойной код
+                StoreProductModel product = null;
+                ArrayList<StoreProductModel> productArray;
+                if (fileType == ConstantManager.FILE_TYPE_EGAIS) {
+                    productArray = mDataManager.getDB().searchStoreEgaisArray(mBar);
+                } else {
+                    productArray = mDataManager.getDB().searchStoreArray(mBar);
+                }
+
+                if (productArray == null || productArray.size() == 0){
+                    product = new StoreProductModel(mBar,"Новый");
+                } else {
+                    if (productArray.size() ==1 ) {
+                        product = new StoreProductModel(mBar,productArray.get(0).getName(),productArray.get(0).getArticul());
+                    } else {
+                        SelectItemsDialog dialog = SelectItemsDialog.newInstance(productArray);
+                        dialog.setOnSelectItemsChangeListener(mOnSelectItemsChangeListener);
+                        dialog.show(getSupportFragmentManager(),"SI");
+                        mBarCode.setText("");
+                        return false;
+                    }
+                }
+
+                int l = mDataModels.indexOf(new ScannedDataModel(mBar,product.getArticul()));
+                if (l == -1) {
+                    showQuantityQuery(product);
+                } else {
+                    showExistsQQ(product,l);
+                    /*
+                    if (!scaleFlg) {
+                        Float qq = mDataModels.get(l).getQuantity();
+                        mArticul = mDataModels.get(l).getArticul();
+                        posID = mDataModels.get(l).getPosId();
+                        QueryQuantityDialog dialod = QueryQuantityDialog.newInstans(mDataModels.get(l).getName(), 0f, qq, editRecord);
+                        dialod.setQuantityChangeListener(mQuantityChangeListener);
+                        dialod.show(getSupportFragmentManager(), "QQ");
+                    } else {
+                        Float oldqq = mDataModels.get(l).getQuantity();
+                        mArticul = mDataModels.get(l).getArticul();
+                        posID = mDataModels.get(l).getPosId();
+                        qq = qq+oldqq;
+                        qq = Func.round(qq,3);
+                        mDataManager.getDB().addScannedPositon(idFile, mBar, qq,posID,mArticul);
+                        countRecord +=1;
+                        updateUI();
+                    }
+                    */
+                }
+
+
+                /*
+                int l = mDataModels.indexOf(new ScannedDataModel(mBar,""));
                 if (l == -1) {
                     // нифига не нашли в уже добавленых смотрим в базе
                     StoreProductModel product = null;
@@ -187,6 +238,7 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
                         product = new StoreProductModel(mBar,"Новый");
                     }
                     */
+                    /*
                     if (productArray == null || productArray.size() == 0){
                         product = new StoreProductModel(mBar,"Новый");
                     } else {
@@ -216,7 +268,7 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
                         updateUI(); // TODO передалать заполнение через добавление в адаптер
                     }
                     */
-
+                /*
                 } else {
                     if (!scaleFlg) {
                         Float qq = mDataModels.get(l).getQuantity();
@@ -236,11 +288,32 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
                         updateUI(); // TODO передалать заполнение через добавление в адаптер
                     }
                 }
+                */
                 mBarCode.setText("");
             }
             return false;
         }
     };
+
+    private void showExistsQQ(StoreProductModel product,int l) {
+        if (!scaleFlg) {
+            Float qq = mDataModels.get(l).getQuantity();
+            mArticul = mDataModels.get(l).getArticul();
+            posID = mDataModels.get(l).getPosId();
+            QueryQuantityDialog dialod = QueryQuantityDialog.newInstans(mDataModels.get(l).getName(), 0f, qq, editRecord);
+            dialod.setQuantityChangeListener(mQuantityChangeListener);
+            dialod.show(getSupportFragmentManager(), "QQ");
+        } else {
+            Float oldqq = mDataModels.get(l).getQuantity();
+            mArticul = mDataModels.get(l).getArticul();
+            posID = mDataModels.get(l).getPosId();
+            qq = qq+oldqq;
+            qq = Func.round(qq,3);
+            mDataManager.getDB().addScannedPositon(idFile, mBar, qq,posID,mArticul);
+            countRecord +=1;
+            updateUI();
+        }
+    }
 
     // показываем окно или же добавляем новую запсиь если код весовой
     private void showQuantityQuery(StoreProductModel product){
@@ -276,7 +349,13 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
     SelectItemsDialog.OnSelectItemsChangeListener mOnSelectItemsChangeListener = new SelectItemsDialog.OnSelectItemsChangeListener() {
         @Override
         public void onSelectItem(StoreProductModel product) {
-            showQuantityQuery(product);
+            //showQuantityQuery(product);
+            int l = mDataModels.indexOf(new ScannedDataModel(mBar,product.getArticul()));
+            if (l == -1) {
+                showQuantityQuery(product);
+            } else {
+                showExistsQQ(product, l);
+            }
         }
     };
 

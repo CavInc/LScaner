@@ -12,6 +12,7 @@ import java.util.List;
 
 import cav.lscaner.R;
 import cav.lscaner.data.models.ScannedDataModel;
+import cav.lscaner.utils.Func;
 
 public class ScannedListAdapter extends ArrayAdapter<ScannedDataModel>{
 
@@ -50,7 +51,8 @@ public class ScannedListAdapter extends ArrayAdapter<ScannedDataModel>{
         }
         holder.mQuantity.setText(String.valueOf(rec.getQuantity()));
         holder.mBarcode.setText(rec.getBarCode());
-        holder.mPosId.setText(String.valueOf(rec.getPosId()));
+        //holder.mPosId.setText(String.valueOf(rec.getPosId())); // крзиция
+        holder.mPosId.setText("Остаток :"+rec.getOstatok());
         if (rec.getArticul() == null || rec.getArticul().length() == 0 ){
             holder.mArticul.setVisibility(View.INVISIBLE);
         } else {
@@ -58,7 +60,7 @@ public class ScannedListAdapter extends ArrayAdapter<ScannedDataModel>{
             holder.mArticul.setText("Код : "+rec.getArticul());
         }
         holder.mPrice.setText("Цена : "+rec.getPrice());
-        holder.mSumma.setText("Сумма : "+rec.getSumm());
+        holder.mSumma.setText("Сумма : "+ Func.roundUp(rec.getSumm(),2));
 
         return row;
     }

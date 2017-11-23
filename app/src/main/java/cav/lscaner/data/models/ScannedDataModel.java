@@ -35,6 +35,11 @@ public class ScannedDataModel {
         mSumm = Double.valueOf(Func.round((float) (quantity * price),2));
     }
 
+    public ScannedDataModel(String barCode, String articul) {
+        mBarCode = barCode;
+        mArticul = articul;
+    }
+
     public ScannedDataModel(int idFile, int posId, String barCode, String name, Float quantity, String articul, Double price, Double ostatok) {
         mIdFile = idFile;
         mPosId = posId;
@@ -95,12 +100,16 @@ public class ScannedDataModel {
         }else {
             ScannedDataModel tmp = (ScannedDataModel) obj;
             //if (tmp.getSportsman().equals(this.mSportsman)) return true;
-            if (tmp.getBarCode().equals(this.mBarCode)){
+            if (this.getArticul() != null && tmp.getArticul() != null) {
+                if (tmp.getBarCode().equals(this.mBarCode) && tmp.getArticul().equals(this.mArticul)) {
+                    return true;
+                }
+            } else if (tmp.getBarCode().equals(this.mBarCode)){
                 //Log.d("ABE","True "+this.mSpId+" "+tmp.mSpId);
                 return true;
             }
-            else return false;
         }
+        return false;
     }
 
     @Override
