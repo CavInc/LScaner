@@ -26,11 +26,15 @@ public class SettingFieldFileActivity extends AppCompatActivity {
     private EditText mOutPrice;
     private EditText mOutArticul;
 
+    private EditText mOutEgaisBar;
+    private EditText mOutEgaisQuantity;
+    private EditText mOutEgaisArticul;
 
     private DataManager mDataManager;
 
     private FileFieldModel mFileFieldModel;
     private FieldOutFile mFieldOutFile;
+    private FieldOutFile mFieldOutEgaisFile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,8 +58,13 @@ public class SettingFieldFileActivity extends AppCompatActivity {
 
         mOutArticul = (EditText) findViewById(R.id.sf_out_articul);
 
+        mOutEgaisBar = (EditText) findViewById(R.id.sf_out_egais_bar);
+        mOutEgaisQuantity = (EditText) findViewById(R.id.sf_out_egais_quantity);
+        mOutEgaisArticul = (EditText) findViewById(R.id.sf_out_egais_articul);
+
         mFileFieldModel = mDataManager.getPreferensManager().getFieldFileModel();
         mFieldOutFile = mDataManager.getPreferensManager().getFieldOutFile();
+        mFieldOutEgaisFile = mDataManager.getPreferensManager().getFieldOutEgaisFile();
 
         if (mFileFieldModel.getBar() != -1) {
             mBar.setText(String.valueOf(mFileFieldModel.getBar()));
@@ -93,6 +102,17 @@ public class SettingFieldFileActivity extends AppCompatActivity {
         if (mFieldOutFile.getArticul() != -1){
             mOutArticul.setText(String.valueOf(mFieldOutFile.getArticul()));
         }
+
+        if (mFieldOutEgaisFile.getBarcode() != -1){
+            mOutEgaisBar.setText(String.valueOf(mFieldOutEgaisFile.getBarcode()));
+        }
+        if (mFieldOutEgaisFile.getQuantity() != -1){
+            mOutEgaisQuantity.setText(String.valueOf(mFieldOutEgaisFile.getQuantity()));
+        }
+        if (mFieldOutEgaisFile.getArticul() != -1) {
+            mOutEgaisArticul.setText(String.valueOf(mFieldOutEgaisFile.getArticul()));
+        }
+
         setupToolBar();
     }
 
@@ -180,5 +200,24 @@ public class SettingFieldFileActivity extends AppCompatActivity {
         }
 
         mDataManager.getPreferensManager().setFieldOutFile(mFieldOutFile);
+
+        if (mOutEgaisBar.getText().length() == 0){
+            mFieldOutEgaisFile.setBarcode(-1);
+        } else {
+            mFieldOutEgaisFile.setBarcode(Integer.parseInt(mOutEgaisBar.getText().toString()));
+        }
+        if (mOutEgaisQuantity.getText().length() == 0) {
+            mFieldOutEgaisFile.setQuantity(-1);
+        } else {
+            mFieldOutEgaisFile.setQuantity(Integer.parseInt(mOutEgaisQuantity.getText().toString()));
+        }
+        if (mOutEgaisArticul.getText().length() == 0){
+            mFieldOutEgaisFile.setArticul(-1);
+        } else {
+            mFieldOutEgaisFile.setArticul(Integer.parseInt(mOutEgaisArticul.getText().toString()));
+        }
+
+        mDataManager.getPreferensManager().setFieldOutEgaisFile(mFieldOutEgaisFile);
+
     }
 }

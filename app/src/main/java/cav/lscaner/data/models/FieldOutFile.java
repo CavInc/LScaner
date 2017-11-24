@@ -19,6 +19,7 @@ public class FieldOutFile {
         mArticul = articul;
     }
 
+
     public int getBarcode() {
         return mBarcode;
     }
