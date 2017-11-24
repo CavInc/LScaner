@@ -182,7 +182,8 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
                     product = new StoreProductModel(mBar,"Новый");
                 } else {
                     if (productArray.size() ==1 ) {
-                        product = new StoreProductModel(mBar,productArray.get(0).getName(),productArray.get(0).getArticul());
+                        product = new StoreProductModel(mBar,productArray.get(0).getName(),productArray.get(0).getArticul(),
+                                productArray.get(0).getPrice(),productArray.get(0).getOstatok());
                     } else {
                         SelectItemsDialog dialog = SelectItemsDialog.newInstance(productArray);
                         dialog.setOnSelectItemsChangeListener(mOnSelectItemsChangeListener);
@@ -300,7 +301,8 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
             Float qq = mDataModels.get(l).getQuantity();
             mArticul = mDataModels.get(l).getArticul();
             posID = mDataModels.get(l).getPosId();
-            QueryQuantityDialog dialod = QueryQuantityDialog.newInstans(mDataModels.get(l).getName(), 0f, qq, editRecord);
+            QueryQuantityDialog dialod = QueryQuantityDialog.newInstans(mDataModels.get(l).getName(), 0f, qq, editRecord,
+                    mDataModels.get(l).getOstatok(),mDataModels.get(l).getPrice());
             dialod.setQuantityChangeListener(mQuantityChangeListener);
             dialod.show(getSupportFragmentManager(), "QQ");
         } else {
@@ -319,7 +321,8 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
     private void showQuantityQuery(StoreProductModel product){
         if (!scaleFlg) {
             mArticul = product.getArticul();
-            QueryQuantityDialog dialod = QueryQuantityDialog.newInstans(product.getName(), 0f, 0f,editRecord);
+            QueryQuantityDialog dialod = QueryQuantityDialog.newInstans(product.getName(), 0f, 0f,
+                    editRecord,product.getOstatok(),product.getPrice());
             dialod.setQuantityChangeListener(mQuantityChangeListener);
             dialod.show(getSupportFragmentManager(), "QQ");
         } else {
@@ -384,7 +387,8 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
                 mArticul = selModel.getArticul();
                 QueryQuantityDialog dialog = QueryQuantityDialog.newInstans(selModel.getName(),
                         selModel.getQuantity(),
-                        selModel.getQuantity(),editRecord);
+                        selModel.getQuantity(),editRecord,
+                        selModel.getOstatok(),selModel.getPrice());
                 dialog.setQuantityChangeListener(mQuantityChangeListener);
                 dialog.show(getSupportFragmentManager(),"EDITSD");
             }

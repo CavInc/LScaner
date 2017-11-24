@@ -25,7 +25,7 @@
             android:layout_weight="1"/>
         <TextView
             android:id="@+id/ssii_price"
-            android:textColor="@color/app_blue"
+            android:textColor="@color/app_green"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="right"

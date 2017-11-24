@@ -17,6 +17,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import cav.lscaner.R;
+import cav.lscaner.utils.Func;
 
 public class QueryQuantityDialog extends DialogFragment implements View.OnClickListener{
 
@@ -24,6 +25,8 @@ public class QueryQuantityDialog extends DialogFragment implements View.OnClickL
     private static final String POSITION_QUANTITY = "POSITION_QUANTITY";
     private static final String POSITION_OLD_QUANTITY = "POSUTUIN_OLD_QUANTITY";
     private static final String EDIT_FLG = "EDIT_FLG";
+    private static final String POSITION_PRICE = "POSITION_PRICE";
+    private static final String POSITION_OSTATOK = "POSITION_OSTATOK";
 
     private TextView mName;
     private EditText mQuantity;
@@ -35,6 +38,12 @@ public class QueryQuantityDialog extends DialogFragment implements View.OnClickL
     private Float mGetQuantity;
     private Float mOldQuantity;
     private Boolean mEditFlg;
+
+    private Double mOstatok;
+    private Double mPrice;
+
+    private TextView mOstatokTV;
+    private TextView mPriceTV;
 
     private QuantityChangeListener mQuantityChangeListener;
 
@@ -57,11 +66,15 @@ public class QueryQuantityDialog extends DialogFragment implements View.OnClickL
         public void cancelButton();
     }
 
-    public static QueryQuantityDialog newInstans(String name,Float qunatity,Float oldQuantity,boolean editFlg){
+    public static QueryQuantityDialog newInstans(String name,Float qunatity,
+                                                 Float oldQuantity,boolean editFlg,
+                                                 Double ostatok,Double price){
         Bundle args = new Bundle();
         args.putString(POSITION_NAME,name);
         args.putFloat(POSITION_QUANTITY,qunatity);
         args.putFloat(POSITION_OLD_QUANTITY,oldQuantity);
+        args.putDouble(POSITION_PRICE,price);
+        args.putDouble(POSITION_OSTATOK,ostatok);
         args.putBoolean(EDIT_FLG,editFlg);
         QueryQuantityDialog dialog = new QueryQuantityDialog();
         dialog.setArguments(args);
@@ -76,6 +89,8 @@ public class QueryQuantityDialog extends DialogFragment implements View.OnClickL
             mGetQuantity = getArguments().getFloat(POSITION_QUANTITY);
             mOldQuantity = getArguments().getFloat(POSITION_OLD_QUANTITY);
             mEditFlg = getArguments().getBoolean(EDIT_FLG);
+            mOstatok = getArguments().getDouble(POSITION_OSTATOK);
+            mPrice = getArguments().getDouble(POSITION_PRICE);
         }
     }
 
@@ -87,6 +102,9 @@ public class QueryQuantityDialog extends DialogFragment implements View.OnClickL
         mName = (TextView) v.findViewById(R.id.qq_title);
         mQuantity = (EditText) v.findViewById(R.id.qq_quantity);
         mOldQuantityTV = (TextView) v.findViewById(R.id.qq_old_quantity);
+
+        mOstatokTV = (TextView) v.findViewById(R.id.qq_ostatok);
+        mPriceTV = (TextView) v.findViewById(R.id.qq_price);
 
         mQuantity.setOnEditorActionListener(mEditorActionListener);
 
@@ -109,8 +127,11 @@ public class QueryQuantityDialog extends DialogFragment implements View.OnClickL
         if (mOldQuantity == 0) {
             mOldQuantityTV.setVisibility(View.GONE);
         } else {
-            mOldQuantityTV.setText(mOldQuantity+"- уже добавлено");
+            mOldQuantityTV.setText(mOldQuantity+" - уже добавлено");
         }
+
+        mOstatokTV.setText("Остаток: "+ Func.roundUp(mOstatok,3));
+        mPriceTV.setText("Цена: "+Func.roundUp(mPrice,2));
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("Количество товара")

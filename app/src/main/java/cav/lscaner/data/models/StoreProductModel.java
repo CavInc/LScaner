@@ -8,6 +8,7 @@ public class StoreProductModel implements Parcelable {
     private String mName;
     private String mArticul = null;
     private Double mPrice = 0.0;
+    private Double mOstatok = 0.0;
 
     public StoreProductModel(String barcode, String name) {
         mBarcode = barcode;
@@ -27,11 +28,20 @@ public class StoreProductModel implements Parcelable {
         mPrice = price;
     }
 
+    public StoreProductModel(String barcode, String name, String articul, Double price, Double ostatok) {
+        mBarcode = barcode;
+        mName = name;
+        mArticul = articul;
+        mPrice = price;
+        mOstatok = ostatok;
+    }
+
     protected StoreProductModel(Parcel in) {
         mBarcode = in.readString();
         mName = in.readString();
         mArticul = in.readString();
         mPrice = in.readDouble();
+        mOstatok = in.readDouble();
     }
 
     public static final Creator<StoreProductModel> CREATOR = new Creator<StoreProductModel>() {
@@ -62,6 +72,10 @@ public class StoreProductModel implements Parcelable {
         return mPrice;
     }
 
+    public Double getOstatok() {
+        return mOstatok;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -73,5 +87,6 @@ public class StoreProductModel implements Parcelable {
         parcel.writeString(mName);
         parcel.writeString(mArticul);
         parcel.writeDouble(mPrice);
+        parcel.writeDouble(mOstatok);
     }
 }
