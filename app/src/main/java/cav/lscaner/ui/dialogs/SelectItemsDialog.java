@@ -63,7 +63,7 @@ public class SelectItemsDialog extends DialogFragment implements AdapterView.OnI
         mListView.setOnItemClickListener(this);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle("Выбор товара").setView(v);
+        builder.setTitle("Выберите товар").setView(v);
         return builder.create();
     }
 

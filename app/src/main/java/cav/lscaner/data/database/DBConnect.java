@@ -114,11 +114,12 @@ public class DBConnect {
     public ArrayList<StoreProductModel> searchStoreArray(String barcode){
         ArrayList<StoreProductModel> rec = new ArrayList<>();
         open();
-        Cursor cursor = database.query(DBHelper.STORE_PRODUCT,new String[]{"barcode","name","articul"},"barcode="+barcode,null,null,null,null);
+        Cursor cursor = database.query(DBHelper.STORE_PRODUCT,new String[]{"barcode","name","articul","price"},"barcode="+barcode,null,null,null,null);
         while (cursor.moveToNext()){
             rec.add(new StoreProductModel(cursor.getString(cursor.getColumnIndex("barcode")),
                     cursor.getString(cursor.getColumnIndex("name")),
-                    cursor.getString(cursor.getColumnIndex("articul"))));
+                    cursor.getString(cursor.getColumnIndex("articul")),
+                    cursor.getDouble(cursor.getColumnIndex("price"))));
 
         }
         close();
