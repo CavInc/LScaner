@@ -87,7 +87,7 @@ public class WorkInFile {
     }
 
     private String getFieldStr(ScannedDataModel model, FieldOutFile fieldFile,String delim) {
-        String[] br = new String[4];
+        String[] br = new String[3];
         if (fieldFile.getBarcode() != -1){
             br[fieldFile.getBarcode()-1] = model.getBarCode();
         }
