@@ -60,6 +60,7 @@ public class WorkInFile {
             String delim = manager.getPreferensManager().getDelimiterStoreFile();
             String path = manager.getStorageAppPath();
             FieldOutFile fieldFile = manager.getPreferensManager().getFieldOutFile();
+            FieldOutFile fieldEgaisFile = manager.getPreferensManager().getFieldOutEgaisFile();
 
             //Log.d("WC",path);
             File outfile = new File(path,fname);
@@ -70,7 +71,8 @@ public class WorkInFile {
                 for (ScannedDataModel l : models){
                     String cls = null;
                     if (filetype == ConstantManager.FILE_TYPE_EGAIS) {
-                        cls = l.getBarCode()+delim+l.getQuantity();
+                        cls = getFieldStr(l,fieldEgaisFile,delim);
+                        //cls = l.getBarCode()+delim+l.getQuantity();
                     } else {
                         cls = getFieldStr(l,fieldFile,delim);
                     }
