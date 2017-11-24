@@ -381,6 +381,7 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
                 editRecord = true;
                 posID = selModel.getPosId();
                 mBar = selModel.getBarCode();
+                mArticul = selModel.getArticul();
                 QueryQuantityDialog dialog = QueryQuantityDialog.newInstans(selModel.getName(),
                         selModel.getQuantity(),
                         selModel.getQuantity(),editRecord);
