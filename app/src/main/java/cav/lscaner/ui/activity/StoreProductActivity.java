@@ -26,7 +26,7 @@ public class StoreProductActivity extends AppCompatActivity {
 
         mListView = (ListView) findViewById(R.id.store_p_lv);
 
-        ArrayList<StoreProductModel> models = new ArrayList<>();
+        ArrayList<StoreProductModel> models = mDataManager.getStoreProdect();
         StoreProductAdapter adapter = new StoreProductAdapter(this,R.layout.store_product_item,models);
         mListView.setAdapter(adapter);
 

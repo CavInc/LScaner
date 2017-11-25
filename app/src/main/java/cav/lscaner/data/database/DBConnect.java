@@ -143,11 +143,13 @@ public class DBConnect {
     public ArrayList<StoreProductModel> searchStoreEgaisArray(String alcocode){
         ArrayList<StoreProductModel> rec = new ArrayList<>();
         open();
-        Cursor cursor = database.query(DBHelper.STORE_PRODUCT,new String[]{"egais","name","articul"},"egais='"+alcocode+"'",null,null,null,null);
+        Cursor cursor = database.query(DBHelper.STORE_PRODUCT,new String[]{"egais","name","articul","price","ostatok"},"egais='"+alcocode+"'",null,null,null,null);
         while (cursor.moveToNext()){
             rec.add(new StoreProductModel(cursor.getString(cursor.getColumnIndex("egais")),
                     cursor.getString(cursor.getColumnIndex("name")),
-                    cursor.getString(cursor.getColumnIndex("articul"))));
+                    cursor.getString(cursor.getColumnIndex("articul")),
+                    cursor.getDouble(cursor.getColumnIndex("price")),
+                    cursor.getDouble(cursor.getColumnIndex("ostatok"))));
         }
         close();
         return rec;
@@ -209,5 +211,11 @@ public class DBConnect {
         int res = cursor.getInt(0);
         close();
         return res;
+    }
+
+    // показать все записи товара
+    public Cursor getStoreProduct(){
+        return database.query(DBHelper.STORE_PRODUCT,
+                new String[]{"barcode","name","articul","price","ostatok","egais"},null,null,null,null,"articul");
     }
 }

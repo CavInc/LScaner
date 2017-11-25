@@ -11,6 +11,7 @@ import java.util.List;
 
 import cav.lscaner.R;
 import cav.lscaner.data.models.StoreProductModel;
+import cav.lscaner.utils.Func;
 
 public class StoreProductAdapter extends ArrayAdapter<StoreProductModel> {
     private LayoutInflater mInflater;
@@ -43,7 +44,8 @@ public class StoreProductAdapter extends ArrayAdapter<StoreProductModel> {
         holder.mName.setText(rec.getName());
         holder.mArticul.setText(rec.getArticul());
         holder.mBarcode.setText(rec.getBarcode());
-
+        holder.mPrice.setText("Цена: " + Func.roundUp(rec.getPrice(),2));
+        holder.mOstatok.setText("Остаток: " + Func.roundUp(rec.getOstatok(),3));
         return row;
     }
 

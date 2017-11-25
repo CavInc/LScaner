@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import cav.lscaner.data.database.DBConnect;
 import cav.lscaner.data.models.ScannedDataModel;
 import cav.lscaner.data.models.ScannedFileModel;
+import cav.lscaner.data.models.StoreProductModel;
 import cav.lscaner.utils.Func;
 import cav.lscaner.utils.LScanerApp;
 
@@ -121,6 +122,24 @@ public class DataManager{
                     cursor.getDouble(cursor.getColumnIndex("ostatok"))
             ));
 
+        }
+        mDB.close();
+        return rec;
+    }
+
+    // список товаров
+    public ArrayList<StoreProductModel> getStoreProdect(){
+        ArrayList<StoreProductModel> rec = new ArrayList<>();
+        mDB.open();
+        Cursor cursor = mDB.getStoreProduct();
+        while (cursor.moveToNext()){
+            rec.add(new StoreProductModel(
+                    cursor.getString(cursor.getColumnIndex("barcode")),
+                    cursor.getString(cursor.getColumnIndex("name")),
+                    cursor.getString(cursor.getColumnIndex("articul")),
+                    cursor.getDouble(cursor.getColumnIndex("price")),
+                    cursor.getDouble(cursor.getColumnIndex("ostatok"))
+            ));
         }
         mDB.close();
         return rec;
