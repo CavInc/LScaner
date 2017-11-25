@@ -121,6 +121,9 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
             mAdapter.setData(mDataModels);
             mAdapter.notifyDataSetChanged();
         }
+        if (!editRecord) {
+            mListView.setSelection(0);
+        }
         mBarCode.requestFocus();
     }
 

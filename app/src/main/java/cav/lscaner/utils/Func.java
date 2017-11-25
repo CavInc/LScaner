@@ -1,11 +1,15 @@
 package cav.lscaner.utils;
 
+import android.util.Log;
+
 import com.google.api.client.util.DateTime;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.text.DecimalFormat;
+import java.text.Format;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -128,6 +132,11 @@ public class Func {
         String rawCode = pdf417.substring(3,19);
         BigInteger big = new BigInteger(rawCode, 36);
         return String.format("%019d",big);
+    }
+
+    public static String viewOstatok(Double ostatok) {
+        DecimalFormat format = new DecimalFormat("###.###");
+        return format.format(ostatok);
     }
 
 

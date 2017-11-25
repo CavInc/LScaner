@@ -130,7 +130,7 @@ public class QueryQuantityDialog extends DialogFragment implements View.OnClickL
             mOldQuantityTV.setText(mOldQuantity+" - уже добавлено");
         }
 
-        mOstatokTV.setText("Остаток: "+ Func.roundUp(mOstatok,3));
+        mOstatokTV.setText("Остаток: "+ Func.viewOstatok(mOstatok));
         mPriceTV.setText("Цена: "+Func.roundUp(mPrice,2));
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
