@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/menu_refresh"
         android:title="Обновить данные о товаре"/>
@@ -8,6 +9,12 @@
         android:title="Настройки"/>
     <item android:id="@+id/menu_filefield_setting"
         android:title="Настройки полей"/>
+    <item
+        android:id="@+id/menu_store_product"
+        android:title="Просмотр списка товаров"
+        android:icon="@drawable/ic_assignment_black_24dp"
+        app:showAsAction="ifRoom"
+        />
     <item
         android:id="@+id/menu_about"
         android:title="О программе"/>

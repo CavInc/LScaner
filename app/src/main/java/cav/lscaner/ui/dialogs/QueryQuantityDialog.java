@@ -136,22 +136,6 @@ public class QueryQuantityDialog extends DialogFragment implements View.OnClickL
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("Количество товара")
                 .setView(v);
-        /*
-                .setPositiveButton(R.string.button_ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int witch) {
-                        if (mQuantityChangeListener != null){
-                            Float qq = Float.valueOf(mQuantity.getText().toString());
-                            mQuantityChangeListener.changeQuantity(mOldQuantity+qq);
-                        }
-
-                    }
-                })
-                .setNegativeButton(R.string.button_cancel,null);
-                */
-
-        //mQuantity.requestFocus();
-
         return builder.create();
     }
 

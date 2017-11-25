@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="cav.lscaner">
+<manifest package="cav.lscaner"
+          xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
@@ -43,6 +43,8 @@
             android:value="@integer/google_play_services_version"/>
 
         <activity android:name=".ui.activity.SettingFieldFileActivity">
+        </activity>
+        <activity android:name=".ui.activity.StoreProductActivity">
         </activity>
     </application>
 
