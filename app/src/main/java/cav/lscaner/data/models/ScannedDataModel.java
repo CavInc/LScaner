@@ -89,6 +89,11 @@ public class ScannedDataModel {
     }
 
     @Override
+    public String toString() {
+        return mName;
+    }
+
+    @Override
     public boolean equals(Object obj) {
         if(obj == this)
             return true;
