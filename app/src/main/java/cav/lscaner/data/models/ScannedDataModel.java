@@ -90,6 +90,9 @@ public class ScannedDataModel {
 
     @Override
     public String toString() {
+        if (mName == null ){
+            return "новый";
+        }
         return mName;
     }
 
