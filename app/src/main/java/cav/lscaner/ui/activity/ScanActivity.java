@@ -59,6 +59,8 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
     private int countRecord = 0;
     private int fileType = 0;
 
+    private boolean mUPCtoEAN = false;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +71,8 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
 
         prefixScale = mDataManager.getPreferensManager().getScalePrefix();
         sizeScale = mDataManager.getPreferensManager().getSizeScale();
+
+        mUPCtoEAN = mDataManager.getPreferensManager().getSharedPreferences().getBoolean("upc_to_ean",true);
 
         idFile = getIntent().getIntExtra(ConstantManager.SELECTED_FILE,-1);
         mFileName = getIntent().getStringExtra(ConstantManager.SELECTED_FILE_NAME);
@@ -225,6 +229,12 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
                         mBar = mBar.substring(0,sizeScale);
                         qq = Float.parseFloat(lq);
                         scaleFlg = true;
+                    }
+                    // получили UPC-A сконвертированный в EAN
+                    if (mBar.startsWith("0") && mBar.length() == 13) {
+                        if (! mUPCtoEAN) {
+                            mBar = mBar.substring(1, 13);
+                        }
                     }
                 }
 
