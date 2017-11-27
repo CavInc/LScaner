@@ -136,7 +136,7 @@ public class Func {
 
     public static String viewOstatok(Double ostatok) {
         DecimalFormat format = new DecimalFormat("###.###");
-        return format.format(ostatok);
+        return format.format(ostatok).replaceAll(",",".");
     }
 
     public static boolean checkEAN(String barcode){
