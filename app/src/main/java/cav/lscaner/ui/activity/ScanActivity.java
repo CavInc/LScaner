@@ -230,13 +230,15 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
                     // выкидываем EAN 8 так как его весовым у нас быть не может
                     if (prefixScale.contains(mBar.substring(0,2)) && (mBar.length() == 13 || mBar.length() == sizeScale)){
                         // Log.d("SA","SCALE KODE");
+                        scaleFlg = true;
                         if (mBar.length() != sizeScale) {
                             String lq = mBar.substring(sizeScale, mBar.length() - 1);
                             lq = lq.substring(0, 2) + "." + lq.substring(2);
                             qq = Float.parseFloat(lq);
+                        } else {
+                            scaleFlg = false;
                         }
                         mBar = mBar.substring(0,sizeScale);
-                        scaleFlg = true;
                     } else if (! mBar.startsWith("0") &&  !Func.checkEAN(mBar)) {
                         // покажем онко что куй а не код
                         InfoNoValidDialog dialog = new InfoNoValidDialog();
