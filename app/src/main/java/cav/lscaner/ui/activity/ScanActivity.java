@@ -23,6 +23,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.logging.Filter;
 
 import cav.lscaner.R;
 import cav.lscaner.data.managers.DataManager;
@@ -61,6 +62,8 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
     private int fileType = 0;
 
     private boolean mUPCtoEAN = false;
+
+    private boolean filterLock = false;
 
 
     @Override
@@ -139,9 +142,11 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
                     //adapter = null;
                    // updateUI(viewSP);
                     mAdapter = null;
+                    filterLock = false;
                     updateUI();
                 } else {
                     //adapter.getFilter().filter(newText);
+                    filterLock = true;
                     mAdapter.getFilter().filter(newText);
                 }
                 return true;
@@ -223,12 +228,14 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
                     mBar = Func.toEGAISAlcoCode(mBar);
                 } else {
                     // выкидываем EAN 8 так как его весовым у нас быть не может
-                    if (prefixScale.contains(mBar.substring(0,2)) && mBar.length() == 13){
+                    if (prefixScale.contains(mBar.substring(0,2)) && (mBar.length() == 13 || mBar.length() == 7)){
                         // Log.d("SA","SCALE KODE");
-                        String lq = mBar.substring(sizeScale,mBar.length()-1);
-                        lq = lq.substring(0,2)+"."+lq.substring(2);
+                        if (mBar.length() != 7) {
+                            String lq = mBar.substring(sizeScale, mBar.length() - 1);
+                            lq = lq.substring(0, 2) + "." + lq.substring(2);
+                            qq = Float.parseFloat(lq);
+                        }
                         mBar = mBar.substring(0,sizeScale);
-                        qq = Float.parseFloat(lq);
                         scaleFlg = true;
                     } else if (! mBar.startsWith("0") &&  !Func.checkEAN(mBar)) {
                         // покажем онко что куй а не код
@@ -273,25 +280,6 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
                     showQuantityQuery(product);
                 } else {
                     showExistsQQ(product,l);
-                    /*
-                    if (!scaleFlg) {
-                        Float qq = mDataModels.get(l).getQuantity();
-                        mArticul = mDataModels.get(l).getArticul();
-                        posID = mDataModels.get(l).getPosId();
-                        QueryQuantityDialog dialod = QueryQuantityDialog.newInstans(mDataModels.get(l).getName(), 0f, qq, editRecord);
-                        dialod.setQuantityChangeListener(mQuantityChangeListener);
-                        dialod.show(getSupportFragmentManager(), "QQ");
-                    } else {
-                        Float oldqq = mDataModels.get(l).getQuantity();
-                        mArticul = mDataModels.get(l).getArticul();
-                        posID = mDataModels.get(l).getPosId();
-                        qq = qq+oldqq;
-                        qq = Func.round(qq,3);
-                        mDataManager.getDB().addScannedPositon(idFile, mBar, qq,posID,mArticul);
-                        countRecord +=1;
-                        updateUI();
-                    }
-                    */
                 }
 
 
@@ -453,6 +441,11 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
         public void selectedItem(int item) {
             if (item == R.id.ss_dialog_del_item){
                 deleteRecord(idFile,selModel.getPosId());
+                if (filterLock) {
+                    android.widget.Filter fl = mAdapter.getFilter();
+                    mAdapter.remove(selModel);
+                    mAdapter.notifyDataSetChanged();
+                }
             }
 
             if (item == R.id.ss_dialog_edit_item){
