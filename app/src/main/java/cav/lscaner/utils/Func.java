@@ -139,6 +139,22 @@ public class Func {
         return format.format(ostatok);
     }
 
+    public static boolean checkEAN(String barcode){
+        int easum = 0;
+        if (barcode.length() == 8 ){
+            barcode = "00000" + barcode;
+        }
+        if (barcode.length() != 13) return false;
+        char[] x = barcode.toCharArray();
+        //byte[] xx = barcode.getBytes();
+        for (int i=0;i<13;i++){
+            easum = easum + Integer.parseInt(String.valueOf(x[i]))*(i%2*2+1);
+        }
+        //Log.d("FN", String.valueOf((easum % 10)));
+        if ((easum % 10) == 0) return true;
+        return false;
+    }
+
 
 
 }

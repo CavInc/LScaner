@@ -30,6 +30,7 @@ import cav.lscaner.data.models.ScannedDataModel;
 import cav.lscaner.data.models.StoreProductModel;
 import cav.lscaner.ui.adapter.ScannedListAdapter;
 import cav.lscaner.ui.dialogs.DemoDialog;
+import cav.lscaner.ui.dialogs.InfoNoValidDialog;
 import cav.lscaner.ui.dialogs.QueryQuantityDialog;
 import cav.lscaner.ui.dialogs.SelectItemsDialog;
 import cav.lscaner.ui.dialogs.SelectScanDialog;
@@ -229,6 +230,11 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
                         mBar = mBar.substring(0,sizeScale);
                         qq = Float.parseFloat(lq);
                         scaleFlg = true;
+                    } else if (! mBar.startsWith("0") &&  !Func.checkEAN(mBar)) {
+                        // покажем онко что куй а не код
+                        InfoNoValidDialog dialog = new InfoNoValidDialog();
+                        dialog.show(getSupportFragmentManager(),"INFD");
+                        return false;
                     }
                     // получили UPC-A сконвертированный в EAN
                     if (mBar.startsWith("0") && mBar.length() == 13) {
