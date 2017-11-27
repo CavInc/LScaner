@@ -228,9 +228,9 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
                     mBar = Func.toEGAISAlcoCode(mBar);
                 } else {
                     // выкидываем EAN 8 так как его весовым у нас быть не может
-                    if (prefixScale.contains(mBar.substring(0,2)) && (mBar.length() == 13 || mBar.length() == 7)){
+                    if (prefixScale.contains(mBar.substring(0,2)) && (mBar.length() == 13 || mBar.length() == sizeScale)){
                         // Log.d("SA","SCALE KODE");
-                        if (mBar.length() != 7) {
+                        if (mBar.length() != sizeScale) {
                             String lq = mBar.substring(sizeScale, mBar.length() - 1);
                             lq = lq.substring(0, 2) + "." + lq.substring(2);
                             qq = Float.parseFloat(lq);
