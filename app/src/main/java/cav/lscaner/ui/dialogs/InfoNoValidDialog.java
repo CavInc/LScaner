@@ -20,7 +20,7 @@ public class InfoNoValidDialog extends DialogFragment{
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("Внимание !!!")
-                .setMessage("Штрихкод не верен")
+                .setMessage("Штрих-код не верен")
                 .setPositiveButton(R.string.button_close,null);;
         return builder.create();
     }

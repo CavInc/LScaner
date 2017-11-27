@@ -5,6 +5,13 @@
     android:orientation="vertical"
     xmlns:android="http://schemas.android.com/apk/res/android">
     <TextView
+        android:id="@+id/sd_file_type"
+        android:text="Тип файла"
+        android:textSize="16sp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"/>
+    <TextView
         android:id="@+id/sd_file_name"
         android:text="Название"
         android:textSize="22sp"
@@ -31,10 +38,5 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"/>
     </LinearLayout>
-    <TextView
-        android:id="@+id/sd_file_type"
-        android:text="Тип файла"
-        android:textSize="18sp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+
 </LinearLayout>
