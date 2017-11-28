@@ -44,7 +44,8 @@
 
         <activity android:name=".ui.activity.SettingFieldFileActivity">
         </activity>
-        <activity android:name=".ui.activity.StoreProductActivity">
+        <activity android:name=".ui.activity.StoreProductActivity"
+            android:label="База данных">
         </activity>
     </application>
 
