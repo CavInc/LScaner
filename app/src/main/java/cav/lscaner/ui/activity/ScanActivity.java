@@ -119,6 +119,8 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
 
     private MenuItem searchItem;
 
+    private String filterString = null;
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.scan_menu, menu);
@@ -139,13 +141,11 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
             @Override
             public boolean onQueryTextChange(String newText) {
                 if (newText.length() == 0){
-                    //adapter = null;
-                   // updateUI(viewSP);
                     mAdapter = null;
                     filterLock = false;
                     updateUI();
                 } else {
-                    //adapter.getFilter().filter(newText);
+                    filterString = newText;
                     filterLock = true;
                     mAdapter.getFilter().filter(newText);
                 }
@@ -404,6 +404,10 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
                 mDataManager.getDB().addScannedPositon(idFile,mBar,quantity,posID,mArticul);
                 if (!editRecord) countRecord += 1;
                 updateUI(); // TODO передалать заполнение через добавление в адаптер
+                if (filterLock) {
+                    mAdapter.getFilter().filter(filterString);
+                    mAdapter.notifyDataSetChanged();
+                }
                 mBarCode.requestFocus();
             }
         }
@@ -444,8 +448,9 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
             if (item == R.id.ss_dialog_del_item){
                 deleteRecord(idFile,selModel.getPosId());
                 if (filterLock) {
-                    android.widget.Filter fl = mAdapter.getFilter();
+                    //android.widget.Filter fl = mAdapter.getFilter();
                     mAdapter.remove(selModel);
+                    mAdapter.getFilter().filter(filterString);
                     mAdapter.notifyDataSetChanged();
                 }
             }

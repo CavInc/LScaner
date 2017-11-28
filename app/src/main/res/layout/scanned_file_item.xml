@@ -8,6 +8,7 @@
         android:id="@+id/sd_file_type"
         android:text="Тип файла"
         android:textSize="16sp"
+        android:gravity="right"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"/>
