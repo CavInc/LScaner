@@ -79,11 +79,12 @@ public class Func {
         StringBuffer mxx = new StringBuffer(mx);
         mxx.reverse();
         mx = md5(mxx.toString());
+        mxx = new StringBuffer(mx);
+        mx = md5(mxx.toString());
         mx = mx.substring(mx.length()-8);
         if (mx.equals(serialNumber)) return true;
        return false;
     }
-
 
     // получаем md5 строки
     public static final String md5(String val){
