@@ -4,6 +4,9 @@ import android.util.Log;
 
 import com.google.api.client.util.DateTime;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.security.MessageDigest;
@@ -154,6 +157,17 @@ public class Func {
         //Log.d("FN", String.valueOf((easum % 10)));
         if ((easum % 10) == 0) return true;
         return false;
+    }
+
+    public static void addLog(String fname,String msg) {
+        try {
+            FileWriter writer = new FileWriter(fname, true);
+            BufferedWriter bufferWriter = new BufferedWriter(writer);
+            bufferWriter.write(msg+'\n');
+            bufferWriter.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 

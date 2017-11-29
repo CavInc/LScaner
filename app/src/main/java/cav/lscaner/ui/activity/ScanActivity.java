@@ -65,6 +65,7 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
 
     private boolean filterLock = false;
 
+    private String debugOutFile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +73,8 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
         setContentView(R.layout.activity_scan);
 
         mDataManager = DataManager.getInstance();
+
+        debugOutFile = mDataManager.getStorageAppPath() + "/log_file.log"; //
 
         prefixScale = mDataManager.getPreferensManager().getScalePrefix();
         sizeScale = mDataManager.getPreferensManager().getSizeScale();
@@ -218,14 +221,18 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
                 posID = -1;
                 scaleFlg = false;
                 editRecord = false;
+                Func.addLog(debugOutFile,"---------------------------------------"); // debug
+                Func.addLog(debugOutFile,"RAW Scanned code : "+mBar); // debug
 
                 if (fileType == ConstantManager.FILE_TYPE_EGAIS){
                     if (mBar.startsWith("1") || mBar.length() < 14) {
                         // марка ФСМ
+                        Func.addLog(debugOutFile,"Mark FSM : "+mBar); // debug
                         mBarCode.setText("");
                         return false;
                     }
                     mBar = Func.toEGAISAlcoCode(mBar);
+                    Func.addLog(debugOutFile,"EGAIS code : "+mBar); // debug
                 } else {
                     // выкидываем EAN 8 так как его весовым у нас быть не может
                     if (prefixScale.contains(mBar.substring(0,2)) && (mBar.length() == 13 || mBar.length() == sizeScale)){
@@ -251,6 +258,7 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
                             mBar = mBar.substring(1, 13);
                         }
                     }
+                    Func.addLog(debugOutFile,"Scanned code : "+mBar); // debug
                 }
 
                 // ищем код и артикул в базе. (в основном артикул потому что иначе куй определим двойной код
@@ -264,14 +272,17 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
 
                 if (productArray == null || productArray.size() == 0){
                     product = new StoreProductModel(mBar,"Новый");
+                    Func.addLog(debugOutFile,"New product : "+mBar); // debug
                 } else {
                     if (productArray.size() ==1 ) {
                         product = new StoreProductModel(mBar,productArray.get(0).getName(),productArray.get(0).getArticul(),
                                 productArray.get(0).getPrice(),productArray.get(0).getOstatok());
+                        Func.addLog(debugOutFile,"Product : "+product.getArticul()+" :: "+product.getName()); // debug
                     } else {
                         SelectItemsDialog dialog = SelectItemsDialog.newInstance(productArray);
                         dialog.setOnSelectItemsChangeListener(mOnSelectItemsChangeListener);
                         dialog.show(getSupportFragmentManager(),"SI");
+                        Func.addLog(debugOutFile,"Selected multiple product : "); // debug
                         mBarCode.setText("");
                         return false;
                     }
@@ -279,8 +290,10 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
 
                 int l = mDataModels.indexOf(new ScannedDataModel(mBar,product.getArticul()));
                 if (l == -1) {
+                    Func.addLog(debugOutFile,"New File pos : "+product.getArticul()+" :: "+product.getName()); // debug
                     showQuantityQuery(product);
                 } else {
+                    Func.addLog(debugOutFile,"Exst File pos : "+product.getArticul()+" :: "+product.getName()); // debug
                     showExistsQQ(product,l);
                 }
 
@@ -295,6 +308,7 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
             Float qq = mDataModels.get(l).getQuantity();
             mArticul = mDataModels.get(l).getArticul();
             posID = mDataModels.get(l).getPosId();
+            Func.addLog(debugOutFile,"No Scale : "+mArticul+" :: "+mDataModels.get(l).getName()+" :: "+l); // debug
             QueryQuantityDialog dialod = QueryQuantityDialog.newInstans(mDataModels.get(l).getName(), 0f, qq, editRecord,
                     mDataModels.get(l).getOstatok(),mDataModels.get(l).getPrice());
             dialod.setQuantityChangeListener(mQuantityChangeListener);
@@ -305,6 +319,7 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
             posID = mDataModels.get(l).getPosId();
             qq = qq+oldqq;
             qq = Func.round(qq,3);
+            Func.addLog(debugOutFile,"Scale : "+mArticul+" :: "+mDataModels.get(l).getName()+" :: "+l); // debug
             mDataManager.getDB().addScannedPositon(idFile, mBar, qq,posID,mArticul);
             countRecord +=1;
             updateUI();
@@ -314,12 +329,14 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
     // показываем окно или же добавляем новую запсиь если код весовой
     private void showQuantityQuery(StoreProductModel product){
         if (!scaleFlg) {
+            Func.addLog(debugOutFile,"No Scale : "+product.getArticul()+" :: "+product.getName()); // debug
             mArticul = product.getArticul();
             QueryQuantityDialog dialod = QueryQuantityDialog.newInstans(product.getName(), 0f, 0f,
                     editRecord,product.getOstatok(),product.getPrice());
             dialod.setQuantityChangeListener(mQuantityChangeListener);
             dialod.show(getSupportFragmentManager(), "QQ");
         } else {
+            Func.addLog(debugOutFile,"Scale : "+product.getArticul()+" :: "+product.getName()); // debug
             mDataManager.getDB().addScannedPositon(idFile, mBar, qq,-1,product.getArticul());
             countRecord +=1;
             updateUI(); // TODO передалать заполнение через добавление в адаптер
@@ -330,6 +347,7 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
         @Override
         public void changeQuantity(Float quantity) {
             if (quantity!=0){
+                Func.addLog(debugOutFile,"Change QQ : "+mArticul+" :: "+mBar+" :: "+posID); // debug
                 mDataManager.getDB().addScannedPositon(idFile,mBar,quantity,posID,mArticul);
                 if (!editRecord) countRecord += 1;
                 updateUI(); // TODO передалать заполнение через добавление в адаптер
