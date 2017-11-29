@@ -203,6 +203,7 @@ public class WorkInFile {
             }
             manager.getDB().close();
             br.close();
+            stFile.delete(); // удалили файл загрузки
         } catch (Exception e) {
             e.printStackTrace();
             return;
