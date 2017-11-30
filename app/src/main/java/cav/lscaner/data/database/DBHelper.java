@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class DBHelper extends SQLiteOpenHelper {
 
     public static final int DATABASE_VERSION = 1 ;
-    public static final String DATABASE_NAME = "lscaner.db3";
+    public static final String DATABASE_NAME = "lscanerv2.db3";
 
     public static final String SCAN_TABLE_SPEC = "scan_table_spec";
     public static final String SCAN_TABLE = "scan_table";
