@@ -246,7 +246,8 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
                             scaleFlg = false;
                         }
                         mBar = mBar.substring(0,sizeScale);
-                    } else if (! mBar.startsWith("0")  &&  !Func.checkEAN(mBar)) {
+                    } else if ((! mBar.startsWith("0") || !(mBar.startsWith("8") && mBar.length() == 12))
+                            &&  !Func.checkEAN(mBar)) {
                         // покажем онко что куй а не код
                         InfoNoValidDialog dialog = new InfoNoValidDialog();
                         dialog.show(getSupportFragmentManager(),"INFD");
