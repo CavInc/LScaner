@@ -148,6 +148,10 @@ public class Func {
         if (barcode.length() == 8 ){
             barcode = "00000" + barcode;
         }
+        // костыль для UPC-A которые не с 0
+        if (barcode.length() == 12) {
+            barcode = "0" + barcode;
+        }
         if (barcode.length() != 13) return false;
         char[] x = barcode.toCharArray();
         //byte[] xx = barcode.getBytes();
