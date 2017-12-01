@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import cav.lscaner.R;
 import cav.lscaner.data.managers.DataManager;
+import cav.lscaner.data.models.StoreProductModel;
 import cav.lscaner.utils.Func;
 
 public class QueryQuantityDialog extends DialogFragment implements View.OnClickListener{
@@ -28,6 +29,8 @@ public class QueryQuantityDialog extends DialogFragment implements View.OnClickL
     private static final String EDIT_FLG = "EDIT_FLG";
     private static final String POSITION_PRICE = "POSITION_PRICE";
     private static final String POSITION_OSTATOK = "POSITION_OSTATOK";
+    private static final String POSITION_BARCODE = "POSITION_BARCODE";
+    private static final String POSITON_ARTICUL = "POSITION_ARTICUL";
 
     private TextView mName;
     private EditText mQuantity;
@@ -39,6 +42,9 @@ public class QueryQuantityDialog extends DialogFragment implements View.OnClickL
     private Float mGetQuantity;
     private Float mOldQuantity;
     private Boolean mEditFlg;
+
+    private String mBarcode;
+    private String mArticul;
 
     private Double mOstatok;
     private Double mPrice;
@@ -65,10 +71,12 @@ public class QueryQuantityDialog extends DialogFragment implements View.OnClickL
     }
 
     public interface QuantityChangeListener {
-        public void changeQuantity (Float quantity);
+       // public void changeQuantity (Float quantity);
+        public void changeQuantity(Float quantity,StoreProductModel productModel);
         public void cancelButton();
     }
 
+    /*
     public static QueryQuantityDialog newInstans(String name,Float qunatity,
                                                  Float oldQuantity,boolean editFlg,
                                                  Double ostatok,Double price){
@@ -79,6 +87,23 @@ public class QueryQuantityDialog extends DialogFragment implements View.OnClickL
         args.putDouble(POSITION_PRICE,price);
         args.putDouble(POSITION_OSTATOK,ostatok);
         args.putBoolean(EDIT_FLG,editFlg);
+        QueryQuantityDialog dialog = new QueryQuantityDialog();
+        dialog.setArguments(args);
+        return dialog;
+    }
+    */
+
+    public static QueryQuantityDialog newInstans(StoreProductModel productModel,Float qunatity,Float oldQuantity,boolean editFlg) {
+        Bundle args = new Bundle();
+        args.putString(POSITION_NAME,productModel.getName());
+        args.putFloat(POSITION_QUANTITY,qunatity);
+        args.putFloat(POSITION_OLD_QUANTITY,oldQuantity);
+        args.putDouble(POSITION_PRICE,productModel.getPrice());
+        args.putDouble(POSITION_OSTATOK,productModel.getOstatok());
+        args.putBoolean(EDIT_FLG,editFlg);
+        args.putString(POSITION_BARCODE,productModel.getBarcode());
+        args.putString(POSITON_ARTICUL,productModel.getArticul());
+
         QueryQuantityDialog dialog = new QueryQuantityDialog();
         dialog.setArguments(args);
         return dialog;
@@ -94,6 +119,8 @@ public class QueryQuantityDialog extends DialogFragment implements View.OnClickL
             mEditFlg = getArguments().getBoolean(EDIT_FLG);
             mOstatok = getArguments().getDouble(POSITION_OSTATOK);
             mPrice = getArguments().getDouble(POSITION_PRICE);
+            mBarcode = getArguments().getString(POSITION_BARCODE);
+            mArticul = getArguments().getString(POSITON_ARTICUL);
         }
 
         mDataManager = DataManager.getInstance(); // debug
@@ -177,11 +204,11 @@ public class QueryQuantityDialog extends DialogFragment implements View.OnClickL
             } else {
                 qq = 1f;
             }
-            if (mEditFlg) {
-                mQuantityChangeListener.changeQuantity(qq);
-            } else {
-                mQuantityChangeListener.changeQuantity(mOldQuantity + qq);
+            if (! mEditFlg) {
+                qq = mOldQuantity + qq;
             }
+            StoreProductModel productModel = new StoreProductModel(mBarcode,mGetName,mArticul);
+            mQuantityChangeListener.changeQuantity(qq,productModel);
 
             Func.addLog(debugOutFile,"STORE QUANTITY : "+qq); // debug
         }

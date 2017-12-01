@@ -315,10 +315,13 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
             mArticul = mDataModels.get(l).getArticul();
             posID = mDataModels.get(l).getPosId();
             Func.addLog(debugOutFile,"No Scale : "+mArticul+" :: "+mDataModels.get(l).getName()+" :: "+l); // debug
+            /*
             QueryQuantityDialog dialod = QueryQuantityDialog.newInstans(mDataModels.get(l).getName(), 0f, qq, editRecord,
                     mDataModels.get(l).getOstatok(),mDataModels.get(l).getPrice());
-            dialod.setQuantityChangeListener(mQuantityChangeListener);
-            dialod.show(getSupportFragmentManager(), "QQ");
+                    */
+            QueryQuantityDialog dialog = QueryQuantityDialog.newInstans(product,0f,qq,editRecord);
+            dialog.setQuantityChangeListener(mQuantityChangeListener);
+            dialog.show(getSupportFragmentManager(), "QQ");
         } else {
             Float oldqq = mDataModels.get(l).getQuantity();
             mArticul = mDataModels.get(l).getArticul();
@@ -337,10 +340,14 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
         if (!scaleFlg) {
             Func.addLog(debugOutFile,"No Scale : "+product.getArticul()+" :: "+product.getName()+" :: "+product.getBarcode()+" :: store "+mBar); // debug
             mArticul = product.getArticul();
+            /*
             QueryQuantityDialog dialod = QueryQuantityDialog.newInstans(product.getName(), 0f, 0f,
                     editRecord,product.getOstatok(),product.getPrice());
-            dialod.setQuantityChangeListener(mQuantityChangeListener);
-            dialod.show(getSupportFragmentManager(), "QQ");
+                    */
+            QueryQuantityDialog dialog = QueryQuantityDialog.newInstans(product,0f,0f,editRecord);
+
+            dialog.setQuantityChangeListener(mQuantityChangeListener);
+            dialog.show(getSupportFragmentManager(), "QQ");
         } else {
             Func.addLog(debugOutFile,"Scale : "+product.getArticul()+" :: "+product.getName()); // debug
             mDataManager.getDB().addScannedPositon(idFile, mBar, qq,-1,product.getArticul());
@@ -350,11 +357,31 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
     }
 
     QueryQuantityDialog.QuantityChangeListener mQuantityChangeListener = new QueryQuantityDialog.QuantityChangeListener(){
+        /*
         @Override
         public void changeQuantity(Float quantity) {
             if (quantity!=0){
                 Func.addLog(debugOutFile,"Change QQ : "+mArticul+" :: "+mBar+" :: "+posID); // debug
                 mDataManager.getDB().addScannedPositon(idFile,mBar,quantity,posID,mArticul);
+                if (!editRecord) countRecord += 1;
+                updateUI(); // TODO передалать заполнение через добавление в адаптер
+                if (filterLock) {
+                    mAdapter.getFilter().filter(filterString);
+                    mAdapter.notifyDataSetChanged();
+                }
+                mBarCode.setText("");
+                mBarCode.requestFocus();
+            }
+        }
+        */
+
+        @Override
+        public void changeQuantity(Float quantity, StoreProductModel productModel) {
+            if (quantity!=0){
+                Func.addLog(debugOutFile,"Change QQ : "+mArticul+" :: "+mBar+" :: "+posID); // debug
+                Func.addLog(debugOutFile,"Change QQ : "+productModel.getArticul()+" :: "+productModel.getBarcode()+" :: "+posID+" :: IDFILE :"+idFile); // debug
+
+                mDataManager.getDB().addScannedPositon(idFile,productModel.getBarcode(),quantity,posID,productModel.getArticul());
                 if (!editRecord) countRecord += 1;
                 updateUI(); // TODO передалать заполнение через добавление в адаптер
                 if (filterLock) {
@@ -414,10 +441,14 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
                 posID = selModel.getPosId();
                 mBar = selModel.getBarCode();
                 mArticul = selModel.getArticul();
+                /*
                 QueryQuantityDialog dialog = QueryQuantityDialog.newInstans(selModel.getName(),
                         selModel.getQuantity(),
                         selModel.getQuantity(),editRecord,
                         selModel.getOstatok(),selModel.getPrice());
+                        */
+                QueryQuantityDialog dialog = QueryQuantityDialog.newInstans(new StoreProductModel(selModel.getBarCode(),selModel.getName(),selModel.getArticul()),
+                        selModel.getQuantity(),selModel.getQuantity(),editRecord);
                 dialog.setQuantityChangeListener(mQuantityChangeListener);
                 dialog.show(getSupportFragmentManager(),"EDITSD");
             }
