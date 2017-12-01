@@ -196,6 +196,12 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
         mBarCode.requestFocus();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Func.addLog(debugOutFile,"FORM RESUME : "); // debug
+    }
+
     private String mBar;
     private String mArticul;
     private Float qq;
@@ -290,13 +296,13 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
 
                 int l = mDataModels.indexOf(new ScannedDataModel(mBar,product.getArticul()));
                 if (l == -1) {
-                    Func.addLog(debugOutFile,"New File pos : "+product.getArticul()+" :: "+product.getName()); // debug
+                    Func.addLog(debugOutFile,"New File pos : "+product.getArticul()+" :: "+product.getName()+" :: "+mBar); // debug
                     showQuantityQuery(product);
                 } else {
-                    Func.addLog(debugOutFile,"Exst File pos : "+product.getArticul()+" :: "+product.getName()); // debug
+                    Func.addLog(debugOutFile,"Exst File pos : "+product.getArticul()+" :: "+product.getName()+" :: "+mBar); // debug
                     showExistsQQ(product,l);
                 }
-                Func.addLog(debugOutFile," CLEAR EDIT TEXT "); // debug
+                Func.addLog(debugOutFile," CLEAR EDIT TEXT MAIN"); // debug
                 mBarCode.setText("");
             }
             return false;
@@ -329,7 +335,7 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
     // показываем окно или же добавляем новую запсиь если код весовой
     private void showQuantityQuery(StoreProductModel product){
         if (!scaleFlg) {
-            Func.addLog(debugOutFile,"No Scale : "+product.getArticul()+" :: "+product.getName()); // debug
+            Func.addLog(debugOutFile,"No Scale : "+product.getArticul()+" :: "+product.getName()+" :: "+product.getBarcode()+" :: store "+mBar); // debug
             mArticul = product.getArticul();
             QueryQuantityDialog dialod = QueryQuantityDialog.newInstans(product.getName(), 0f, 0f,
                     editRecord,product.getOstatok(),product.getPrice());
