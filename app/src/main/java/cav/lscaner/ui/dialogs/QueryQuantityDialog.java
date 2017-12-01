@@ -17,6 +17,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import cav.lscaner.R;
+import cav.lscaner.data.managers.DataManager;
 import cav.lscaner.utils.Func;
 
 public class QueryQuantityDialog extends DialogFragment implements View.OnClickListener{
@@ -46,6 +47,8 @@ public class QueryQuantityDialog extends DialogFragment implements View.OnClickL
     private TextView mPriceTV;
 
     private QuantityChangeListener mQuantityChangeListener;
+    private DataManager mDataManager;
+    private String debugOutFile;
 
     @Override
     public void onClick(View view) {
@@ -92,6 +95,10 @@ public class QueryQuantityDialog extends DialogFragment implements View.OnClickL
             mOstatok = getArguments().getDouble(POSITION_OSTATOK);
             mPrice = getArguments().getDouble(POSITION_PRICE);
         }
+
+        mDataManager = DataManager.getInstance(); // debug
+
+        debugOutFile = mDataManager.getStorageAppPath() + "/log_file.log"; // debug
     }
 
     @NonNull
@@ -175,6 +182,8 @@ public class QueryQuantityDialog extends DialogFragment implements View.OnClickL
             } else {
                 mQuantityChangeListener.changeQuantity(mOldQuantity + qq);
             }
+
+            Func.addLog(debugOutFile,"STORE QUANTITY : "+qq); // debug
         }
     }
 }

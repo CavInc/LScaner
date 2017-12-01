@@ -296,7 +296,7 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
                     Func.addLog(debugOutFile,"Exst File pos : "+product.getArticul()+" :: "+product.getName()); // debug
                     showExistsQQ(product,l);
                 }
-
+                Func.addLog(debugOutFile," CLEAR EDIT TEXT "); // debug
                 mBarCode.setText("");
             }
             return false;
@@ -355,6 +355,7 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
                     mAdapter.getFilter().filter(filterString);
                     mAdapter.notifyDataSetChanged();
                 }
+                mBarCode.setText("");
                 mBarCode.requestFocus();
             }
         }
