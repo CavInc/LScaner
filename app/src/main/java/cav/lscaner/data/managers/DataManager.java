@@ -27,6 +27,8 @@ public class DataManager{
 
     private DBConnect mDB;
 
+    private String mLastError;
+
     public static DataManager getInstance() {
         if (INSTANCE==null){
             INSTANCE = new DataManager();
@@ -87,6 +89,13 @@ public class DataManager{
         return false;
     }
 
+    public String getLastError() {
+        return mLastError;
+    }
+
+    public void setLastError(String mlastError) {
+        this.mLastError = mlastError;
+    }
 
     // =============================== запросы к базе данных =======================================
     // запрос списка файлов

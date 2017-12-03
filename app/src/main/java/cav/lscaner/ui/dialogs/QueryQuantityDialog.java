@@ -186,7 +186,8 @@ public class QueryQuantityDialog extends DialogFragment implements View.OnClickL
     TextView.OnEditorActionListener mEditorActionListener = new TextView.OnEditorActionListener() {
         @Override
         public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
-            Log.d("SA KEY", " qq EVENT KEY ");
+            //Log.d("SA KEY", " qq EVENT KEY ");
+            Func.addLog(debugOutFile,"QQ KEY EVENT  ac: "+actionId+" kv :"+keyEvent); // debug
             if ((keyEvent != null && (keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER))
                     || actionId == EditorInfo.IME_ACTION_DONE){
                // Log.d("SA KEY", " qq EVENT KEY ");

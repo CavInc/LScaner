@@ -160,6 +160,7 @@ public class DBConnect {
     public void deleteStore(){
         open();
         database.delete(DBHelper.STORE_PRODUCT,null,null);
+        database.execSQL("update sqlite_sequence set seq=1 where name='store_product';");
         close();
     }
 

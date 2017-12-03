@@ -9,8 +9,6 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -122,9 +120,9 @@ public class WorkInFile {
         return savedFile;
     }
 
-    public void loadProductFile(String fname,DataManager manager){
+    public int loadProductFile(String fname,DataManager manager){
         // проверяем доступность SD
-        if (!manager.isExternalStorageWritable()) return;
+        if (!manager.isExternalStorageWritable()) return ConstantManager.RET_NO_SD;
         String delim = manager.getPreferensManager().getDelimiterStoreFile();
         String path = manager.getStorageAppPath();
         //Log.d("LC",path);
@@ -160,9 +158,8 @@ public class WorkInFile {
                         str = str.replaceAll(delim+delim,delim+" "+delim);
                         lm = str.split(delim);
                         if (lm.length < fieldFile.getMaxIndex()) {
-                            //TODO сдеся сообщение о том что облом файлы не соотвествует разметки
                             Log.d("WF","OOPS !!!!");
-                            return;
+                            return ConstantManager.RET_NO_FIELD_MANY;
                         }
                         //manager.getDB().addStore(lm[0],lm[2]);
                         // обработать поля здесь или передать их в процедуру дальшн  ?
@@ -209,12 +206,15 @@ public class WorkInFile {
             manager.getDB().close();
             br.close();
             stFile.delete(); // удалили файл загрузки
+
             // обновили файлы для привязки названий
             manager.refreshDataInFiles();
         } catch (Exception e) {
             e.printStackTrace();
-            return;
+            manager.setLastError(e.getLocalizedMessage());
+            return ConstantManager.RET_ERROR;
         }
+        return ConstantManager.RET_OK;
 
     }
 }

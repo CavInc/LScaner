@@ -211,6 +211,9 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
     TextView.OnEditorActionListener mEditorActionListener = new TextView.OnEditorActionListener() {
         @Override
         public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
+
+            Func.addLog(debugOutFile,"KEY EVENT  ac: "+actionId+" kv :"+keyEvent); // debug
+
             if ((keyEvent != null && (keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER))
                     || actionId == EditorInfo.IME_ACTION_DONE){
                 Log.d("SA KEY", "EVENT KEY ");
@@ -309,15 +312,6 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
             return false;
         }
     };
-
-    @Override
-    public boolean onKeyUp(int keyCode, KeyEvent event) {
-        Log.d("SA","KEY CODE :"+keyCode);
-        if (keyCode == KeyEvent.KEYCODE_ENTER) {
-            Log.d("SA","ENTER");
-        }
-        return super.onKeyUp(keyCode,event);
-    }
 
     private void showExistsQQ(StoreProductModel product, int l) {
         if (!scaleFlg) {

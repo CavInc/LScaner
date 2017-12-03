@@ -16,4 +16,9 @@ public interface ConstantManager{
     int FILE_TYPE_PRODUCT = 0;
     int FILE_TYPE_EGAIS = 1;
 
+    int RET_OK = 200;
+
+    int RET_ERROR = 201;
+    int RET_NO_FIELD_MANY = 202;
+    int RET_NO_SD = 203;
 }
