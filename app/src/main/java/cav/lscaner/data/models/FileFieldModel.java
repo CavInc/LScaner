@@ -37,6 +37,8 @@ public class FileFieldModel implements Parcelable {
         mArticul = parcel.readInt();
         mPrice = parcel.readInt();
         mEGAIS = parcel.readInt();
+        mBasePrice = parcel.readInt();
+        mOstatok = parcel.readInt();
     }
 
     public int getBar() {
@@ -120,5 +122,7 @@ public class FileFieldModel implements Parcelable {
         parcel.writeInt(mArticul);
         parcel.writeInt(mPrice);
         parcel.writeInt(mEGAIS);
+        parcel.writeInt(mBasePrice);
+        parcel.writeInt(mOstatok);
     }
 }
