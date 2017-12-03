@@ -145,5 +145,24 @@ public class DataManager{
         return rec;
     }
 
+    // обновляет данные после загрузки файла базы данных
+    // в существующих файлах
+    public void refreshDataInFiles(){
+        mDB.open();
+        mDB.refreshAllFile();
+        /*
+        Cursor  cursor = mDB.getLinkedRec();
+        mDB.getDatabase().beginTransaction();
+        while (cursor.moveToNext()){
+            mDB.updateArticul(cursor.getInt(cursor.getColumnIndex("id")),
+                    cursor.getInt(cursor.getColumnIndex("pos_id")),
+                    cursor.getString(cursor.getColumnIndex("articul")));
+
+        }
+        mDB.getDatabase().setTransactionSuccessful();
+        */
+        mDB.close();
+    }
+
 
 }

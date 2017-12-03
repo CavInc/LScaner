@@ -159,6 +159,11 @@ public class WorkInFile {
                         str = str.replaceAll(delim+delim,delim+" "+delim);
                         str = str.replaceAll(delim+delim,delim+" "+delim);
                         lm = str.split(delim);
+                        if (lm.length < fieldFile.getMaxIndex()) {
+                            //TODO сдеся сообщение о том что облом файлы не соотвествует разметки
+                            Log.d("WF","OOPS !!!!");
+                            return;
+                        }
                         //manager.getDB().addStore(lm[0],lm[2]);
                         // обработать поля здесь или передать их в процедуру дальшн  ?
                         // что делать с товаром без кода но с егаис маркой.
@@ -204,6 +209,8 @@ public class WorkInFile {
             manager.getDB().close();
             br.close();
             stFile.delete(); // удалили файл загрузки
+            // обновили файлы для привязки названий
+            manager.refreshDataInFiles();
         } catch (Exception e) {
             e.printStackTrace();
             return;

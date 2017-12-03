@@ -213,7 +213,7 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
         public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
             if ((keyEvent != null && (keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER))
                     || actionId == EditorInfo.IME_ACTION_DONE){
-                //Log.d("SA KEY", "EVENT KEY ");
+                Log.d("SA KEY", "EVENT KEY ");
 
                 if (demo && countRecord >=10 ) {
                     new DemoDialog().show(getSupportFragmentManager(),"DEMO");
@@ -240,6 +240,7 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
                     mBar = Func.toEGAISAlcoCode(mBar);
                     Func.addLog(debugOutFile,"EGAIS code : "+mBar); // debug
                 } else {
+                    if (mBar.length()<2) return false;
                     // выкидываем EAN 8 так как его весовым у нас быть не может
                     if (prefixScale.contains(mBar.substring(0,2)) && (mBar.length() == 13 || mBar.length() == sizeScale)){
                         // Log.d("SA","SCALE KODE");
@@ -309,7 +310,16 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
         }
     };
 
-    private void showExistsQQ(StoreProductModel product,int l) {
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+        Log.d("SA","KEY CODE :"+keyCode);
+        if (keyCode == KeyEvent.KEYCODE_ENTER) {
+            Log.d("SA","ENTER");
+        }
+        return super.onKeyUp(keyCode,event);
+    }
+
+    private void showExistsQQ(StoreProductModel product, int l) {
         if (!scaleFlg) {
             Float qq = mDataModels.get(l).getQuantity();
             mArticul = mDataModels.get(l).getArticul();
