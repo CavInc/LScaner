@@ -58,7 +58,7 @@ public class ScannedListAdapter extends ArrayAdapter<ScannedDataModel>{
         } else {
             holder.mName.setText(rec.getName());
         }
-        holder.mQuantity.setText(String.valueOf(rec.getQuantity()));
+        holder.mQuantity.setText(Func.viewOstatok(Double.valueOf(rec.getQuantity())));
         holder.mBarcode.setText(rec.getBarCode());
         //holder.mPosId.setText(String.valueOf(rec.getPosId())); // крзиция
 
