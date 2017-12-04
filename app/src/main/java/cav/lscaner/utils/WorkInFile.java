@@ -156,6 +156,10 @@ public class WorkInFile {
                     if (str.length() != 0) {
                         str = str.replaceAll(delim+delim,delim+" "+delim);
                         str = str.replaceAll(delim+delim,delim+" "+delim);
+                        char lastS =  str.toCharArray()[str.length() - 1];
+                        if (lastS == '#') {
+                            str = str + " ";
+                        }
                         lm = str.split(delim);
                         if (lm.length < fieldFile.getMaxIndex()) {
                             Log.d("WF","OOPS !!!!");
