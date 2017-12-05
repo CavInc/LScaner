@@ -44,7 +44,9 @@
         android:imeOptions="actionDone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:nextFocusDown="@+id/qq_bt_ok"/>
+        android:nextFocusDown="@+id/qq_bt_ok">
+        <requestFocus/>
+        </EditText>
     <TextView
         android:id="@+id/qq_old_quantity"
         android:text="00 - старое количество"
