@@ -236,8 +236,8 @@ public class DBConnect {
     }
 
     public void refreshAllFile(){
-        String sql = "insert or replace into scan_table_spec (head_id,pos_id,barcode,articul) \n" +
-                "select st.id as head_id,stc.pos_id,stc.barcode,sp.articul from scan_table st \n" +
+        String sql = "insert or replace into scan_table_spec (head_id,pos_id,barcode,articul,quantity) \n" +
+                "select st.id as head_id,stc.pos_id,stc.barcode,sp.articul,stc.quantity from scan_table st \n" +
                 "  JOIN scan_table_spec stc on st.id=stc.head_id\n" +
                 "  join store_product sp on stc.barcode=sp.barcode \n" +
                 "where st.type=0 ";
