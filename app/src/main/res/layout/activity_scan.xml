@@ -17,7 +17,7 @@
         <EditText
             android:id="@+id/barcode_et"
             android:hint="Штрих-код"
-            android:inputType="numberSigned"
+            android:inputType="numberDecimal"
             android:imeOptions="actionDone"
             android:lines="1"
             android:maxLength="13"

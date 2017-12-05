@@ -140,7 +140,7 @@ public class QueryQuantityDialog extends DialogFragment implements View.OnClickL
         mOstatokTV = (TextView) v.findViewById(R.id.qq_ostatok);
         mPriceTV = (TextView) v.findViewById(R.id.qq_price);
 
-        mQuantity.setOnEditorActionListener(mEditorActionListener);
+       // mQuantity.setOnEditorActionListener(mEditorActionListener);
 
         mCancelBt = (Button) v.findViewById(R.id.qq_bt_cancel);
         mOkBt = (Button) v.findViewById(R.id.qq_bt_ok);
@@ -154,7 +154,6 @@ public class QueryQuantityDialog extends DialogFragment implements View.OnClickL
             mName.setText("Новый");
         }
         if (mGetQuantity != null && mGetQuantity !=0) {
-            //mQuantity.setText(String.valueOf(mGetQuantity));
             mQuantity.setHint(String.valueOf(mGetQuantity));
         }
 
@@ -188,8 +187,7 @@ public class QueryQuantityDialog extends DialogFragment implements View.OnClickL
         public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
             //Log.d("SA KEY", " qq EVENT KEY ");
             Func.addLog(debugOutFile,"QQ KEY EVENT  ac: "+actionId+" kv :"+keyEvent); // debug
-            if ((keyEvent != null && (keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER))
-                    || actionId == EditorInfo.IME_ACTION_DONE){
+            if (actionId == EditorInfo.IME_ACTION_DONE  || (keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER)){
                // Log.d("SA KEY", " qq EVENT KEY ");
                 storeQuantiy();
                 dismiss();

@@ -9,8 +9,10 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.SearchView;
+import android.text.Editable;
 import android.text.InputFilter;
 import android.text.InputType;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -74,7 +76,7 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
 
         mDataManager = DataManager.getInstance();
 
-        debugOutFile = mDataManager.getStorageAppPath() + "/log_file.log"; //
+        debugOutFile = mDataManager.getStorageAppPath() + "/log_file.log"; //debug
 
         prefixScale = mDataManager.getPreferensManager().getScalePrefix();
         sizeScale = mDataManager.getPreferensManager().getSizeScale();
@@ -90,6 +92,8 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
         mListView = (ListView) findViewById(R.id.san_lv);
 
         mBarCode.setOnEditorActionListener(mEditorActionListener);
+        //mBarCode.addTextChangedListener(mScanWatcher);
+        //mBarCode.setOnEditorActionListener(mX12);
 
         mListView.setOnItemLongClickListener(this);
 
@@ -208,14 +212,53 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
     private int posID;
     private boolean scaleFlg = false;
 
+
+    TextWatcher mScanWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence cs, int start, int before, int count) {
+            String s = cs.toString();
+            Log.d("SA",s);
+            if (s.contains("\n")){
+                Log.d("SA","ENTER");
+            }
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+
+        }
+    };
+
+    TextView.OnEditorActionListener mX12 = new TextView.OnEditorActionListener() {
+        @Override
+        public boolean onEditorAction(TextView textView, int actionID, KeyEvent keyEvent) {
+            System.out.println(" --- "+actionID+" --- "+keyEvent);
+            if (actionID == EditorInfo.IME_ACTION_DONE ||
+                    (keyEvent.getAction() == KeyEvent.ACTION_DOWN && keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER) ){
+                System.out.println("ENTER");
+                mBarCode.setText("");
+
+                return true;
+            }
+
+            return false;
+        };
+    };
+
     TextView.OnEditorActionListener mEditorActionListener = new TextView.OnEditorActionListener() {
         @Override
         public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
 
             Func.addLog(debugOutFile,"KEY EVENT  ac: "+actionId+" kv :"+keyEvent); // debug
 
-            if ((keyEvent != null && (keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER))
-                    || actionId == EditorInfo.IME_ACTION_DONE){
+            if (actionId == EditorInfo.IME_ACTION_DONE ||
+                    (keyEvent.getAction() == KeyEvent.ACTION_DOWN && keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER)){
                 Log.d("SA KEY", "EVENT KEY ");
 
                 if (demo && countRecord >=10 ) {
@@ -294,7 +337,7 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
                         dialog.show(getSupportFragmentManager(),"SI");
                         Func.addLog(debugOutFile,"Selected multiple product : "); // debug
                         mBarCode.setText("");
-                        return false;
+                        return true;
                     }
                 }
 

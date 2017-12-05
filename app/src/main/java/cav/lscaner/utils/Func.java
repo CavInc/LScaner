@@ -163,7 +163,6 @@ public class Func {
         //Log.d("FN", String.valueOf((easum % 10)));
         if ((easum % 10) == 0) return true;
         return false;
-
     }
 
     public static void addLog(String fname,String msg) {
