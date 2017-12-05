@@ -281,12 +281,12 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
                         // марка ФСМ
                         Func.addLog(debugOutFile,"Mark FSM : "+mBar); // debug
                         mBarCode.setText("");
-                        return false;
+                        return true;
                     }
                     mBar = Func.toEGAISAlcoCode(mBar);
                     Func.addLog(debugOutFile,"EGAIS code : "+mBar); // debug
                 } else {
-                    if (mBar.length()<2) return false;
+                    if (mBar.length()<2) return true;
                     // выкидываем EAN 8 так как его весовым у нас быть не может
                     if (prefixScale.contains(mBar.substring(0,2)) && (mBar.length() == 13 || mBar.length() == sizeScale)){
                         // Log.d("SA","SCALE KODE");
