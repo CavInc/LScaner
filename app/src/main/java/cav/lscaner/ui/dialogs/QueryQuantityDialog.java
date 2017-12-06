@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.text.Editable;
+import android.text.method.KeyListener;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -76,22 +78,6 @@ public class QueryQuantityDialog extends DialogFragment implements View.OnClickL
         public void cancelButton();
     }
 
-    /*
-    public static QueryQuantityDialog newInstans(String name,Float qunatity,
-                                                 Float oldQuantity,boolean editFlg,
-                                                 Double ostatok,Double price){
-        Bundle args = new Bundle();
-        args.putString(POSITION_NAME,name);
-        args.putFloat(POSITION_QUANTITY,qunatity);
-        args.putFloat(POSITION_OLD_QUANTITY,oldQuantity);
-        args.putDouble(POSITION_PRICE,price);
-        args.putDouble(POSITION_OSTATOK,ostatok);
-        args.putBoolean(EDIT_FLG,editFlg);
-        QueryQuantityDialog dialog = new QueryQuantityDialog();
-        dialog.setArguments(args);
-        return dialog;
-    }
-    */
 
     public static QueryQuantityDialog newInstans(StoreProductModel productModel,Float qunatity,Float oldQuantity,boolean editFlg) {
         Bundle args = new Bundle();
@@ -141,6 +127,7 @@ public class QueryQuantityDialog extends DialogFragment implements View.OnClickL
         mPriceTV = (TextView) v.findViewById(R.id.qq_price);
 
        // mQuantity.setOnEditorActionListener(mEditorActionListener);
+
 
         mCancelBt = (Button) v.findViewById(R.id.qq_bt_cancel);
         mOkBt = (Button) v.findViewById(R.id.qq_bt_ok);
@@ -195,6 +182,7 @@ public class QueryQuantityDialog extends DialogFragment implements View.OnClickL
             return false;
         }
     };
+
 
     private void storeQuantiy (){
         if (mQuantityChangeListener != null){

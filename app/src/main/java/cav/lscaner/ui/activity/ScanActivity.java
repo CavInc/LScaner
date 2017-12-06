@@ -261,8 +261,10 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
             if (actionId == EditorInfo.IME_ACTION_DONE ||
                     (keyEvent.getAction() == KeyEvent.ACTION_DOWN && keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER)){
                 Log.d("SA KEY", "EVENT KEY ");
+                /*
                 InputDevice lxDev = keyEvent.getDevice();
                 Log.d("SA "," KEY DES "+lxDev.getDescriptor()+" "+lxDev.getName());
+                */
 
                 if (demo && countRecord >=10 ) {
                     new DemoDialog().show(getSupportFragmentManager(),"DEMO");
