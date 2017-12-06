@@ -140,7 +140,7 @@ public class QueryQuantityDialog extends DialogFragment implements View.OnClickL
         mOstatokTV = (TextView) v.findViewById(R.id.qq_ostatok);
         mPriceTV = (TextView) v.findViewById(R.id.qq_price);
 
-       // mQuantity.setOnEditorActionListener(mEditorActionListener);
+        mQuantity.setOnEditorActionListener(mEditorActionListener);
 
         mCancelBt = (Button) v.findViewById(R.id.qq_bt_cancel);
         mOkBt = (Button) v.findViewById(R.id.qq_bt_ok);
@@ -186,10 +186,10 @@ public class QueryQuantityDialog extends DialogFragment implements View.OnClickL
         @Override
         public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
             Func.addLog(debugOutFile,"QQ KEY EVENT  ac: "+actionId+" kv :"+keyEvent); // debug
-            if (actionId == EditorInfo.IME_ACTION_DONE  || (keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER)){
-               // Log.d("SA KEY", " qq EVENT KEY ");
+            if (actionId == EditorInfo.IME_ACTION_DONE  || (keyEvent.getAction() == KeyEvent.ACTION_DOWN && keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER)){
                 storeQuantiy();
                 dismiss();
+                return true;
             }
             return false;
         }

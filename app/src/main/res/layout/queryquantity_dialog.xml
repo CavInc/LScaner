@@ -79,7 +79,6 @@
             android:textStyle="bold"
             android:textColor="@android:color/white"
             android:background="@drawable/button_orange_background"
-            android:nextFocusUp="@id/qq_quantity"
             android:layout_weight="1"/>
     </LinearLayout>
 </LinearLayout>
