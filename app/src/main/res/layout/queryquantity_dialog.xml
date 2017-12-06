@@ -67,6 +67,7 @@
             android:background="@drawable/button_gray_background"
             android:textColor="@android:color/white"
             android:textStyle="bold"
+            android:focusable="false"
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"/>
         <Button
@@ -79,6 +80,7 @@
             android:textStyle="bold"
             android:textColor="@android:color/white"
             android:background="@drawable/button_orange_background"
+            android:focusable="false"
             android:layout_weight="1"/>
     </LinearLayout>
 </LinearLayout>
