@@ -219,16 +219,11 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
             //Func.addLog(debugOutFile,"KEY EVENT  ac: "+actionId+" kv :"+keyEvent); // debug
 
             if (actionId == EditorInfo.IME_ACTION_DONE ||
-<<<<<<< HEAD
-                    (keyEvent.getAction() == KeyEvent.ACTION_DOWN && keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER)){
-                Log.d("SA KEY", "EVENT KEY ");
-=======
                     (keyEvent.getAction() == KeyEvent.ACTION_DOWN
                             && keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER
                             && keyEvent.getRepeatCount() == 0)){
                // Log.d("SA KEY", "EVENT KEY ");
               //  Func.addLog(debugOutFile," обрабатываем ввод"); // debug
->>>>>>> NewModel
                 /*
                 InputDevice lxDev = keyEvent.getDevice();
                 Log.d("SA "," KEY DES "+lxDev.getDescriptor()+" "+lxDev.getName());
