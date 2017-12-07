@@ -48,7 +48,7 @@ public class DBHelper extends SQLiteOpenHelper {
                     "name_file text,"+
                     "date text,"+
                     "time text,"+
-                    "type integer default 0)"); // 0 - товары 1 -егаис
+                    "type integer default 0)"); // 0 - товары 1 -егаис 2 - поступление 3 - переоценка
 
             db.execSQL("create table "+SCAN_TABLE_SPEC+"("+
                     "head_id integer not null,"+
