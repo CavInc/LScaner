@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cav.lscaner.R;
+import cav.lscaner.data.managers.DataManager;
+import cav.lscaner.data.models.FileFieldModel;
 import cav.lscaner.data.models.ScannedDataModel;
 import cav.lscaner.utils.Func;
 
@@ -19,10 +21,17 @@ public class ScannedListAdapter extends ArrayAdapter<ScannedDataModel>{
     private LayoutInflater mInflater;
     private int resLayout;
 
+    private int priceFlg;
+    private int ostatokFlg;
+
     public ScannedListAdapter(Context context, int resource, List<ScannedDataModel> objects) {
         super(context, resource, objects);
         resLayout = resource;
         mInflater = LayoutInflater.from(context);
+        DataManager manager = DataManager.getInstance();
+        FileFieldModel fieldModel = manager.getPreferensManager().getFieldFileModel();
+        priceFlg = fieldModel.getPrice();
+        ostatokFlg = fieldModel.getOstatok();
     }
 
     @Override
@@ -49,10 +58,16 @@ public class ScannedListAdapter extends ArrayAdapter<ScannedDataModel>{
         } else {
             holder.mName.setText(rec.getName());
         }
-        holder.mQuantity.setText(String.valueOf(rec.getQuantity()));
+        holder.mQuantity.setText(Func.viewOstatok(Double.valueOf(rec.getQuantity())));
         holder.mBarcode.setText(rec.getBarCode());
         //holder.mPosId.setText(String.valueOf(rec.getPosId())); // крзиция
-        holder.mPosId.setText("Остаток: "+Func.viewOstatok(rec.getOstatok()));
+
+        if (ostatokFlg == -1) {
+            holder.mPosId.setVisibility(View.INVISIBLE);
+        } else {
+            holder.mPosId.setVisibility(View.VISIBLE);
+            holder.mPosId.setText("Остаток: " + Func.viewOstatok(rec.getOstatok()));
+        }
 
         if (rec.getArticul() == null || rec.getArticul().length() == 0 ){
             holder.mArticul.setVisibility(View.INVISIBLE);
@@ -60,7 +75,12 @@ public class ScannedListAdapter extends ArrayAdapter<ScannedDataModel>{
             holder.mArticul.setVisibility(View.VISIBLE);
             holder.mArticul.setText("Код : "+rec.getArticul());
         }
-        holder.mPrice.setText("Цена : "+rec.getPrice());
+        if (priceFlg == -1) {
+            holder.mPrice.setVisibility(View.INVISIBLE);
+        }else {
+            holder.mPrice.setVisibility(View.VISIBLE);
+            holder.mPrice.setText("Цена : " + rec.getPrice());
+        }
         holder.mSumma.setText("Сумма : "+ Func.roundUp(rec.getSumm(),2));
 
         return row;

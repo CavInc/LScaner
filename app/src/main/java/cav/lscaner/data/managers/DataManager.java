@@ -27,6 +27,8 @@ public class DataManager{
 
     private DBConnect mDB;
 
+    private String mLastError;
+
     public static DataManager getInstance() {
         if (INSTANCE==null){
             INSTANCE = new DataManager();
@@ -87,6 +89,13 @@ public class DataManager{
         return false;
     }
 
+    public String getLastError() {
+        return mLastError;
+    }
+
+    public void setLastError(String mlastError) {
+        this.mLastError = mlastError;
+    }
 
     // =============================== запросы к базе данных =======================================
     // запрос списка файлов
@@ -143,6 +152,25 @@ public class DataManager{
         }
         mDB.close();
         return rec;
+    }
+
+    // обновляет данные после загрузки файла базы данных
+    // в существующих файлах
+    public void refreshDataInFiles(){
+        mDB.open();
+        mDB.refreshAllFile();
+        /*
+        Cursor  cursor = mDB.getLinkedRec();
+        mDB.getDatabase().beginTransaction();
+        while (cursor.moveToNext()){
+            mDB.updateArticul(cursor.getInt(cursor.getColumnIndex("id")),
+                    cursor.getInt(cursor.getColumnIndex("pos_id")),
+                    cursor.getString(cursor.getColumnIndex("articul")));
+
+        }
+        mDB.getDatabase().setTransactionSuccessful();
+        */
+        mDB.close();
     }
 
 

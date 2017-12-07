@@ -160,6 +160,7 @@ public class DBConnect {
     public void deleteStore(){
         open();
         database.delete(DBHelper.STORE_PRODUCT,null,null);
+        database.execSQL("update sqlite_sequence set seq=1 where name='store_product';");
         close();
     }
 
@@ -217,5 +218,30 @@ public class DBConnect {
     public Cursor getStoreProduct(){
         return database.query(DBHelper.STORE_PRODUCT,
                 new String[]{"barcode","name","articul","price","ostatok","egais"},null,null,null,null,"articul");
+    }
+
+    // возвращаем записи для обновления
+    public Cursor getLinkedRec(){
+        String sql = "select st.id,stc.pos_id,sp.articul from scan_table st\n" +
+                "  JOIN scan_table_spec stc on st.id=stc.head_id\n" +
+                "  join store_product sp on stc.barcode=sp.barcode\n" +
+                "where st.type=0";
+        return database.rawQuery(sql,null);
+    }
+    // обновляем запись в файле
+    public void updateArticul(int idFile,int pos,String articul){
+        ContentValues values = new ContentValues();
+        values.put("articul",articul);
+        database.update(DBHelper.SCAN_TABLE_SPEC,values,"head_id="+idFile+" and  pos_id="+pos,null);
+    }
+
+    public void refreshAllFile(){
+        String sql = "insert or replace into scan_table_spec (head_id,pos_id,barcode,articul,quantity) \n" +
+                "select st.id as head_id,stc.pos_id,stc.barcode,sp.articul,stc.quantity from scan_table st \n" +
+                "  JOIN scan_table_spec stc on st.id=stc.head_id\n" +
+                "  join store_product sp on stc.barcode=sp.barcode \n" +
+                "where st.type=0 ";
+        //database.rawQuery(sql,null);
+        database.execSQL(sql);
     }
 }

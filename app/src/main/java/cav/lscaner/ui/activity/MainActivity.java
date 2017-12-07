@@ -59,6 +59,7 @@ import cav.lscaner.ui.adapter.ScannedFileAdapter;
 import cav.lscaner.ui.dialogs.AddEditNameFileDialog;
 import cav.lscaner.ui.dialogs.DemoDialog;
 import cav.lscaner.ui.dialogs.SelectMainDialog;
+import cav.lscaner.ui.dialogs.WarningDialog;
 import cav.lscaner.utils.ConstantManager;
 import cav.lscaner.utils.Func;
 import cav.lscaner.utils.WorkInFile;
@@ -787,7 +788,16 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
                     mService.files().get(fileId).executeMediaAndDownloadTo(outputStream);
                     //System.out.println(new Date());
                     WorkInFile workInFile = new WorkInFile(mDataManager.getPreferensManager().getCodeFile());
-                    workInFile.loadProductFile(fn,mDataManager);
+                    int ret_flg =  workInFile.loadProductFile(fn,mDataManager);
+
+                    if (ret_flg == ConstantManager.RET_NO_FIELD_MANY) {
+                        WarningDialog dialog = WarningDialog.newInstance("Количество полей в файле меньше чем указано в настройках");
+                        dialog.show(getFragmentManager(),"WD");
+                    }
+                    if (ret_flg == ConstantManager.RET_ERROR) {
+                        WarningDialog dialog = WarningDialog.newInstance("Ошибка при загрузке файла данных\n"+mDataManager.getLastError());
+                        dialog.show(getFragmentManager(),"WD");
+                    }
                 } catch (IOException e) {
                     e.printStackTrace();
                     mLastError = e;

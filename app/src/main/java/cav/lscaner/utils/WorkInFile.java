@@ -9,8 +9,6 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -110,21 +108,21 @@ public class WorkInFile {
             if (br[i] != null) {
                 out.append(br[i]);
             }
-            if (i!= iMax) {
+            if (i < iMax) {
                 out.append(delim);
             }
         }
 
-        return out.toString();
+        return out.toString().replaceFirst("#+$", "");
     }
 
     public String getSavedFile() {
         return savedFile;
     }
 
-    public void loadProductFile(String fname,DataManager manager){
+    public int loadProductFile(String fname,DataManager manager){
         // проверяем доступность SD
-        if (!manager.isExternalStorageWritable()) return;
+        if (!manager.isExternalStorageWritable()) return ConstantManager.RET_NO_SD;
         String delim = manager.getPreferensManager().getDelimiterStoreFile();
         String path = manager.getStorageAppPath();
         //Log.d("LC",path);
@@ -158,7 +156,15 @@ public class WorkInFile {
                     if (str.length() != 0) {
                         str = str.replaceAll(delim+delim,delim+" "+delim);
                         str = str.replaceAll(delim+delim,delim+" "+delim);
+                        char lastS =  str.toCharArray()[str.length() - 1];
+                        if (lastS == '#') {
+                            str = str + " ";
+                        }
                         lm = str.split(delim);
+                        if (lm.length < fieldFile.getMaxIndex()) {
+                            Log.d("WF","OOPS !!!!");
+                            return ConstantManager.RET_NO_FIELD_MANY;
+                        }
                         //manager.getDB().addStore(lm[0],lm[2]);
                         // обработать поля здесь или передать их в процедуру дальшн  ?
                         // что делать с товаром без кода но с егаис маркой.
@@ -204,10 +210,15 @@ public class WorkInFile {
             manager.getDB().close();
             br.close();
             stFile.delete(); // удалили файл загрузки
+
+            // обновили файлы для привязки названий
+            manager.refreshDataInFiles();
         } catch (Exception e) {
             e.printStackTrace();
-            return;
+            manager.setLastError(e.getLocalizedMessage());
+            return ConstantManager.RET_ERROR;
         }
+        return ConstantManager.RET_OK;
 
     }
 }

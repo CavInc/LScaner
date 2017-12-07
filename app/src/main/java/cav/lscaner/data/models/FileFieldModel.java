@@ -12,6 +12,8 @@ public class FileFieldModel implements Parcelable {
     private int mBasePrice;
     private int mOstatok;
 
+    private int mMaxIndex = 0;
+
 
     public FileFieldModel(int bar, int name, int articul, int price, int EGAIS) {
         mBar = bar;
@@ -19,6 +21,7 @@ public class FileFieldModel implements Parcelable {
         mArticul = articul;
         mPrice = price;
         mEGAIS = EGAIS;
+        setMaxIndex();
     }
 
     public FileFieldModel(int bar, int name, int articul, int price, int EGAIS, int basePrice, int ostatok) {
@@ -29,6 +32,7 @@ public class FileFieldModel implements Parcelable {
         mEGAIS = EGAIS;
         mBasePrice = basePrice;
         mOstatok = ostatok;
+        setMaxIndex();
     }
 
     public FileFieldModel(Parcel parcel) {
@@ -37,6 +41,20 @@ public class FileFieldModel implements Parcelable {
         mArticul = parcel.readInt();
         mPrice = parcel.readInt();
         mEGAIS = parcel.readInt();
+        mBasePrice = parcel.readInt();
+        mOstatok = parcel.readInt();
+        mMaxIndex = parcel.readInt();
+        setMaxIndex();
+    }
+
+    private void setMaxIndex(){
+        if (mBar > mMaxIndex) mMaxIndex = mBar;
+        if (mName > mMaxIndex) mMaxIndex = mName;
+        if (mArticul > mMaxIndex) mMaxIndex = mArticul;
+        if (mPrice > mMaxIndex) mMaxIndex = mPrice;
+        if (mEGAIS > mMaxIndex) mMaxIndex = mEGAIS;
+        if (mBasePrice > mMaxIndex) mMaxIndex = mBasePrice;
+        if (mOstatok > mMaxIndex) mMaxIndex = mOstatok;
     }
 
     public int getBar() {
@@ -95,6 +113,10 @@ public class FileFieldModel implements Parcelable {
         mOstatok = ostatok;
     }
 
+    public int getMaxIndex() {
+        return mMaxIndex;
+    }
+
     public static final Creator<FileFieldModel> CREATOR = new Creator<FileFieldModel>(){
 
         @Override
@@ -120,5 +142,8 @@ public class FileFieldModel implements Parcelable {
         parcel.writeInt(mArticul);
         parcel.writeInt(mPrice);
         parcel.writeInt(mEGAIS);
+        parcel.writeInt(mBasePrice);
+        parcel.writeInt(mOstatok);
+        parcel.writeInt(mMaxIndex);
     }
 }
