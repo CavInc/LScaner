@@ -49,6 +49,7 @@ public class Func {
     }
 
     public static String getDateTimeToStr(DateTime date,String mask){
+        if (date == null) return null;
         long ml = date.getValue();
         Date xm = new Date(ml);
 
