@@ -77,7 +77,7 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
 
         mDataManager = DataManager.getInstance();
 
-        debugOutFile = mDataManager.getStorageAppPath() + "/log_file.log"; //debug
+        //debugOutFile = mDataManager.getStorageAppPath() + "/log_file.log"; //debug
 
         prefixScale = mDataManager.getPreferensManager().getScalePrefix();
         sizeScale = mDataManager.getPreferensManager().getSizeScale();
@@ -93,8 +93,6 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
         mListView = (ListView) findViewById(R.id.san_lv);
 
         mBarCode.setOnEditorActionListener(mEditorActionListener);
-        //mBarCode.addTextChangedListener(mScanWatcher);
-        //mBarCode.setOnEditorActionListener(mX12);
 
         mListView.setOnItemLongClickListener(this);
 
@@ -204,7 +202,7 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
     @Override
     protected void onResume() {
         super.onResume();
-        Func.addLog(debugOutFile,"FORM RESUME : "); // debug
+       // Func.addLog(debugOutFile,"FORM RESUME : "); // debug
     }
 
     private String mBar;
@@ -214,56 +212,18 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
     private boolean scaleFlg = false;
 
 
-    TextWatcher mScanWatcher = new TextWatcher() {
-        @Override
-        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-        }
-
-        @Override
-        public void onTextChanged(CharSequence cs, int start, int before, int count) {
-            String s = cs.toString();
-            Log.d("SA",s);
-            if (s.contains("\n")){
-                Log.d("SA","ENTER");
-            }
-
-        }
-
-        @Override
-        public void afterTextChanged(Editable editable) {
-
-        }
-    };
-
-    TextView.OnEditorActionListener mX12 = new TextView.OnEditorActionListener() {
-        @Override
-        public boolean onEditorAction(TextView textView, int actionID, KeyEvent keyEvent) {
-            System.out.println(" --- "+actionID+" --- "+keyEvent);
-            if (actionID == EditorInfo.IME_ACTION_DONE ||
-                    (keyEvent.getAction() == KeyEvent.ACTION_DOWN && keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER) ){
-                System.out.println("ENTER");
-                mBarCode.setText("");
-
-                return true;
-            }
-
-            return false;
-        };
-    };
-
     TextView.OnEditorActionListener mEditorActionListener = new TextView.OnEditorActionListener() {
         @Override
         public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
 
-            Func.addLog(debugOutFile,"KEY EVENT  ac: "+actionId+" kv :"+keyEvent); // debug
+            //Func.addLog(debugOutFile,"KEY EVENT  ac: "+actionId+" kv :"+keyEvent); // debug
 
             if (actionId == EditorInfo.IME_ACTION_DONE ||
                     (keyEvent.getAction() == KeyEvent.ACTION_DOWN
                             && keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER
                             && keyEvent.getRepeatCount() == 0)){
-                Log.d("SA KEY", "EVENT KEY ");
-                Func.addLog(debugOutFile," обрабатываем ввод"); // debug
+               // Log.d("SA KEY", "EVENT KEY ");
+              //  Func.addLog(debugOutFile," обрабатываем ввод"); // debug
                 /*
                 InputDevice lxDev = keyEvent.getDevice();
                 Log.d("SA "," KEY DES "+lxDev.getDescriptor()+" "+lxDev.getName());
@@ -281,8 +241,8 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
                 posID = -1;
                 scaleFlg = false;
                 editRecord = false;
-                Func.addLog(debugOutFile,"---------------------------------------"); // debug
-                Func.addLog(debugOutFile,"RAW Scanned code : "+mBar); // debug
+                //Func.addLog(debugOutFile,"---------------------------------------"); // debug
+               // Func.addLog(debugOutFile,"RAW Scanned code : "+mBar); // debug
 
                 if (fileType == ConstantManager.FILE_TYPE_EGAIS){
                     if (mBar.startsWith("1") || mBar.length() < 14) {
@@ -311,6 +271,7 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
                         // покажем онко что куй а не код
                         InfoNoValidDialog dialog = new InfoNoValidDialog();
                         dialog.show(getSupportFragmentManager(),"INFD");
+                        mBarCode.setText("");
                         return false;
                     }
                     // получили UPC-A сконвертированный в EAN
@@ -319,7 +280,7 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
                             mBar = mBar.substring(1, 13);
                         }
                     }
-                    Func.addLog(debugOutFile,"Scanned code : "+mBar); // debug
+                    //Func.addLog(debugOutFile,"Scanned code : "+mBar); // debug
                 }
 
                 // ищем код и артикул в базе. (в основном артикул потому что иначе куй определим двойной код
@@ -333,7 +294,7 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
 
                 if (productArray == null || productArray.size() == 0){
                     product = new StoreProductModel(mBar,"Новый");
-                    Func.addLog(debugOutFile,"New product : "+mBar); // debug
+                   // Func.addLog(debugOutFile,"New product : "+mBar); // debug
                 } else {
                     if (productArray.size() ==1 ) {
                         product = new StoreProductModel(mBar,productArray.get(0).getName(),productArray.get(0).getArticul(),
@@ -343,7 +304,7 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
                         SelectItemsDialog dialog = SelectItemsDialog.newInstance(productArray);
                         dialog.setOnSelectItemsChangeListener(mOnSelectItemsChangeListener);
                         dialog.show(getSupportFragmentManager(),"SI");
-                        Func.addLog(debugOutFile,"Selected multiple product : "); // debug
+                        //Func.addLog(debugOutFile,"Selected multiple product : "); // debug
                         mBarCode.setText("");
                         return true;
                     }
@@ -351,13 +312,13 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
 
                 int l = mDataModels.indexOf(new ScannedDataModel(mBar,product.getArticul()));
                 if (l == -1) {
-                    Func.addLog(debugOutFile,"New File pos : "+product.getArticul()+" :: "+product.getName()+" :: "+mBar); // debug
+                   // Func.addLog(debugOutFile,"New File pos : "+product.getArticul()+" :: "+product.getName()+" :: "+mBar); // debug
                     showQuantityQuery(product);
                 } else {
-                    Func.addLog(debugOutFile,"Exst File pos : "+product.getArticul()+" :: "+product.getName()+" :: "+mBar); // debug
+                    //Func.addLog(debugOutFile,"Exst File pos : "+product.getArticul()+" :: "+product.getName()+" :: "+mBar); // debug
                     showExistsQQ(product,l);
                 }
-                Func.addLog(debugOutFile," CLEAR EDIT TEXT MAIN"); // debug
+                //Func.addLog(debugOutFile," CLEAR EDIT TEXT MAIN"); // debug
                 mBarCode.setText("");
             }
             return false;
@@ -369,7 +330,7 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
             Float qq = mDataModels.get(l).getQuantity();
             mArticul = mDataModels.get(l).getArticul();
             posID = mDataModels.get(l).getPosId();
-            Func.addLog(debugOutFile,"No Scale : "+mArticul+" :: "+mDataModels.get(l).getName()+" :: "+l); // debug
+           // Func.addLog(debugOutFile,"No Scale : "+mArticul+" :: "+mDataModels.get(l).getName()+" :: "+l); // debug
             /*
             QueryQuantityDialog dialod = QueryQuantityDialog.newInstans(mDataModels.get(l).getName(), 0f, qq, editRecord,
                     mDataModels.get(l).getOstatok(),mDataModels.get(l).getPrice());
@@ -383,7 +344,7 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
             posID = mDataModels.get(l).getPosId();
             qq = qq+oldqq;
             qq = Func.round(qq,3);
-            Func.addLog(debugOutFile,"Scale : "+mArticul+" :: "+mDataModels.get(l).getName()+" :: "+l); // debug
+           // Func.addLog(debugOutFile,"Scale : "+mArticul+" :: "+mDataModels.get(l).getName()+" :: "+l); // debug
             mDataManager.getDB().addScannedPositon(idFile, mBar, qq,posID,mArticul);
             countRecord +=1;
             updateUI();
@@ -393,7 +354,7 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
     // показываем окно или же добавляем новую запсиь если код весовой
     private void showQuantityQuery(StoreProductModel product){
         if (!scaleFlg) {
-            Func.addLog(debugOutFile,"No Scale : "+product.getArticul()+" :: "+product.getName()+" :: "+product.getBarcode()+" :: store "+mBar); // debug
+           // Func.addLog(debugOutFile,"No Scale : "+product.getArticul()+" :: "+product.getName()+" :: "+product.getBarcode()+" :: store "+mBar); // debug
             mArticul = product.getArticul();
             /*
             QueryQuantityDialog dialod = QueryQuantityDialog.newInstans(product.getName(), 0f, 0f,
@@ -404,7 +365,7 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
             dialog.setQuantityChangeListener(mQuantityChangeListener);
             dialog.show(getSupportFragmentManager(), "QQ");
         } else {
-            Func.addLog(debugOutFile,"Scale : "+product.getArticul()+" :: "+product.getName()); // debug
+           // Func.addLog(debugOutFile,"Scale : "+product.getArticul()+" :: "+product.getName()); // debug
             mDataManager.getDB().addScannedPositon(idFile, mBar, qq,-1,product.getArticul());
             countRecord +=1;
             updateUI(); // TODO передалать заполнение через добавление в адаптер
@@ -433,8 +394,8 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
         @Override
         public void changeQuantity(Float quantity, StoreProductModel productModel) {
             if (quantity!=0){
-                Func.addLog(debugOutFile,"Change QQ : "+mArticul+" :: "+mBar+" :: "+posID); // debug
-                Func.addLog(debugOutFile,"Change QQ : "+productModel.getArticul()+" :: "+productModel.getBarcode()+" :: "+posID+" :: IDFILE :"+idFile); // debug
+               // Func.addLog(debugOutFile,"Change QQ : "+mArticul+" :: "+mBar+" :: "+posID); // debug
+               // Func.addLog(debugOutFile,"Change QQ : "+productModel.getArticul()+" :: "+productModel.getBarcode()+" :: "+posID+" :: IDFILE :"+idFile); // debug
 
                 mDataManager.getDB().addScannedPositon(idFile,productModel.getBarcode(),quantity,posID,productModel.getArticul());
                 if (!editRecord) countRecord += 1;

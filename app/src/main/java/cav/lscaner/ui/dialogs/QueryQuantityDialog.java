@@ -125,7 +125,7 @@ public class QueryQuantityDialog extends DialogFragment implements View.OnClickL
 
         mDataManager = DataManager.getInstance(); // debug
 
-        debugOutFile = mDataManager.getStorageAppPath() + "/log_file.log"; // debug
+        //debugOutFile = mDataManager.getStorageAppPath() + "/log_file.log"; // debug
     }
 
     @NonNull
@@ -185,8 +185,10 @@ public class QueryQuantityDialog extends DialogFragment implements View.OnClickL
     TextView.OnEditorActionListener mEditorActionListener = new TextView.OnEditorActionListener() {
         @Override
         public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
-            Func.addLog(debugOutFile,"QQ KEY EVENT  ac: "+actionId+" kv :"+keyEvent); // debug
-            if (actionId == EditorInfo.IME_ACTION_DONE  || (keyEvent.getAction() == KeyEvent.ACTION_DOWN && keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER)){
+          //  Func.addLog(debugOutFile,"QQ KEY EVENT  ac: "+actionId+" kv :"+keyEvent); // debug
+            if (actionId == EditorInfo.IME_ACTION_DONE  || (keyEvent.getAction() == KeyEvent.ACTION_DOWN &&
+                    keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER
+                    && keyEvent.getRepeatCount() == 0)){
                 storeQuantiy();
                 dismiss();
                 return true;
@@ -209,7 +211,7 @@ public class QueryQuantityDialog extends DialogFragment implements View.OnClickL
             StoreProductModel productModel = new StoreProductModel(mBarcode,mGetName,mArticul);
             mQuantityChangeListener.changeQuantity(qq,productModel);
 
-            Func.addLog(debugOutFile,"STORE QUANTITY : "+qq); // debug
+           // Func.addLog(debugOutFile,"STORE QUANTITY : "+qq); // debug
         }
     }
 
