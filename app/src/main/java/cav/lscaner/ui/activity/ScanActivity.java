@@ -247,12 +247,12 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
                 if (fileType == ConstantManager.FILE_TYPE_EGAIS){
                     if (mBar.startsWith("1") || mBar.length() < 14) {
                         // марка ФСМ
-                        Func.addLog(debugOutFile,"Mark FSM : "+mBar); // debug
+                        //Func.addLog(debugOutFile,"Mark FSM : "+mBar); // debug
                         mBarCode.setText("");
                         return true;
                     }
                     mBar = Func.toEGAISAlcoCode(mBar);
-                    Func.addLog(debugOutFile,"EGAIS code : "+mBar); // debug
+                    //Func.addLog(debugOutFile,"EGAIS code : "+mBar); // debug
                 } else {
                     if (mBar.length()<2) return true;
                     // выкидываем EAN 8 так как его весовым у нас быть не может
@@ -299,7 +299,7 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
                     if (productArray.size() ==1 ) {
                         product = new StoreProductModel(mBar,productArray.get(0).getName(),productArray.get(0).getArticul(),
                                 productArray.get(0).getPrice(),productArray.get(0).getOstatok());
-                        Func.addLog(debugOutFile,"Product : "+product.getArticul()+" :: "+product.getName()); // debug
+                       // Func.addLog(debugOutFile,"Product : "+product.getArticul()+" :: "+product.getName()); // debug
                     } else {
                         SelectItemsDialog dialog = SelectItemsDialog.newInstance(productArray);
                         dialog.setOnSelectItemsChangeListener(mOnSelectItemsChangeListener);
@@ -373,23 +373,6 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
     }
 
     QueryQuantityDialog.QuantityChangeListener mQuantityChangeListener = new QueryQuantityDialog.QuantityChangeListener(){
-        /*
-        @Override
-        public void changeQuantity(Float quantity) {
-            if (quantity!=0){
-                Func.addLog(debugOutFile,"Change QQ : "+mArticul+" :: "+mBar+" :: "+posID); // debug
-                mDataManager.getDB().addScannedPositon(idFile,mBar,quantity,posID,mArticul);
-                if (!editRecord) countRecord += 1;
-                updateUI(); // TODO передалать заполнение через добавление в адаптер
-                if (filterLock) {
-                    mAdapter.getFilter().filter(filterString);
-                    mAdapter.notifyDataSetChanged();
-                }
-                mBarCode.setText("");
-                mBarCode.requestFocus();
-            }
-        }
-        */
 
         @Override
         public void changeQuantity(Float quantity, StoreProductModel productModel) {
