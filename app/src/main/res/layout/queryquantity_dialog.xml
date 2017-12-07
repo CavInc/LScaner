@@ -66,10 +66,7 @@
             android:textStyle="bold"
             android:textColor="@android:color/white"
             android:background="@drawable/button_orange_background"
-<<<<<<< HEAD
-=======
             android:focusable="false"
->>>>>>> NewModel
             android:layout_weight="1"/>
     </LinearLayout>
 
