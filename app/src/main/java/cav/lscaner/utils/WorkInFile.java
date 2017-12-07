@@ -108,12 +108,12 @@ public class WorkInFile {
             if (br[i] != null) {
                 out.append(br[i]);
             }
-            if (i!= iMax) {
+            if (i < iMax) {
                 out.append(delim);
             }
         }
 
-        return out.toString();
+        return out.toString().replaceFirst("#+$", "");
     }
 
     public String getSavedFile() {

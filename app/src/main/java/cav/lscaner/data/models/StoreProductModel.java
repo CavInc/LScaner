@@ -89,4 +89,23 @@ public class StoreProductModel implements Parcelable {
         parcel.writeDouble(mPrice);
         parcel.writeDouble(mOstatok);
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(obj == this)
+            return true;
+        if(obj == null)
+            return false;
+                /* Удостоверимся, что ссылки имеют тот же самый тип */
+        if(!(getClass() == obj.getClass())) {
+            return false;
+        }else {
+            StoreProductModel tmp = (StoreProductModel) obj;
+            if (tmp.getName().toUpperCase().equals(this.mName.toUpperCase())) return true;
+            if (tmp.mName.toUpperCase().indexOf(this.getName().toUpperCase())!=-1){
+                return true;
+            }
+        }
+        return false;
+    }
 }
