@@ -724,6 +724,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
         private DateTime createDate;
         private DateTime modifidDate;
 
+        private boolean resultSearchFlag;
+
         public RequestDataTask(GoogleAccountCredential credential, String fn){
             this.fn = fn;
 
@@ -757,6 +759,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
             //http://javaprogrammernotes.blogspot.ru/2013/01/drive-api-2.html
             String fileId = null;
             String fileName = null;
+            resultSearchFlag = false;
 
             for (Object l:fileList){
                 File lx = (File) l;
@@ -778,8 +781,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
                     break;
                 }
             }
+
             if (fileId != null) {
                 //mService.files().
+                resultSearchFlag = true;
 
                 Log.d(TAG,"НАШЛИ :"+fileId);
                // System.out.println(new Date());
@@ -805,6 +810,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
                     return null;
                 }
             }
+
             return null;
         }
 
@@ -817,11 +823,17 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
         protected void onPostExecute(Void aVoid) {
             hideProgress();
            // System.out.println(new Date());
+            String msg;
+            if (resultSearchFlag) {
+                msg = "Скачан файл с товаром:"+fn+"\nсозданный : "+Func.getDateTimeToStr(createDate,"dd.MM.yyyy HH:mm")
+                        +"\nи измененный : "+Func.getDateTimeToStr(modifidDate,"dd.MM.yyyy HH:mm");
+            } else {
+                msg = "Файл "+fn+" отсутствует на GD";
+            }
 
             AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
             builder.setTitle(R.string.app_name)
-                    .setMessage("Скачан файл с товаром:"+fn+"\nсозданный : "+Func.getDateTimeToStr(createDate,"dd.MM.yyyy HH:mm")
-                            +"\nи измененный : "+Func.getDateTimeToStr(modifidDate,"dd.MM.yyyy HH:mm"))
+                    .setMessage(msg)
                     .setCancelable(false)
                     .setNegativeButton(R.string.button_ok, new DialogInterface.OnClickListener() {
                         @Override
