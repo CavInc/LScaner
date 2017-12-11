@@ -550,67 +550,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
                 return null;
             }
 
-
-
-            /*
-            			String extend_file = defAppSettings.getString("extend_file","csv");
-
-            fileMetadata.setName("KarmaReport"+viewDate+"."+extend_file);
-            if (extend_file.equals("csv")) {
-                fileMetadata.setMimeType("application/vnd.google-apps.spreadsheet");
-            } else {
-                // закоментировать нахрен если завтра утром останется таблицей
-               // fileMetadata.setMimeType("application/vnd.google-apps.unknown");
-            }
-
-
-            filePath = new java.io.File(fn);
-            FileContent mediaContent = new FileContent("text/csv", filePath);
-
-            File file = null;
-            try {
-
-                Log.d(TAG,"DATE: " + defAppSettings.getString("GD_DATE","")+" file :"+defAppSettings.getString("GD_FILE",""));
-
-                if (defAppSettings.getString("GD_DATE","").equals(viewDate) &
-                        defAppSettings.getString("GD_FILE","").length()!=0 &
-                        defAppSettings.getString("GD_OLD_EXT","csv").equals(extend_file)){
-                    Log.d(TAG,"YES CONT DATE");
-                    fileMetadata.setModifiedTime(new DateTime(System.currentTimeMillis()));
-                    file = mService.files().update(defAppSettings.getString("GD_FILE",""),fileMetadata,mediaContent)
-                            .setFields("id,modifiedTime")
-                            .execute();
-                    //.setFileId("id, modifiedTime")
-
-                } else {
-
-                    file = mService.files().create(fileMetadata, mediaContent)
-                            .setFields("id,name")
-                            .execute();
-
-                    Editor editor = defAppSettings.edit();
-                    editor.putString("GD_FILE",file.getId());
-                    editor.putString("GD_DATE",viewDate);
-                    editor.putString("GD_NAME",file.getName());
-                    editor.putString("GD_OLD_EXT",defAppSettings.getString("extend_file","csv"));
-
-                    editor.apply();
-                }
-
-            } catch (Exception e) {
-                e.printStackTrace();
-                mLastError = e;
-				// удаление файла здесь не лутшая идея наверно если мы потом перезапускаем отправку
-				//filePath.delete();
-                cancel(true);
-                return null;
-            }
-
-            Log.d(TAG,"File ID: " + file.getId()+" file :"+file.getName());
-			filePath.delete();
-
-             */
-
             return null;
         }
 
@@ -628,25 +567,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
                     })
                     .create();
             builder.show();
-
-            /*
-            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-            builder.setTitle(R.string.app_name)
-                    .setMessage("Загружен файл :"+"File ID: " + defAppSettings.getString("GD_FILE","")
-                            +" file :"+defAppSettings.getString("GD_NAME",""))
-                    .setCancelable(false)
-                    .setNegativeButton("Close",new DialogInterface.OnClickListener(){
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.cancel();
-                        }
-                    });
-            AlertDialog alert = builder.create();
-            alert.show();
-             */
-
-            //resend = false;
-            //count_fail_resend = 0;
         }
 
         @Override
@@ -668,48 +588,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
             } else {
                 Log.d(TAG,"Request cancelled.");
             }
-            /*
-            if (mLastError != null) {
 
-                if (mLastError instanceof GooglePlayServicesAvailabilityIOException) {
-                    showGooglePlayServicesAvailabilityErrorDialog(
-                            ((GooglePlayServicesAvailabilityIOException) mLastError)
-                                    .getConnectionStatusCode());
-                }else if (mLastError instanceof UserRecoverableAuthIOException) {
-                    startActivityForResult(
-                            ((UserRecoverableAuthIOException) mLastError).getIntent(),
-                            MainActivity.REQUEST_AUTHORIZATION);
-
-                } else {
-                    //Log.d(TAG,mLastError.getMessage());
-                    // вот так должно работать
-                    int pref_count_fail =  Integer.parseInt(defAppSettings.getString("count_send", "3"));
-
-                    if (!defAppSettings.getBoolean("resend_on_error",false) | pref_count_fail<count_fail_resend) {
-                        // удаляем файл для пересылки
-                        filePath.delete();
-
-                        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                        builder.setTitle(R.string.app_name)
-                                .setMessage("Error: " + mLastError.toString())
-                                .setCancelable(false)
-                                .setNegativeButton("Close", new DialogInterface.OnClickListener() {
-                                    @Override
-                                   public void onClick(DialogInterface dialog, int which) {
-                                        dialog.cancel();
-                                    }
-                                });
-                        AlertDialog alert = builder.create();
-                        alert.show();
-                    } else {
-                        resend = true;
-                        count_fail_resend +=1;
-                        getResultsFromApi();
-                    }
-                }
-
-            }
-            */
         }
     }
 
