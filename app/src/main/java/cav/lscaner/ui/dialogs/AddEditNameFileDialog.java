@@ -7,12 +7,14 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import cav.lscaner.R;
@@ -21,6 +23,7 @@ import cav.lscaner.utils.ConstantManager;
 public class AddEditNameFileDialog extends DialogFragment implements View.OnClickListener{
     private static final String EDIT_NAME = "EDIT_NAME";
     private static final String EDIT_TYPE = "EDIT_TYPE";
+    private static final String TAG = "AEND";
     private AddEditNameFileDialog INSTANSE = null;
 
     private AddEditNameFileListener mListener;
@@ -34,6 +37,11 @@ public class AddEditNameFileDialog extends DialogFragment implements View.OnClic
 
     private RadioButton mTovar;
     private RadioButton mEGAIS;
+    private RadioButton mPrihod;
+    private RadioButton mChangePrice;
+
+    private RadioGroup mRG1;
+    private RadioGroup mRG2;
 
     private int type;
 
@@ -64,8 +72,12 @@ public class AddEditNameFileDialog extends DialogFragment implements View.OnClic
                 int type = 0;
                 if (mTovar.isChecked()) {
                     type = 0;
-                }else {
+                }else if (mEGAIS.isChecked()){
                     type = 1;
+                } else if (mPrihod.isChecked()) {
+                    type = 2;
+                } else {
+                    type = 3;
                 }
                 mListener.changeName(mName.getText().toString(),type);
             }
@@ -106,15 +118,42 @@ public class AddEditNameFileDialog extends DialogFragment implements View.OnClic
 
         mTovar = (RadioButton) v.findViewById(R.id.dialog_tovar);
         mEGAIS = (RadioButton) v.findViewById(R.id.dialog_egais);
+        mPrihod = (RadioButton) v.findViewById(R.id.dialog_prixod);
+        mChangePrice = (RadioButton) v.findViewById(R.id.dialog_changeprise);
 
         if (type == ConstantManager.FILE_TYPE_PRODUCT) {
             mTovar.setChecked(true);
-        } else {
+        } else  if (type == ConstantManager.FILE_TYPE_EGAIS){
             mEGAIS.setChecked(true);
+        } else if (type == ConstantManager.FILE_TYPE_PRIHOD) {
+            mPrihod.setChecked(true);
+        } else  {
+            mChangePrice.setChecked(true);
         }
+
+        mRG1 = (RadioGroup) v.findViewById(R.id.dialog_rg_1);
+        mRG2 = (RadioGroup) v.findViewById(R.id.dialog_rg_2);
 
         mCancelBt.setOnClickListener(this);
         mOkBt.setOnClickListener(this);
+
+        mRG1.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup radioGroup, int i) {
+                mPrihod.setChecked(false);
+                mChangePrice.setChecked(false);
+                Log.d(TAG,"RG1 ID "+i);
+            }
+        });
+
+        mRG2.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup radioGroup, int i) {
+                mTovar.setChecked(false);
+                mEGAIS.setChecked(false);
+                Log.d(TAG,"RG2 ID "+i);
+            }
+        });
 
         mName.setText(nameFile);
 
@@ -122,19 +161,6 @@ public class AddEditNameFileDialog extends DialogFragment implements View.OnClic
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("Имя файла документа").setView(v);
-                /*
-                .setPositiveButton(R.string.button_ok, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                if (mName.getText().length()!=0) {
-                    if (mListener != null) {
-                        mListener.changeName(mName.getText().toString());
-                    }
-                }
-            }
-        })
-                .setNegativeButton(R.string.button_cancel,null);
-         */
         return builder.create();
     }
 

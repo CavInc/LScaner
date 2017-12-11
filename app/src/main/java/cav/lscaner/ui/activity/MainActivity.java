@@ -175,7 +175,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
         if (view.getId() == R.id.main_fab) {
             newRecord = true;
             int rec_count = mDataManager.getDB().getCountFile();
-            if (demo && (rec_count+1)>2) {
+            if (demo && (rec_count+1)>MAX_DEMO_REC) {
                 Log.d(TAG,"DEMO");
                 new DemoDialog().show(getSupportFragmentManager(),"DEMO");
             } else {

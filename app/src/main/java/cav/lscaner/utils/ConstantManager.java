@@ -15,10 +15,13 @@ public interface ConstantManager{
     String SELECTED_FILE_TYPE = "SELECTED_FILE_TYPE";
     int FILE_TYPE_PRODUCT = 0;
     int FILE_TYPE_EGAIS = 1;
+    int FILE_TYPE_PRIHOD = 2;
+    int FILE_TYPE_CHANGE_PRICE = 3;
 
     int RET_OK = 200;
 
     int RET_ERROR = 201;
     int RET_NO_FIELD_MANY = 202;
     int RET_NO_SD = 203;
+
 }
