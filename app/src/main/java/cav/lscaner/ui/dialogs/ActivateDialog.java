@@ -14,11 +14,14 @@ import android.widget.TextView;
 
 import cav.lscaner.R;
 import cav.lscaner.data.managers.DataManager;
+import cav.lscaner.utils.Func;
 
 public class ActivateDialog extends DialogFragment implements View.OnClickListener {
 
     private DataManager mDataManager;
     private EditText mAcivateCode;
+
+    private String deviceId;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -32,7 +35,11 @@ public class ActivateDialog extends DialogFragment implements View.OnClickListen
         View v = LayoutInflater.from(getActivity()).inflate(R.layout.activate_dialog, null);
         mAcivateCode = (EditText) v.findViewById(R.id.activate_key_code);
 
-        ((TextView) v.findViewById(R.id.activate_code)).setText(mDataManager.getAndroidID());
+
+        deviceId = mDataManager.getAndroidID();
+        deviceId = deviceId.substring(deviceId.length()-8);
+
+        ((TextView) v.findViewById(R.id.activate_code)).setText(deviceId);
 
         ((Button) v.findViewById(R.id.activate_dlg_ok)).setOnClickListener(this);
         ((Button) v.findViewById(R.id.activate_dlg_cancel)).setOnClickListener(this);
@@ -52,6 +59,15 @@ public class ActivateDialog extends DialogFragment implements View.OnClickListen
         }
         if (view.getId() == R.id.activate_dlg_ok) {
             // здесь проверяем код и пишем если все ок
+            // проверяем тот ли номер
+            String x = mAcivateCode.getText().toString();
+            if (Func.checkSerialNumber(x,deviceId) ) {
+                // сохраняем серийник и флаг что не недемо
+                mDataManager.getPreferensManager().setRegistrationNumber(x);
+                mDataManager.getPreferensManager().setDemo(false);
+            } else {
+                mDataManager.getPreferensManager().setDemo(true);
+            }
 
             dismiss();
         }

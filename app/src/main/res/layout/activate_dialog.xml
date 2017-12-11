@@ -37,6 +37,8 @@
         <EditText
             android:id="@+id/activate_key_code"
             android:hint="Введите ключ"
+            android:maxLines="1"
+            android:lines="1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
     </android.support.design.widget.TextInputLayout>
