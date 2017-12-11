@@ -34,6 +34,7 @@ public class DBHelper extends SQLiteOpenHelper {
                     " id integer not null primary key AUTOINCREMENT,"+
                     "barcode text,"+
                     "name text,"+
+                    "codetv text,"+
                     "articul text,"+
                     "price float default 0,"+
                     "egais text,"+
