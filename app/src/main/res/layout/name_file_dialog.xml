@@ -4,6 +4,12 @@
     android:layout_height="wrap_content"
     android:padding="16dp"
     xmlns:android="http://schemas.android.com/apk/res/android">
+    <TextView
+        android:text="Инвентаризация"
+        android:textColor="@color/app_blue"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
     <RadioGroup
             android:orientation="horizontal"
             android:layout_width="match_parent"
@@ -24,6 +30,31 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"/>
+    </RadioGroup>
+    <TextView
+        android:text="Товарные операции и переоценки"
+        android:textColor="@color/app_blue"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+    <RadioGroup
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp">
+        <RadioButton
+            android:id="@+id/dialog_prixod"
+            android:text="Поступление"
+            android:layout_weight="1"
+            android:textStyle="bold"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+        <RadioButton
+            android:id="@+id/dialog_changeprise"
+            android:text="Переоценка"
+            android:layout_weight="1"
+            android:textStyle="bold"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
     </RadioGroup>
 
     <EditText

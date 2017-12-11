@@ -73,7 +73,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
     private static final int WRITE_FILE = 1012;
     private static final int READ_FILE = 1010;
 
-    private final int MAX_DEMO_REC = 2;
+    private final int MAX_DEMO_REC = 4;
 
     private FloatingActionButton mFAB;
     private ListView mListView;
