@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import cav.lscaner.R;
+import cav.lscaner.ui.adapter.CustomExpandListAdapter;
 
 //https://habrahabr.ru/post/147546/
 //http://startandroid.ru/ru/uroki/vse-uroki-spiskom/86-urok-45-spisok-derevo-expandablelistview.html
@@ -118,7 +119,20 @@ public class SettingFieldNewActivity extends AppCompatActivity {
         int childTo[] = new int[] {R.id.expant_list_item_name};
 
 
+        /*
         SimpleExpandableListAdapter adapter = new SimpleExpandableListAdapter(
+                this,
+                groupData,
+                R.layout.expant_list_group_item,
+                groupFrom,
+                groupTo,
+                childData,
+                R.layout.expand_list_item,
+                childFrom,
+                childTo);
+        */
+
+        CustomExpandListAdapter adapter = new CustomExpandListAdapter(
                 this,
                 groupData,
                 R.layout.expant_list_group_item,
