@@ -15,6 +15,8 @@ import cav.lscaner.ui.adapter.CustomExpandListAdapter;
 //https://habrahabr.ru/post/147546/
 //http://startandroid.ru/ru/uroki/vse-uroki-spiskom/86-urok-45-spisok-derevo-expandablelistview.html
 //http://developer.alexanderklimov.ru/android/views/expandablelistview.php
+//https://alvinalexander.com/java/jwarehouse/android/core/java/android/widget/SimpleExpandableListAdapter.java.shtml
+//https://www.programcreek.com/java-api-examples/index.php?api=android.widget.SimpleExpandableListAdapter
 
 public class SettingFieldNewActivity extends AppCompatActivity {
 

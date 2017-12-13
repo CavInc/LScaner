@@ -152,6 +152,13 @@ public class AddEditNameFileDialog extends DialogFragment implements View.OnClic
                 mTovar.setChecked(false);
                 mEGAIS.setChecked(false);
                 Log.d(TAG,"RG2 ID "+i);
+                Log.d(TAG,"RG2 chID "+radioGroup.getCheckedRadioButtonId());
+                if (i == R.id.dialog_prixod) {
+                    mPrihod.setChecked(true);
+                }
+                if (i == R.id.dialog_changeprise) {
+                    mChangePrice.setChecked(true);
+                }
             }
         });
 
