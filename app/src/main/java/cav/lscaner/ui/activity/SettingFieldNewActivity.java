@@ -18,6 +18,8 @@ import cav.lscaner.ui.adapter.CustomExpandListAdapter;
 //https://alvinalexander.com/java/jwarehouse/android/core/java/android/widget/SimpleExpandableListAdapter.java.shtml
 //https://www.programcreek.com/java-api-examples/index.php?api=android.widget.SimpleExpandableListAdapter
 
+//https://sohabr.net/post/227549/   - а вот тут то что надо
+
 public class SettingFieldNewActivity extends AppCompatActivity {
 
     private ExpandableListView mExpandList;
@@ -121,7 +123,7 @@ public class SettingFieldNewActivity extends AppCompatActivity {
         int childTo[] = new int[] {R.id.expant_list_item_name};
 
 
-        /*
+
         SimpleExpandableListAdapter adapter = new SimpleExpandableListAdapter(
                 this,
                 groupData,
@@ -132,8 +134,9 @@ public class SettingFieldNewActivity extends AppCompatActivity {
                 R.layout.expand_list_item,
                 childFrom,
                 childTo);
-        */
 
+
+        /*
         CustomExpandListAdapter adapter = new CustomExpandListAdapter(
                 this,
                 groupData,
@@ -144,6 +147,7 @@ public class SettingFieldNewActivity extends AppCompatActivity {
                 R.layout.expand_list_item,
                 childFrom,
                 childTo);
+          */
 
         mExpandList = (ExpandableListView) findViewById(R.id.expandableListView);
         mExpandList.setAdapter(adapter);
