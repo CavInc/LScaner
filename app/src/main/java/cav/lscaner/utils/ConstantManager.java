@@ -24,4 +24,9 @@ public interface ConstantManager{
     int RET_NO_FIELD_MANY = 202;
     int RET_NO_SD = 203;
 
+    String PREFIX_FILE_TOVAR = "{ТОВАР}";
+    String PREFIX_FILE_EGAIS = "{ЕГАИС}";
+    String PREFIX_FILE_CHANGEPRICE = "{Переоценка}";
+    String PREFIX_FILE_PRIHOD = "{Поступление}";
+
 }
