@@ -15,6 +15,10 @@ public class ScannedDataModel {
     private Double mSumm = 0.0;
     private Double mPrice = 0.0;
     private Double mOstatok = 0.0;
+    private Double mBasePrice = 0.0;
+    private String mCodeArticul = null;
+    private String mEgais;
+
 
     public ScannedDataModel(int idFile,int posId, String barCode, String name, Float quantity) {
         mIdFile = idFile;
@@ -86,6 +90,18 @@ public class ScannedDataModel {
 
     public Double getOstatok() {
         return mOstatok;
+    }
+
+    public Double getBasePrice() {
+        return mBasePrice;
+    }
+
+    public String getCodeArticul() {
+        return mCodeArticul;
+    }
+
+    public String getEgais() {
+        return mEgais;
     }
 
     @Override

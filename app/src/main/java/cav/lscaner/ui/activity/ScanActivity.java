@@ -187,7 +187,11 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
     private void updateUI(){
         mDataModels = mDataManager.getScannedData(idFile,fileType);
         if (mAdapter == null) {
-            mAdapter = new ScannedListAdapter(this,R.layout.scanned_item,mDataModels);
+            int linkLayout = R.layout.scanned_item;
+            if (fileType == ConstantManager.FILE_TYPE_CHANGE_PRICE) {
+                linkLayout = R.layout.change_price_item;
+            }
+            mAdapter = new ScannedListAdapter(this,linkLayout,mDataModels);
             mListView.setAdapter(mAdapter);
         }else {
             mAdapter.setData(mDataModels);
@@ -234,7 +238,6 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
                     return false;
                 }
 
-               // Log.d("SA",textView.getText().toString());
                 mBar = textView.getText().toString();
                 if (mBar.length() == 0) return true;
                 qq = 1f;
