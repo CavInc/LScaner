@@ -42,7 +42,7 @@ import cav.lscaner.utils.ConstantManager;
 import cav.lscaner.utils.Func;
 
 public class ScanActivity extends AppCompatActivity implements AdapterView.OnItemLongClickListener{
-    private final int MAX_REC = 10;  // количество записей в демо версии
+    private final int MAX_REC = 30;  // количество записей в демо версии
 
     private EditText mBarCode;
     private ListView mListView;
@@ -334,10 +334,6 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
             mArticul = mDataModels.get(l).getArticul();
             posID = mDataModels.get(l).getPosId();
            // Func.addLog(debugOutFile,"No Scale : "+mArticul+" :: "+mDataModels.get(l).getName()+" :: "+l); // debug
-            /*
-            QueryQuantityDialog dialod = QueryQuantityDialog.newInstans(mDataModels.get(l).getName(), 0f, qq, editRecord,
-                    mDataModels.get(l).getOstatok(),mDataModels.get(l).getPrice());
-                    */
             QueryQuantityDialog dialog = QueryQuantityDialog.newInstans(product,0f,qq,editRecord);
             dialog.setQuantityChangeListener(mQuantityChangeListener);
             dialog.show(getSupportFragmentManager(), "QQ");
@@ -359,12 +355,8 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
         if (!scaleFlg) {
            // Func.addLog(debugOutFile,"No Scale : "+product.getArticul()+" :: "+product.getName()+" :: "+product.getBarcode()+" :: store "+mBar); // debug
             mArticul = product.getArticul();
-            /*
-            QueryQuantityDialog dialod = QueryQuantityDialog.newInstans(product.getName(), 0f, 0f,
-                    editRecord,product.getOstatok(),product.getPrice());
-                    */
-            QueryQuantityDialog dialog = QueryQuantityDialog.newInstans(product,0f,0f,editRecord);
 
+            QueryQuantityDialog dialog = QueryQuantityDialog.newInstans(product,0f,0f,editRecord);
             dialog.setQuantityChangeListener(mQuantityChangeListener);
             dialog.show(getSupportFragmentManager(), "QQ");
         } else {
