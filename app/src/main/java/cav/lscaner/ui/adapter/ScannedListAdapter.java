@@ -58,15 +58,19 @@ public class ScannedListAdapter extends ArrayAdapter<ScannedDataModel>{
         } else {
             holder.mName.setText(rec.getName());
         }
-        holder.mQuantity.setText(Func.viewOstatok(Double.valueOf(rec.getQuantity())));
+        if (holder.mQuantity !=null ) {
+            holder.mQuantity.setText(Func.viewOstatok(Double.valueOf(rec.getQuantity())));
+        }
         holder.mBarcode.setText(rec.getBarCode());
         //holder.mPosId.setText(String.valueOf(rec.getPosId())); // крзиция
 
-        if (ostatokFlg == -1) {
-            holder.mPosId.setVisibility(View.INVISIBLE);
-        } else {
-            holder.mPosId.setVisibility(View.VISIBLE);
-            holder.mPosId.setText("Остаток: " + Func.viewOstatok(rec.getOstatok()));
+        if (holder.mPosId != null) {
+            if (ostatokFlg == -1) {
+                holder.mPosId.setVisibility(View.INVISIBLE);
+            } else {
+                holder.mPosId.setVisibility(View.VISIBLE);
+                holder.mPosId.setText("Остаток: " + Func.viewOstatok(rec.getOstatok()));
+            }
         }
 
         if (rec.getArticul() == null || rec.getArticul().length() == 0 ){
@@ -81,7 +85,10 @@ public class ScannedListAdapter extends ArrayAdapter<ScannedDataModel>{
             holder.mPrice.setVisibility(View.VISIBLE);
             holder.mPrice.setText("Цена : " + rec.getPrice());
         }
-        holder.mSumma.setText("Сумма : "+ Func.roundUp(rec.getSumm(),2));
+
+        if (holder.mSumma !=null) {
+            holder.mSumma.setText("Сумма : " + Func.roundUp(rec.getSumm(), 2));
+        }
 
         return row;
     }
