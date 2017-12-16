@@ -6,11 +6,12 @@ import android.os.Parcelable;
 public class FileFieldModel implements Parcelable {
     private int mBar;
     private int mName;
-    private int mArticul;
+    private int mArticul;// код
     private int mPrice;
     private int mEGAIS;
     private int mBasePrice;
     private int mOstatok;
+    private int mCodeTV; // артикул
 
     private int mMaxIndex = 0;
 
@@ -35,6 +36,17 @@ public class FileFieldModel implements Parcelable {
         setMaxIndex();
     }
 
+    public FileFieldModel(int bar, int name, int articul, int price, int EGAIS, int basePrice, int ostatok, int codeTV) {
+        mBar = bar;
+        mName = name;
+        mArticul = articul;
+        mPrice = price;
+        mEGAIS = EGAIS;
+        mBasePrice = basePrice;
+        mOstatok = ostatok;
+        mCodeTV = codeTV;
+    }
+
     public FileFieldModel(Parcel parcel) {
         mBar = parcel.readInt();
         mName = parcel.readInt();
@@ -43,7 +55,7 @@ public class FileFieldModel implements Parcelable {
         mEGAIS = parcel.readInt();
         mBasePrice = parcel.readInt();
         mOstatok = parcel.readInt();
-        mMaxIndex = parcel.readInt();
+        mCodeTV = parcel.readInt();
         setMaxIndex();
     }
 
@@ -55,6 +67,7 @@ public class FileFieldModel implements Parcelable {
         if (mEGAIS > mMaxIndex) mMaxIndex = mEGAIS;
         if (mBasePrice > mMaxIndex) mMaxIndex = mBasePrice;
         if (mOstatok > mMaxIndex) mMaxIndex = mOstatok;
+        if (mCodeTV > mMaxIndex) mMaxIndex = mCodeTV;
     }
 
     public int getBar() {
@@ -117,6 +130,10 @@ public class FileFieldModel implements Parcelable {
         return mMaxIndex;
     }
 
+    public int getCodeTV() {
+        return mCodeTV;
+    }
+
     public static final Creator<FileFieldModel> CREATOR = new Creator<FileFieldModel>(){
 
         @Override
@@ -144,6 +161,6 @@ public class FileFieldModel implements Parcelable {
         parcel.writeInt(mEGAIS);
         parcel.writeInt(mBasePrice);
         parcel.writeInt(mOstatok);
-        parcel.writeInt(mMaxIndex);
+        parcel.writeInt(mCodeTV);
     }
 }

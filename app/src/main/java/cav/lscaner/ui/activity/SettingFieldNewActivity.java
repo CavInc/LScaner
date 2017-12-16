@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import cav.lscaner.R;
+import cav.lscaner.data.managers.DataManager;
 import cav.lscaner.ui.adapter.CustomExpandListAdapter;
 
 //https://habrahabr.ru/post/147546/
@@ -26,6 +27,8 @@ import cav.lscaner.ui.adapter.CustomExpandListAdapter;
 // https://stackoverflow.com/questions/5188196/how-to-write-custom-expandablelistadapter - тоже самое
 
 public class SettingFieldNewActivity extends AppCompatActivity {
+
+    private DataManager mDataManager;
 
     private ExpandableListView mExpandList;
 
@@ -55,6 +58,8 @@ public class SettingFieldNewActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting_field_new);
+
+        mDataManager = DataManager.getInstance();
 
         // заполняем коллекцию групп из массива с названиями групп
         groupData = new ArrayList<Map<String, String>>();

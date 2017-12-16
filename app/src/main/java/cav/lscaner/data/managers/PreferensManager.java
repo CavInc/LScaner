@@ -22,13 +22,21 @@ public class PreferensManager {
     private static final String FIELD_EGAIS = "FIELD_EGAIS";
     private static final String FIELD_BASE_PRICE = "FIELD_BASE_PRICE";
     private static final String FIELD_OSTATOK = "FIELD_OSTATOK";
+
     private static final String FIELD_OUT_BARCODE = "FIELD_OUT_BARCODE";
     private static final String FIELD_OUT_QUANTITY = "FIELD_OUT_QUANTITY";
     private static final String FIELD_OUT_PRICE = "FIELD_OUT_PRICE";
     private static final String FIELD_OUT_ARTICUL = "FIELD_OUT_ARTICUL";
+    private static final String FIELD_OUT_EGAIS = "FIELD_OUT_EGAIS";
+    private static final String FIELD_OUT_BASE_PRICE = "FIELD_OUT_BASE_PRICE";
+    private static final String FIELD_OUT_CODETV = "FIELD_OUT_CODETV";
+
     private static final String FIELD_OUT_EGAIS_CODE = "FIELD_OUT_EGAIS_CODE";
     private static final String FIELD_OUT_EGAIS_ARTICUL = "FIELD_OUT_EGAIS_ARTICUL";
     private static final String FIELD_OUT_EGAIS_QUANTITY = "FIELD_OUT_EGAIS_QUANTITY";
+
+
+
     private SharedPreferences mSharedPreferences;
 
     public PreferensManager() {
@@ -163,7 +171,10 @@ public class PreferensManager {
                 mSharedPreferences.getInt(FIELD_OUT_BARCODE,1),
                 mSharedPreferences.getInt(FIELD_OUT_QUANTITY,2),
                 mSharedPreferences.getInt(FIELD_OUT_PRICE,-1),
-                mSharedPreferences.getInt(FIELD_OUT_ARTICUL,-1)
+                mSharedPreferences.getInt(FIELD_OUT_ARTICUL,-1),
+                mSharedPreferences.getInt(FIELD_OUT_BASE_PRICE,-1),
+                mSharedPreferences.getInt(FIELD_OUT_EGAIS,-1),
+                mSharedPreferences.getInt(FIELD_OUT_CODETV,-1)
         );
         return md;
     }
@@ -174,6 +185,9 @@ public class PreferensManager {
         editor.putInt(FIELD_OUT_QUANTITY,field.getQuantity());
         editor.putInt(FIELD_OUT_PRICE,field.getPrice());
         editor.putInt(FIELD_OUT_ARTICUL,field.getArticul());
+        editor.putInt(FIELD_OUT_EGAIS,field.getEGAIS());
+        editor.putInt(FIELD_OUT_BASE_PRICE,field.getBasePrice());
+        editor.putInt(FIELD_OUT_CODETV,field.getCodeTV());
         editor.apply();
     }
 
