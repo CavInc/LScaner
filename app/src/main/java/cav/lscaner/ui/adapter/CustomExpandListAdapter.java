@@ -5,6 +5,8 @@ package cav.lscaner.ui.adapter;
 import android.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -149,7 +151,7 @@ public class CustomExpandListAdapter  extends BaseExpandableListAdapter {
 
 
     @Override
-    public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
+    public View getChildView(final int groupPosition, final int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
         View v;
         if (convertView == null){
             v = mInflater.inflate(mChildLayout,null);
@@ -167,9 +169,31 @@ public class CustomExpandListAdapter  extends BaseExpandableListAdapter {
         String vl = (String) l.get(mChildFrom[1]);
         if (!vl.equals("-1")) {
             ed.setText(vl);
+        } else {
+            ed.setText("");
         }
 
-        //bindView(v, mChildData.get(groupPosition).get(childPosition), mChildFrom, mChildTo);
+        /*
+        ed.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                if (editable.length() !=0 ) {
+                    ((HashMap) mChildData.get(groupPosition).get(childPosition)).put("itemValue", editable.toString());
+                }
+            }
+        });
+        */
+
         return v;
     }
 
@@ -181,5 +205,6 @@ public class CustomExpandListAdapter  extends BaseExpandableListAdapter {
     public void setGroupCallBackListener (GroupCallBackListener listener){
         mGroupCallBackListener = listener;
     }
+
 
 }

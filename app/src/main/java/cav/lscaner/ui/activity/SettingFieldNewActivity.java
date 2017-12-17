@@ -1,7 +1,12 @@
 package cav.lscaner.ui.activity;
 
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ExpandableListView;
 import android.widget.SimpleExpandableListAdapter;
 
@@ -31,6 +36,7 @@ import cav.lscaner.ui.dialogs.SettingFieldDialog;
 
 public class SettingFieldNewActivity extends AppCompatActivity {
 
+    private static final String TAG = "SFA";
     private DataManager mDataManager;
 
     private ExpandableListView mExpandList;
@@ -183,6 +189,23 @@ public class SettingFieldNewActivity extends AppCompatActivity {
         mExpandList = (ExpandableListView) findViewById(R.id.expandableListView);
         mExpandList.setAdapter(adapter);
 
+        setupToolBar();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+        }
+        return true;
+    }
+
+
+    public void setupToolBar(){
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar!=null){
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
     }
 
     CustomExpandListAdapter.GroupCallBackListener mBackListener = new CustomExpandListAdapter.GroupCallBackListener() {
