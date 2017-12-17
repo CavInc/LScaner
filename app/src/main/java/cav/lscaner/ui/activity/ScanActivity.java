@@ -35,6 +35,7 @@ import cav.lscaner.data.models.StoreProductModel;
 import cav.lscaner.ui.adapter.ScannedListAdapter;
 import cav.lscaner.ui.dialogs.DemoDialog;
 import cav.lscaner.ui.dialogs.InfoNoValidDialog;
+import cav.lscaner.ui.dialogs.PrihodChangePriceDialog;
 import cav.lscaner.ui.dialogs.QueryQuantityDialog;
 import cav.lscaner.ui.dialogs.SelectItemsDialog;
 import cav.lscaner.ui.dialogs.SelectScanDialog;
@@ -356,9 +357,15 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
            // Func.addLog(debugOutFile,"No Scale : "+product.getArticul()+" :: "+product.getName()+" :: "+product.getBarcode()+" :: store "+mBar); // debug
             mArticul = product.getArticul();
 
-            QueryQuantityDialog dialog = QueryQuantityDialog.newInstans(product,0f,0f,editRecord);
-            dialog.setQuantityChangeListener(mQuantityChangeListener);
-            dialog.show(getSupportFragmentManager(), "QQ");
+            if (fileType == ConstantManager.FILE_TYPE_CHANGE_PRICE) {
+                PrihodChangePriceDialog dialog = PrihodChangePriceDialog.newInstance();
+                dialog.show(getFragmentManager(),"pcd");
+            }else {
+                QueryQuantityDialog dialog = QueryQuantityDialog.newInstans(product, 0f, 0f, editRecord);
+                dialog.setQuantityChangeListener(mQuantityChangeListener);
+                dialog.show(getSupportFragmentManager(), "QQ");
+            }
+
         } else {
            // Func.addLog(debugOutFile,"Scale : "+product.getArticul()+" :: "+product.getName()); // debug
             mDataManager.getDB().addScannedPositon(idFile, mBar, qq,-1,product.getArticul());
