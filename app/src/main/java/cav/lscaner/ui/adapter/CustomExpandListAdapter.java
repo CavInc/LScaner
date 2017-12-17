@@ -2,16 +2,22 @@ package cav.lscaner.ui.adapter;
 
 // Адаптер для раскрывающегося списка
 
+import android.app.FragmentManager;
 import android.content.Context;
+import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import cav.lscaner.R;
 
 public class CustomExpandListAdapter  extends BaseExpandableListAdapter {
 
@@ -28,8 +34,13 @@ public class CustomExpandListAdapter  extends BaseExpandableListAdapter {
     private String[] mChildFrom;
     private int[] mChildTo;
 
-
     private LayoutInflater mInflater;
+
+    private GroupCallBackListener mGroupCallBackListener;
+
+    public interface GroupCallBackListener {
+        public void ClickSettingButton(int groupPosition);
+    }
 
     public CustomExpandListAdapter(Context context, List<? extends Map> groupData, int groupLayout,
                                    String[] groupFrom, int[] groupTo, List<? extends List> childData,
@@ -82,13 +93,43 @@ public class CustomExpandListAdapter  extends BaseExpandableListAdapter {
     }
 
     @Override
-    public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
+    public View getGroupView(final int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
         View v;
         if (convertView == null) {
             v = mInflater.inflate(mGroupLayout,null);
         } else {
             v = convertView;
         }
+
+        switch (groupPosition) {
+            case 0:
+                v.setBackgroundResource(R.drawable.ligth);
+                break;
+            case 1 :
+                v.setBackgroundResource(R.drawable.gren);
+                break;
+            case 2:
+                v.setBackgroundResource(R.drawable.blue);
+                break;
+            case 3:
+                v.setBackgroundResource(R.drawable.orange);
+                break;
+            case 4:
+                v.setBackgroundResource(R.drawable.dark);
+                break;
+        }
+
+        ImageView settingButton = (ImageView) v.findViewById(R.id.elg_setting);
+        settingButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mGroupCallBackListener != null) {
+                    mGroupCallBackListener.ClickSettingButton(groupPosition);
+                }
+
+            }
+        });
+
         bindView(v, mGroupData.get(groupPosition), mGroupFrom, mGroupTo);
         return v;
     }
@@ -114,6 +155,7 @@ public class CustomExpandListAdapter  extends BaseExpandableListAdapter {
             v = convertView;
         }
         Object l = mChildData.get(groupPosition).get(childPosition);
+        System.out.println(l);
         //bindView(v, mChildData.get(groupPosition).get(childPosition), mChildFrom, mChildTo);
         return v;
     }
@@ -122,4 +164,9 @@ public class CustomExpandListAdapter  extends BaseExpandableListAdapter {
     public boolean isChildSelectable(int groupPosition, int childPosition) {
         return true;
     }
+
+    public void setGroupCallBackListener (GroupCallBackListener listener){
+        mGroupCallBackListener = listener;
+    }
+
 }

@@ -10,7 +10,7 @@ import android.widget.CheckBox;
 
 import cav.lscaner.R;
 
-public class SettingFieldDialog extends DialogFragment{
+public class SettingFieldDialog extends DialogFragment implements View.OnClickListener{
 
     private CheckBox[] mCheckBoxes;
 
@@ -26,5 +26,10 @@ public class SettingFieldDialog extends DialogFragment{
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("Поля базы данных").setView(v);
         return builder.create();
+    }
+
+    @Override
+    public void onClick(View view) {
+
     }
 }

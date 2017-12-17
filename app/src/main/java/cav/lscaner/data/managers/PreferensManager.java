@@ -22,6 +22,7 @@ public class PreferensManager {
     private static final String FIELD_EGAIS = "FIELD_EGAIS";
     private static final String FIELD_BASE_PRICE = "FIELD_BASE_PRICE";
     private static final String FIELD_OSTATOK = "FIELD_OSTATOK";
+    private static final String FIELD_CODETV = "FIELD_CODETV";
 
     private static final String FIELD_OUT_BARCODE = "FIELD_OUT_BARCODE";
     private static final String FIELD_OUT_QUANTITY = "FIELD_OUT_QUANTITY";
@@ -35,6 +36,13 @@ public class PreferensManager {
     private static final String FIELD_OUT_EGAIS_ARTICUL = "FIELD_OUT_EGAIS_ARTICUL";
     private static final String FIELD_OUT_EGAIS_QUANTITY = "FIELD_OUT_EGAIS_QUANTITY";
 
+    private static final String FIELD_OUT_CP_BARCODE = "FIELD_OUT_CP_BARCODE";
+    private static final String FIELD_OUT_CP_QUANTITY = "FIELD_OUT_CP_QUANTITY";
+    private static final String FIELD_OUT_CP_PRICE = "FIELD_OUT_CP_PRICE";
+    private static final String FIELD_OUT_CP_ARTICUL = "FIELD_OUT_CP_ARTICUL";
+    private static final String FIELD_OUT_CP_BASE_PRICE = "FIELD_OUT_CP_BASE_PRICE";
+    private static final String FIELD_OUT_CP_EGAIS = "FIELD_OUT_CP_EGAIS";
+    private static final String FIELD_OUT_CP_CODETV = "FIELD_OUT_CP_CODETV";
 
 
     private SharedPreferences mSharedPreferences;
@@ -148,7 +156,8 @@ public class PreferensManager {
                 mSharedPreferences.getInt(FIELD_PRICE,-1),
                 mSharedPreferences.getInt(FIELD_EGAIS,-1),
                 mSharedPreferences.getInt(FIELD_BASE_PRICE,-1),
-                mSharedPreferences.getInt(FIELD_OSTATOK,-1)
+                mSharedPreferences.getInt(FIELD_OSTATOK,-1),
+                mSharedPreferences.getInt(FIELD_CODETV,-1)
         );
         return md;
     }
@@ -162,6 +171,7 @@ public class PreferensManager {
         editor.putInt(FIELD_EGAIS,field.getEGAIS());
         editor.putInt(FIELD_BASE_PRICE,field.getBasePrice());
         editor.putInt(FIELD_OSTATOK,field.getOstatok());
+        editor.putInt(FIELD_CODETV,field.getCodeTV());
         editor.apply();
     }
 
@@ -169,9 +179,9 @@ public class PreferensManager {
     public FieldOutFile getFieldOutFile(){
         FieldOutFile md = new FieldOutFile(
                 mSharedPreferences.getInt(FIELD_OUT_BARCODE,1),
-                mSharedPreferences.getInt(FIELD_OUT_QUANTITY,2),
+                mSharedPreferences.getInt(FIELD_OUT_QUANTITY,3),
                 mSharedPreferences.getInt(FIELD_OUT_PRICE,-1),
-                mSharedPreferences.getInt(FIELD_OUT_ARTICUL,-1),
+                mSharedPreferences.getInt(FIELD_OUT_ARTICUL,2),
                 mSharedPreferences.getInt(FIELD_OUT_BASE_PRICE,-1),
                 mSharedPreferences.getInt(FIELD_OUT_EGAIS,-1),
                 mSharedPreferences.getInt(FIELD_OUT_CODETV,-1)
@@ -209,5 +219,40 @@ public class PreferensManager {
         editor.putInt(FIELD_OUT_EGAIS_QUANTITY,field.getQuantity());
         editor.apply();
     }
+
+    // настройка полей выходоного файла переоценки
+    public FieldOutFile getFieldOutChangePriceFile(){
+        FieldOutFile md = new FieldOutFile(
+                mSharedPreferences.getInt(FIELD_OUT_CP_BARCODE,1),
+                mSharedPreferences.getInt(FIELD_OUT_CP_QUANTITY,-1),
+                mSharedPreferences.getInt(FIELD_OUT_CP_PRICE,3),
+                mSharedPreferences.getInt(FIELD_OUT_CP_ARTICUL,2),
+                mSharedPreferences.getInt(FIELD_OUT_CP_BASE_PRICE,-1),
+                mSharedPreferences.getInt(FIELD_OUT_CP_EGAIS,-1),
+                mSharedPreferences.getInt(FIELD_OUT_CP_CODETV,-1)
+        );
+        return md;
+    }
+    public void setFieldOutChangePriceFile(FieldOutFile field){
+        SharedPreferences.Editor editor = mSharedPreferences.edit();
+        editor.putInt(FIELD_OUT_CP_BARCODE,field.getBarcode());
+        editor.putInt(FIELD_OUT_CP_QUANTITY,field.getQuantity());
+        editor.putInt(FIELD_OUT_CP_PRICE,field.getPrice());
+        editor.putInt(FIELD_OUT_CP_ARTICUL,field.getArticul());
+        editor.putInt(FIELD_OUT_CP_EGAIS,field.getEGAIS());
+        editor.putInt(FIELD_OUT_CP_BASE_PRICE,field.getBasePrice());
+        editor.putInt(FIELD_OUT_CP_CODETV,field.getCodeTV());
+        editor.apply();
+    }
+
+    // настройка полей выходного файла прихода
+    public FieldOutFile getFieldOutPrixodFile() {
+        return null;
+    }
+
+    public void setFieldOutPrixodFile(FieldOutFile field){
+
+    }
+
 
 }

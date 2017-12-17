@@ -12,6 +12,7 @@ import java.util.Map;
 import cav.lscaner.R;
 import cav.lscaner.data.managers.DataManager;
 import cav.lscaner.ui.adapter.CustomExpandListAdapter;
+import cav.lscaner.ui.dialogs.SettingFieldDialog;
 
 //https://habrahabr.ru/post/147546/
 //http://startandroid.ru/ru/uroki/vse-uroki-spiskom/86-urok-45-spisok-derevo-expandablelistview.html
@@ -132,8 +133,7 @@ public class SettingFieldNewActivity extends AppCompatActivity {
         // список ID view-элементов, в которые будет помещены атрибуты элементов
         int childTo[] = new int[] {R.id.expant_list_item_name};
 
-
-
+        /*
         SimpleExpandableListAdapter adapter = new SimpleExpandableListAdapter(
                 this,
                 groupData,
@@ -144,9 +144,8 @@ public class SettingFieldNewActivity extends AppCompatActivity {
                 R.layout.expand_list_item,
                 childFrom,
                 childTo);
+                */
 
-
-        /*
         CustomExpandListAdapter adapter = new CustomExpandListAdapter(
                 this,
                 groupData,
@@ -157,10 +156,20 @@ public class SettingFieldNewActivity extends AppCompatActivity {
                 R.layout.expand_list_item,
                 childFrom,
                 childTo);
-          */
+
+        adapter.setGroupCallBackListener(mBackListener);
+
 
         mExpandList = (ExpandableListView) findViewById(R.id.expandableListView);
         mExpandList.setAdapter(adapter);
 
     }
+
+    CustomExpandListAdapter.GroupCallBackListener mBackListener = new CustomExpandListAdapter.GroupCallBackListener() {
+        @Override
+        public void ClickSettingButton(int groupPosition) {
+            SettingFieldDialog dialog = new SettingFieldDialog();
+            dialog.show(getFragmentManager(),"sfd");
+        }
+    };
 }
