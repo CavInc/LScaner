@@ -75,4 +75,27 @@ public class FieldOutFile {
     public int getCodeTV() {
         return mCodeTV;
     }
+
+    // возвращает значение в соотсветсвии с таблицей размещения полей
+    //"Штрих-код","Код","Кол-во.","Цена","Цена закупочная","Код ЕГАИС","Артикул"};
+    public int get(int i){
+        switch (i){
+            case 0:
+                return mBarcode;
+            case 1:
+                return mArticul;
+            case 2:
+                return mQuantity;
+            case 3:
+                return mPrice;
+            case 4:
+                return mBasePrice;
+            case 5:
+                return mEGAIS;
+            case 6:
+                return mCodeTV;
+        }
+        return -1;
+    }
+
 }

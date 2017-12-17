@@ -134,6 +134,30 @@ public class FileFieldModel implements Parcelable {
         return mCodeTV;
     }
 
+    // возвращает код
+    // "Штрих-код","Код","Наименование",Остаток","Цена","Цена закупочная","Код ЕГАИС","Артикул"
+    public int get(int i){
+        switch (i){
+            case 0:
+                return mBar;
+            case 1:
+                return mArticul;
+            case 2:
+                return mName;
+            case 3:
+                return mOstatok;
+            case 4:
+                return mPrice;
+            case 5:
+                return mBasePrice;
+            case 6:
+                return mEGAIS;
+            case 7:
+                return mCodeTV;
+        }
+        return -1;
+    }
+
     public static final Creator<FileFieldModel> CREATOR = new Creator<FileFieldModel>(){
 
         @Override

@@ -44,6 +44,14 @@ public class PreferensManager {
     private static final String FIELD_OUT_CP_EGAIS = "FIELD_OUT_CP_EGAIS";
     private static final String FIELD_OUT_CP_CODETV = "FIELD_OUT_CP_CODETV";
 
+    private static final String FIELD_OUT_P_BARCODE = "FIELD_OUT_P_BARCODE";
+    private static final String FIELD_OUT_P_QUANTITY = "FIELD_OUT_P_QUANTITY";
+    private static final String FIELD_OUT_P_PRICE = "FIELD_OUT_P_PRICE";
+    private static final String FIELD_OUT_P_ARTICUL = "FIELD_OUT_P_ARTICUL";
+    private static final String FIELD_OUT_P_BASE_PRICE = "FIELD_OUT_P_BASE_PRICE";
+    private static final String FIELD_OUT_P_EGAIS = "FIELD_OUT_P_EGAIS";
+    private static final String FIELD_OUT_P_CODETV = "FIELD_OUT_P_CODETV";
+
 
     private SharedPreferences mSharedPreferences;
 
@@ -247,11 +255,28 @@ public class PreferensManager {
 
     // настройка полей выходного файла прихода
     public FieldOutFile getFieldOutPrixodFile() {
-        return null;
+        FieldOutFile md = new FieldOutFile(
+                mSharedPreferences.getInt(FIELD_OUT_P_BARCODE,1),
+                mSharedPreferences.getInt(FIELD_OUT_P_QUANTITY,-1),
+                mSharedPreferences.getInt(FIELD_OUT_P_PRICE,3),
+                mSharedPreferences.getInt(FIELD_OUT_P_ARTICUL,2),
+                mSharedPreferences.getInt(FIELD_OUT_P_BASE_PRICE,4),
+                mSharedPreferences.getInt(FIELD_OUT_P_EGAIS,-1),
+                mSharedPreferences.getInt(FIELD_OUT_P_CODETV,-1)
+        );
+        return md;
     }
 
     public void setFieldOutPrixodFile(FieldOutFile field){
-
+        SharedPreferences.Editor editor = mSharedPreferences.edit();
+        editor.putInt(FIELD_OUT_P_BARCODE,field.getBarcode());
+        editor.putInt(FIELD_OUT_P_QUANTITY,field.getQuantity());
+        editor.putInt(FIELD_OUT_P_PRICE,field.getPrice());
+        editor.putInt(FIELD_OUT_P_ARTICUL,field.getArticul());
+        editor.putInt(FIELD_OUT_P_EGAIS,field.getEGAIS());
+        editor.putInt(FIELD_OUT_P_BASE_PRICE,field.getBasePrice());
+        editor.putInt(FIELD_OUT_P_CODETV,field.getCodeTV());
+        editor.apply();
     }
 
 

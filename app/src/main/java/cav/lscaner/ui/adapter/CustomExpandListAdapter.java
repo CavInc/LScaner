@@ -10,10 +10,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -154,8 +156,19 @@ public class CustomExpandListAdapter  extends BaseExpandableListAdapter {
         } else {
             v = convertView;
         }
-        Object l = mChildData.get(groupPosition).get(childPosition);
+
+        HashMap l = (HashMap) mChildData.get(groupPosition).get(childPosition);
         System.out.println(l);
+        TextView tv = (TextView) v.findViewById(mChildTo[0]);
+        String s = (String) l.get(mChildFrom[0]);
+        tv.setText(s);
+
+        EditText ed = (EditText) v.findViewById(mChildTo[1]);
+        String vl = (String) l.get(mChildFrom[1]);
+        if (!vl.equals("-1")) {
+            ed.setText(vl);
+        }
+
         //bindView(v, mChildData.get(groupPosition).get(childPosition), mChildFrom, mChildTo);
         return v;
     }
