@@ -9,6 +9,7 @@ public class StoreProductModel implements Parcelable {
     private String mArticul = null;
     private Double mPrice = 0.0;
     private Double mOstatok = 0.0;
+    private String mCodeTV;
 
     public StoreProductModel(String barcode, String name) {
         mBarcode = barcode;
@@ -42,6 +43,7 @@ public class StoreProductModel implements Parcelable {
         mArticul = in.readString();
         mPrice = in.readDouble();
         mOstatok = in.readDouble();
+        mCodeTV = in.readString();
     }
 
     public static final Creator<StoreProductModel> CREATOR = new Creator<StoreProductModel>() {
@@ -76,6 +78,10 @@ public class StoreProductModel implements Parcelable {
         return mOstatok;
     }
 
+    public String getCodeTV() {
+        return mCodeTV;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -88,6 +94,7 @@ public class StoreProductModel implements Parcelable {
         parcel.writeString(mArticul);
         parcel.writeDouble(mPrice);
         parcel.writeDouble(mOstatok);
+        parcel.writeString(mCodeTV);
     }
 
     @Override

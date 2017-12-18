@@ -87,10 +87,33 @@ public class DBConnect {
         values.put("quantity",quantity);
         values.put("articul",articul);
         values.put("pos_id", position);
-        open();
+
         database.insertWithOnConflict(DBHelper.SCAN_TABLE_SPEC,null,values,SQLiteDatabase.CONFLICT_REPLACE);
         close();
     }
+
+    // добавили позицию в файл
+    public void addScannedPricePosition(int idFile, StoreProductModel productModel, int position) {
+        open();
+
+        if (position == -1) {
+            Cursor cursor = database.rawQuery("select max(pos_id)+1 as pos from " + DBHelper.SCAN_TABLE_SPEC + " where head_id=" + idFile, null);
+            cursor.moveToFirst();
+            position = cursor.getInt(0);
+            if (position == 0) position = 1;
+        }
+
+        ContentValues values = new ContentValues();
+        values.put("head_id",idFile);
+        values.put("barcode",productModel.getBarcode());
+        values.put("articul",productModel.getArticul());
+        values.put("pos_id", position);
+        values.put("price",productModel.getPrice());
+
+        database.insertWithOnConflict(DBHelper.SCAN_TABLE_SPEC,null,values,SQLiteDatabase.CONFLICT_REPLACE);
+        close();
+    }
+
     // удалили позицию в файле
     public void delScannedPosition(int idFile,int posId){
         open();
@@ -244,4 +267,6 @@ public class DBConnect {
         //database.rawQuery(sql,null);
         database.execSQL(sql);
     }
+
+
 }

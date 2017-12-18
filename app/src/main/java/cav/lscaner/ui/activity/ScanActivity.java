@@ -9,12 +9,8 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.SearchView;
-import android.text.Editable;
 import android.text.InputFilter;
 import android.text.InputType;
-import android.text.TextWatcher;
-import android.util.Log;
-import android.view.InputDevice;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -26,7 +22,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.logging.Filter;
 
 import cav.lscaner.R;
 import cav.lscaner.data.managers.DataManager;
@@ -358,9 +353,10 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
             mArticul = product.getArticul();
 
             if (fileType == ConstantManager.FILE_TYPE_CHANGE_PRICE) {
-                PrihodChangePriceDialog dialog = PrihodChangePriceDialog.newInstance();
+                PrihodChangePriceDialog dialog = PrihodChangePriceDialog.newInstance(product,fileType,editRecord);
+                dialog.setPrihodChangePriceListener(mChangePriceListener);
                 dialog.show(getFragmentManager(),"pcd");
-            }else {
+            } else {
                 QueryQuantityDialog dialog = QueryQuantityDialog.newInstans(product, 0f, 0f, editRecord);
                 dialog.setQuantityChangeListener(mQuantityChangeListener);
                 dialog.show(getSupportFragmentManager(), "QQ");
@@ -374,6 +370,25 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
         }
     }
 
+    // получаем обратно данные от переоценке или приходе товара
+    PrihodChangePriceDialog.PrihodChangePriceListener mChangePriceListener = new PrihodChangePriceDialog.PrihodChangePriceListener() {
+        @Override
+        public void cancelButton() {
+            mBarCode.requestFocus();
+        }
+
+        @Override
+        public void changeQuantity(StoreProductModel productModel) {
+            if (fileType == ConstantManager.FILE_TYPE_CHANGE_PRICE){
+                mDataManager.getDB().addScannedPricePosition(idFile,productModel,posID);
+            }
+            updateUI();
+            mBarCode.setText("");
+            mBarCode.requestFocus();
+        }
+    };
+
+    // получаем обратно данные о количестве
     QueryQuantityDialog.QuantityChangeListener mQuantityChangeListener = new QueryQuantityDialog.QuantityChangeListener(){
 
         @Override
