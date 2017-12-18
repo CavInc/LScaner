@@ -117,7 +117,6 @@ public class PrihodChangePriceDialog extends DialogFragment implements View.OnCl
             storeData();
             dismiss();
         }
-
     }
 
     private void storeData() {
