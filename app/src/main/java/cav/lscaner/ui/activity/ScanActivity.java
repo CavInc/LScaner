@@ -385,6 +385,8 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
         public void changeQuantity(StoreProductModel productModel) {
             if (fileType == ConstantManager.FILE_TYPE_CHANGE_PRICE){
                 mDataManager.getDB().addScannedPricePosition(idFile,productModel,posID);
+            } else {
+                mDataManager.getDB().addScannedPrihodPosition(idFile,productModel,posID);
             }
             updateUI();
             mBarCode.setText("");

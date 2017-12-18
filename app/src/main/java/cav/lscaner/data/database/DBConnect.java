@@ -64,6 +64,9 @@ public class DBConnect {
         if (mode == ConstantManager.FILE_TYPE_PRODUCT) {
             sql = "select sts.head_id,sts.barcode,sts.pos_id,sts.quantity,sp.name,sp.articul,sp.baseprice,sp.price,sp.ostatok from " + DBHelper.SCAN_TABLE_SPEC + " sts \n" +
                     " left join " + DBHelper.STORE_PRODUCT + " sp on sts.barcode = sp.barcode and sts.articul=sp.articul where sts.head_id=" + idFile + " order by sts.pos_id desc";
+        } else if (mode == ConstantManager.FILE_TYPE_PRIHOD || mode == ConstantManager.FILE_TYPE_CHANGE_PRICE) {
+            sql = "select sts.head_id,sts.barcode,sts.pos_id,sts.quantity,sp.name,sp.articul,sp.baseprice,sts.price,sp.ostatok from " + DBHelper.SCAN_TABLE_SPEC + " sts \n" +
+                    " left join " + DBHelper.STORE_PRODUCT + " sp on sts.barcode = sp.egais where sts.head_id=" + idFile + " order by sts.pos_id desc";
         } else {
             sql = "select sts.head_id,sts.barcode,sts.pos_id,sts.quantity,sp.name,sp.articul,sp.baseprice,sp.price,sp.ostatok from " + DBHelper.SCAN_TABLE_SPEC + " sts \n" +
                     " left join " + DBHelper.STORE_PRODUCT + " sp on sts.barcode = sp.egais where sts.head_id=" + idFile + " order by sts.pos_id desc";
@@ -109,6 +112,28 @@ public class DBConnect {
         values.put("articul",productModel.getArticul());
         values.put("pos_id", position);
         values.put("price",productModel.getPrice());
+
+        database.insertWithOnConflict(DBHelper.SCAN_TABLE_SPEC,null,values,SQLiteDatabase.CONFLICT_REPLACE);
+        close();
+    }
+
+    public void addScannedPrihodPosition(int idFile, StoreProductModel productModel, int position) {
+        open();
+
+        if (position == -1) {
+            Cursor cursor = database.rawQuery("select max(pos_id)+1 as pos from " + DBHelper.SCAN_TABLE_SPEC + " where head_id=" + idFile, null);
+            cursor.moveToFirst();
+            position = cursor.getInt(0);
+            if (position == 0) position = 1;
+        }
+
+        ContentValues values = new ContentValues();
+        values.put("head_id",idFile);
+        values.put("barcode",productModel.getBarcode());
+        values.put("articul",productModel.getArticul());
+        values.put("pos_id", position);
+        values.put("price",productModel.getPrice());
+        values.put("quantity",productModel.getQuantity());
 
         database.insertWithOnConflict(DBHelper.SCAN_TABLE_SPEC,null,values,SQLiteDatabase.CONFLICT_REPLACE);
         close();
@@ -267,6 +292,7 @@ public class DBConnect {
         //database.rawQuery(sql,null);
         database.execSQL(sql);
     }
+
 
 
 }
