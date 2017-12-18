@@ -19,6 +19,8 @@ public class ScannedDataModel {
     private String mCodeArticul = null;
     private String mEgais;
 
+    private int fileType; // тип файла
+
 
     public ScannedDataModel(int idFile,int posId, String barCode, String name, Float quantity) {
         mIdFile = idFile;
@@ -102,6 +104,10 @@ public class ScannedDataModel {
 
     public String getEgais() {
         return mEgais;
+    }
+
+    public int getFileType() {
+        return fileType;
     }
 
     @Override

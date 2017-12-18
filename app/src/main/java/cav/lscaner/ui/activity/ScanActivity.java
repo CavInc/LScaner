@@ -356,7 +356,11 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
                 PrihodChangePriceDialog dialog = PrihodChangePriceDialog.newInstance(product,fileType,editRecord);
                 dialog.setPrihodChangePriceListener(mChangePriceListener);
                 dialog.show(getFragmentManager(),"pcd");
-            } else {
+            } else if (fileType == ConstantManager.FILE_TYPE_PRIHOD) {
+                PrihodChangePriceDialog dialog = PrihodChangePriceDialog.newInstance(product,fileType,editRecord);
+                dialog.setPrihodChangePriceListener(mChangePriceListener);
+                dialog.show(getFragmentManager(),"ppd");
+            }else {
                 QueryQuantityDialog dialog = QueryQuantityDialog.newInstans(product, 0f, 0f, editRecord);
                 dialog.setQuantityChangeListener(mQuantityChangeListener);
                 dialog.show(getSupportFragmentManager(), "QQ");

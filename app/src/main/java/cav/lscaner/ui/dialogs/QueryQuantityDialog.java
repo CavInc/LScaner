@@ -71,27 +71,10 @@ public class QueryQuantityDialog extends DialogFragment implements View.OnClickL
     }
 
     public interface QuantityChangeListener {
-       // public void changeQuantity (Float quantity);
         public void changeQuantity(Float quantity,StoreProductModel productModel);
         public void cancelButton();
     }
 
-    /*
-    public static QueryQuantityDialog newInstans(String name,Float qunatity,
-                                                 Float oldQuantity,boolean editFlg,
-                                                 Double ostatok,Double price){
-        Bundle args = new Bundle();
-        args.putString(POSITION_NAME,name);
-        args.putFloat(POSITION_QUANTITY,qunatity);
-        args.putFloat(POSITION_OLD_QUANTITY,oldQuantity);
-        args.putDouble(POSITION_PRICE,price);
-        args.putDouble(POSITION_OSTATOK,ostatok);
-        args.putBoolean(EDIT_FLG,editFlg);
-        QueryQuantityDialog dialog = new QueryQuantityDialog();
-        dialog.setArguments(args);
-        return dialog;
-    }
-    */
 
     public static QueryQuantityDialog newInstans(StoreProductModel productModel,Float qunatity,Float oldQuantity,boolean editFlg) {
         Bundle args = new Bundle();

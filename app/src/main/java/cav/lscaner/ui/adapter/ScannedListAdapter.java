@@ -106,5 +106,6 @@ public class ScannedListAdapter extends ArrayAdapter<ScannedDataModel>{
         private TextView mArticul;
         private TextView mSumma;
         private TextView mPrice;
+        private TextView mOldPrice;
     }
 }

@@ -35,6 +35,8 @@ public class PrihodChangePriceDialog extends DialogFragment implements View.OnCl
 
 
     private EditText mPrice; // поле ввода цены
+    private EditText mQuantity; // количество
+    private EditText mSumma; // сумма
 
     private PrihodChangePriceListener mListener;
 
@@ -81,6 +83,9 @@ public class PrihodChangePriceDialog extends DialogFragment implements View.OnCl
         } else {
             buildTitle = "Поступление";
             v = LayoutInflater.from(getActivity()).inflate(R.layout.prihod_dialog, null);
+            mPrice = (EditText) v.findViewById(R.id.qq_price);
+            mQuantity = (EditText) v.findViewById(R.id.qq_quantity);
+            mSumma = (EditText) v.findViewById(R.id.qq_summ);
         }
 
         TextView mName = (TextView) v.findViewById(R.id.qq_title);
@@ -117,14 +122,25 @@ public class PrihodChangePriceDialog extends DialogFragment implements View.OnCl
 
     private void storeData() {
         if (mListener != null ) {
+            Double price = 0.0;
+            if (mPrice.getText().length() !=  0){
+                price = Double.parseDouble(mPrice.getText().toString());
+            }
+
             if (mFileType == ConstantManager.FILE_TYPE_CHANGE_PRICE) {
-                Double price = 0.0;
-                if (mPrice.getText().length() !=  0){
-                    price = Double.parseDouble(mPrice.getText().toString());
-                }
                 StoreProductModel productModel = new StoreProductModel(mBarcode, mGetName, mArticul,price);
                 mListener.changeQuantity(productModel);
+            } else {
+                Float qq;
+                if (mQuantity.getText().length()!=0) {
+                    qq = Float.valueOf(mQuantity.getText().toString());
+                } else {
+                    qq = 1f;
+                }
+                StoreProductModel productModel = new StoreProductModel(mBarcode, mGetName, mArticul,price,qq,0.0);
+                mListener.changeQuantity(productModel);
             }
+
         }
     }
 
