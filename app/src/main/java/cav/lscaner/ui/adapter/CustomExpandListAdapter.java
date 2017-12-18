@@ -104,26 +104,31 @@ public class CustomExpandListAdapter  extends BaseExpandableListAdapter {
         } else {
             v = convertView;
         }
+        ImageView settingButton = (ImageView) v.findViewById(R.id.elg_setting);
 
         switch (groupPosition) {
             case 0:
                 v.setBackgroundResource(R.drawable.ligth);
+                settingButton.setImageResource(R.drawable.settings_2_gray);
                 break;
             case 1 :
                 v.setBackgroundResource(R.drawable.gren);
+                settingButton.setImageResource(R.drawable.settings_2_green);
                 break;
             case 2:
                 v.setBackgroundResource(R.drawable.blue);
+                settingButton.setImageResource(R.drawable.settings_2_blue);
                 break;
             case 3:
                 v.setBackgroundResource(R.drawable.orange);
+                settingButton.setImageResource(R.drawable.settings_2_orange);
                 break;
             case 4:
                 v.setBackgroundResource(R.drawable.dark);
                 break;
         }
 
-        ImageView settingButton = (ImageView) v.findViewById(R.id.elg_setting);
+
         settingButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
