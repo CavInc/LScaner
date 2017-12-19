@@ -182,6 +182,7 @@ public class CustomExpandListAdapter  extends BaseExpandableListAdapter {
             ed.setText("");
         }
 
+        // TODO нужно как то правильно передавать текущие индексы группы и позиции
 
         ed.addTextChangedListener(new TextWatcher() {
             @Override
