@@ -48,6 +48,7 @@ public class ScannedListAdapter extends ArrayAdapter<ScannedDataModel>{
             holder.mArticul = (TextView) row.findViewById(R.id.sc_item_articul);
             holder.mSumma = (TextView) row.findViewById(R.id.sc_item_summa);
             holder.mPrice = (TextView) row.findViewById(R.id.sc_item_price);
+            holder.mOldPrice = (TextView) row.findViewById(R.id.sc_item_oldprice);
             row.setTag(holder);
         }else{
             holder = (ViewHolder)row.getTag();
@@ -88,6 +89,10 @@ public class ScannedListAdapter extends ArrayAdapter<ScannedDataModel>{
 
         if (holder.mSumma !=null) {
             holder.mSumma.setText("Сумма : " + Func.roundUp(rec.getSumm(), 2));
+        }
+
+        if (holder.mOldPrice != null) {
+            holder.mOldPrice.setText("Старая: "+rec.getOldPrice());
         }
 
         return row;

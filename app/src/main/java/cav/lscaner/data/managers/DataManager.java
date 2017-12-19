@@ -128,9 +128,9 @@ public class DataManager{
                     cursor.getFloat(cursor.getColumnIndex("quantity")),
                     cursor.getString(cursor.getColumnIndex("articul")),
                     cursor.getDouble(cursor.getColumnIndex("price")),
-                    cursor.getDouble(cursor.getColumnIndex("ostatok"))
+                    cursor.getDouble(cursor.getColumnIndex("ostatok")),
+                    cursor.getDouble(cursor.getColumnIndex("oldprice"))
             ));
-
         }
         mDB.close();
         return rec;
