@@ -79,6 +79,8 @@ public class PrihodChangePriceDialog extends DialogFragment implements View.OnCl
         if (mFileType == ConstantManager.FILE_TYPE_CHANGE_PRICE) {
             buildTitle = "Переоценка";
             v = LayoutInflater.from(getActivity()).inflate(R.layout.change_price_dialog, null);
+            ((TextView) v.findViewById(R.id.chpr_price)).setText("Текущая: "+mGetPrice);
+            ((TextView) v.findViewById(R.id.chpr_ostatok)).setText("Остаток: "+mGetOstatok);
             mPrice = (EditText) v.findViewById(R.id.chpr_newprice);
         } else {
             buildTitle = "Поступление";
@@ -86,6 +88,7 @@ public class PrihodChangePriceDialog extends DialogFragment implements View.OnCl
             mPrice = (EditText) v.findViewById(R.id.qq_price);
             mQuantity = (EditText) v.findViewById(R.id.qq_quantity);
             mSumma = (EditText) v.findViewById(R.id.qq_summ);
+            ((TextView) v.findViewById(R.id.qq_articul)).setText(mArticul);
         }
 
         TextView mName = (TextView) v.findViewById(R.id.qq_title);
