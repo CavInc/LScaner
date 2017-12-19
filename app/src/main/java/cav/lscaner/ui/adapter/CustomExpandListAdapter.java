@@ -196,8 +196,12 @@ public class CustomExpandListAdapter  extends BaseExpandableListAdapter {
 
             @Override
             public void afterTextChanged(Editable editable) {
-                if (lockEdit && editable.length() !=0 ) {
-                    ((HashMap) mChildData.get(groupPosition).get(childPosition)).put("itemValue", editable.toString());
+                if (lockEdit ) {
+                    if (editable.length() !=0) {
+                        ((HashMap) mChildData.get(groupPosition).get(childPosition)).put("itemValue", editable.toString());
+                    } else {
+                        ((HashMap) mChildData.get(groupPosition).get(childPosition)).put("itemValue", "-1");
+                    }
                 }
             }
         });

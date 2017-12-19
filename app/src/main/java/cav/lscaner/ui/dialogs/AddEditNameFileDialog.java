@@ -20,7 +20,7 @@ import android.widget.TextView;
 import cav.lscaner.R;
 import cav.lscaner.utils.ConstantManager;
 
-public class AddEditNameFileDialog extends DialogFragment implements View.OnClickListener{
+public class AddEditNameFileDialog extends DialogFragment implements View.OnClickListener,RadioGroup.OnCheckedChangeListener{
     private static final String EDIT_NAME = "EDIT_NAME";
     private static final String EDIT_TYPE = "EDIT_TYPE";
     private static final String TAG = "AEND";
@@ -84,6 +84,33 @@ public class AddEditNameFileDialog extends DialogFragment implements View.OnClic
         }
     }
 
+    @Override
+    public void onCheckedChanged(RadioGroup radioGroup, int i) {
+        Log.d(TAG,"RG ID "+i);
+        Log.d(TAG,"--------------------");
+        //radioGroup.clearCheck();
+        Log.d(TAG,"RX ID "+radioGroup.getCheckedRadioButtonId());
+
+        mPrihod.setChecked(false);
+        mTovar.setChecked(false);
+        mEGAIS.setChecked(false);
+        mChangePrice.setChecked(false);
+
+        if (i == R.id.dialog_egais) {
+            mPrihod.setChecked(true);
+        }
+        if (i == R.id.dialog_tovar){
+            mTovar.setChecked(true);
+        }
+
+        if (i == R.id.dialog_prixod) {
+            mPrihod.setChecked(true);
+        }
+        if (i == R.id.dialog_changeprise) {
+            mChangePrice.setChecked(true);
+        }
+    }
+
     public interface AddEditNameFileListener {
         public void changeName(String value,int type_file);
     }
@@ -137,6 +164,10 @@ public class AddEditNameFileDialog extends DialogFragment implements View.OnClic
         mCancelBt.setOnClickListener(this);
         mOkBt.setOnClickListener(this);
 
+        mRG1.setOnCheckedChangeListener(this);
+        mRG2.setOnCheckedChangeListener(this);
+
+        /*
         mRG1.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, int i) {
@@ -162,6 +193,7 @@ public class AddEditNameFileDialog extends DialogFragment implements View.OnClic
                 }
             }
         });
+        */
 
         mName.setText(nameFile);
 
