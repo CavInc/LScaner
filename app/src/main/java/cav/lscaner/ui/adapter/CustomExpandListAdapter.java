@@ -125,6 +125,7 @@ public class CustomExpandListAdapter  extends BaseExpandableListAdapter {
                 break;
             case 4:
                 v.setBackgroundResource(R.drawable.dark);
+                settingButton.setImageResource(R.drawable.settings_2_dark);
                 break;
         }
 
@@ -154,6 +155,7 @@ public class CustomExpandListAdapter  extends BaseExpandableListAdapter {
         }
     }
 
+    private boolean lockEdit = false;
 
     @Override
     public View getChildView(final int groupPosition, final int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
@@ -170,6 +172,8 @@ public class CustomExpandListAdapter  extends BaseExpandableListAdapter {
         String s = (String) l.get(mChildFrom[0]);
         tv.setText(s);
 
+        lockEdit = false;
+
         EditText ed = (EditText) v.findViewById(mChildTo[1]);
         String vl = (String) l.get(mChildFrom[1]);
         if (!vl.equals("-1")) {
@@ -178,7 +182,7 @@ public class CustomExpandListAdapter  extends BaseExpandableListAdapter {
             ed.setText("");
         }
 
-        /*
+
         ed.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int start, int count, int after) {
@@ -192,12 +196,13 @@ public class CustomExpandListAdapter  extends BaseExpandableListAdapter {
 
             @Override
             public void afterTextChanged(Editable editable) {
-                if (editable.length() !=0 ) {
+                if (lockEdit && editable.length() !=0 ) {
                     ((HashMap) mChildData.get(groupPosition).get(childPosition)).put("itemValue", editable.toString());
                 }
             }
         });
-        */
+
+        lockEdit = true;
 
         return v;
     }

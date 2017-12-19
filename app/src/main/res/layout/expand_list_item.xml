@@ -13,7 +13,8 @@
     <EditText
         android:id="@+id/expant_list_item_pos"
         android:layout_weight="6"
-        android:inputType="numberSigned"
+        android:inputType="numberDecimal"
+        android:imeOptions="actionNone"
         android:maxLength="1"
         android:gravity="center"
         android:layout_width="match_parent"
