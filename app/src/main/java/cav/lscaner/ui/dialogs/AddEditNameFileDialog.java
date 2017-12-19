@@ -143,6 +143,7 @@ public class AddEditNameFileDialog extends DialogFragment implements View.OnClic
                 mPrihod.setChecked(false);
                 mChangePrice.setChecked(false);
                 Log.d(TAG,"RG1 ID "+i);
+                Log.d(TAG,"-----------");
             }
         });
 
