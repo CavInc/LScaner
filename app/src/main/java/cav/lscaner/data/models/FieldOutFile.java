@@ -9,6 +9,16 @@ public class FieldOutFile {
     private int mEGAIS;
     private int mCodeTV; // артикул
 
+    public FieldOutFile() {
+        mBarcode = -1;
+        mQuantity = -1;
+        mPrice = -1;
+        mArticul = -1; // код
+        mBasePrice = -1;
+        mEGAIS = -1;
+        mCodeTV = -1; // артикул
+    }
+
     public FieldOutFile(int barcode, int quantity, int price) {
         mBarcode = barcode;
         mQuantity = quantity;
@@ -74,6 +84,18 @@ public class FieldOutFile {
 
     public int getCodeTV() {
         return mCodeTV;
+    }
+
+    public void setBasePrice(int basePrice) {
+        mBasePrice = basePrice;
+    }
+
+    public void setEGAIS(int EGAIS) {
+        mEGAIS = EGAIS;
+    }
+
+    public void setCodeTV(int codeTV) {
+        mCodeTV = codeTV;
     }
 
     // возвращает значение в соотсветсвии с таблицей размещения полей

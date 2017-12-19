@@ -16,6 +16,17 @@ public class FileFieldModel implements Parcelable {
     private int mMaxIndex = 0;
 
 
+    public FileFieldModel() {
+        mBar = -1;
+        mName = -1;
+        mArticul = -1;// код
+        mPrice = -1;
+        mEGAIS = -1;
+        mBasePrice = -1;
+        mOstatok = -1;
+        mCodeTV = -1; // артикул
+    }
+
     public FileFieldModel(int bar, int name, int articul, int price, int EGAIS) {
         mBar = bar;
         mName = name;

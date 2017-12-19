@@ -1,5 +1,6 @@
 package cav.lscaner.ui.activity;
 
+import android.content.Intent;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -69,6 +70,8 @@ public class SettingFieldNewActivity extends AppCompatActivity {
 
     // список атрибутов группы или элемента
     Map<String, String> m;
+
+    private CustomExpandListAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -159,20 +162,8 @@ public class SettingFieldNewActivity extends AppCompatActivity {
         // список ID view-элементов, в которые будет помещены атрибуты элементов
         int childTo[] = new int[] {R.id.expant_list_item_name,R.id.expant_list_item_pos};
 
-        /*
-        SimpleExpandableListAdapter adapter = new SimpleExpandableListAdapter(
-                this,
-                groupData,
-                R.layout.expant_list_group_item,
-                groupFrom,
-                groupTo,
-                childData,
-                R.layout.expand_list_item,
-                childFrom,
-                childTo);
-                */
 
-        CustomExpandListAdapter adapter = new CustomExpandListAdapter(
+        adapter = new CustomExpandListAdapter(
                 this,
                 groupData,
                 R.layout.expant_list_group_item,
@@ -208,6 +199,12 @@ public class SettingFieldNewActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        saveData();
+    }
+
     CustomExpandListAdapter.GroupCallBackListener mBackListener = new CustomExpandListAdapter.GroupCallBackListener() {
         @Override
         public void ClickSettingButton(int groupPosition) {
@@ -215,4 +212,135 @@ public class SettingFieldNewActivity extends AppCompatActivity {
             dialog.show(getFragmentManager(),"sfd");
         }
     };
+
+    // сохраняем данные в preferens
+    public void saveData(){
+        int ic = adapter.getGroupCount();
+        for (int i=0;i<ic;i++){
+            Log.d(TAG, String.valueOf(adapter.getChildrenCount(i)));
+            // база данных
+            if (((HashMap)adapter.getGroup(i)).get("groupName").equals(groups[0])) {
+                saveStoreProduct(i);
+            }
+            // сканированные товара
+            if (((HashMap)adapter.getGroup(i)).get("groupName").equals(groups[1])) {
+                saveTovar(i,0);
+            }
+            // егаис
+            if (((HashMap)adapter.getGroup(i)).get("groupName").equals(groups[2])) {
+                saveTovar(i,1);
+            }
+            // переоценка
+            if (((HashMap)adapter.getGroup(i)).get("groupName").equals(groups[3])) {
+                saveTovar(i,2);
+            }
+            // приход
+            if (((HashMap)adapter.getGroup(i)).get("groupName").equals(groups[4])) {
+                saveTovar(i,3);
+            }
+        }
+    }
+
+    /*
+        String[] storeProduct = new String[] {"Штрих-код","Код","Наименование",
+            "Остаток","Цена","Цена закупочная","Код ЕГАИС","Артикул"};
+    */
+
+    private void saveStoreProduct(int groupID) {
+        FileFieldModel field = new FileFieldModel();
+        int ic = adapter.getChildrenCount(groupID);
+        for (int i=0;i<ic;i++){
+            HashMap lx = (HashMap) adapter.getChild(groupID, i);
+            // штрикод
+            if (lx.get("itemText").equals(storeProduct[0])) {
+                field.setBar(Integer.parseInt(lx.get("itemValue").toString()));
+            }
+            // код - артикул
+            if (lx.get("itemText").equals(storeProduct[1])) {
+                field.setArticul(Integer.parseInt(lx.get("itemValue").toString()));
+            }
+            // наименование
+            if (lx.get("itemText").equals(storeProduct[2])) {
+                field.setName(Integer.parseInt(lx.get("itemValue").toString()));
+            }
+            // остаток
+            if (lx.get("itemText").equals(storeProduct[3])) {
+                field.setOstatok(Integer.parseInt(lx.get("itemValue").toString()));
+            }
+            // цена
+            if (lx.get("itemText").equals(storeProduct[4])) {
+                field.setPrice(Integer.parseInt(lx.get("itemValue").toString()));
+            }
+            // цена зак
+            if (lx.get("itemText").equals(storeProduct[5])) {
+                field.setBasePrice(Integer.parseInt(lx.get("itemValue").toString()));
+            }
+            // егаис
+            if (lx.get("itemText").equals(storeProduct[6])) {
+                field.setEGAIS(Integer.parseInt(lx.get("itemValue").toString()));
+            }
+            // артикул - codtv
+            if (lx.get("itemText").equals(storeProduct[7])) {
+
+            }
+        }
+        mDataManager.getPreferensManager().setFieldFileModel(field);
+    }
+
+    /*
+        String[] outField = new String[] {"Штрих-код","Код","Кол-во.",
+            "Цена","Цена закупочная","Код ЕГАИС","Артикул"};
+     */
+
+    private void saveTovar(int groupId,int mode){
+        FieldOutFile field = new FieldOutFile();
+        int ic = adapter.getChildrenCount(groupId);
+        for (int i=0;i<ic;i++) {
+            HashMap lx = (HashMap) adapter.getChild(groupId, i);
+            // штрикод
+            if (lx.get("itemText").equals(outField[0])) {
+                field.setBarcode(Integer.parseInt(lx.get("itemValue").toString()));
+            }
+            // код - артикул
+            if (lx.get("itemText").equals(outField[1])) {
+                field.setArticul(Integer.parseInt(lx.get("itemValue").toString()));
+            }
+            // кол-во.
+            if (lx.get("itemText").equals(outField[2])) {
+                field.setQuantity(Integer.parseInt(lx.get("itemValue").toString()));
+            }
+            // цена
+            if (lx.get("itemText").equals(outField[3])) {
+                field.setPrice(Integer.parseInt(lx.get("itemValue").toString()));
+            }
+            // цена зак
+            if (lx.get("itemText").equals(outField[4])) {
+                field.setBasePrice(Integer.parseInt(lx.get("itemValue").toString()));
+            }
+            // егаис
+            if (lx.get("itemText").equals(outField[5])) {
+                field.setEGAIS(Integer.parseInt(lx.get("itemValue").toString()));
+            }
+            // артикул - codtv
+            if (lx.get("itemText").equals(outField[6])) {
+                field.setCodeTV(Integer.parseInt(lx.get("itemValue").toString()));
+            }
+
+        }
+        switch (mode) {
+            case (0):
+                mDataManager.getPreferensManager().setFieldOutFile(field);
+                break;
+            case (1):
+                mDataManager.getPreferensManager().setFieldOutEgaisFile(field);
+                break;
+            case (2):
+                mDataManager.getPreferensManager().setFieldOutChangePriceFile(field);
+                break;
+            case (3):
+                mDataManager.getPreferensManager().setFieldOutPrixodFile(field);
+                break;
+        }
+    }
+
 }
