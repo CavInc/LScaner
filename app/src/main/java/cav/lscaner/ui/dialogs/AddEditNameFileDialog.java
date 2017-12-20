@@ -20,7 +20,7 @@ import android.widget.TextView;
 import cav.lscaner.R;
 import cav.lscaner.utils.ConstantManager;
 
-public class AddEditNameFileDialog extends DialogFragment implements View.OnClickListener,RadioGroup.OnCheckedChangeListener{
+public class AddEditNameFileDialog extends DialogFragment implements View.OnClickListener{
     private static final String EDIT_NAME = "EDIT_NAME";
     private static final String EDIT_TYPE = "EDIT_TYPE";
     private static final String TAG = "AEND";
@@ -81,32 +81,6 @@ public class AddEditNameFileDialog extends DialogFragment implements View.OnClic
         }
     }
 
-    @Override
-    public void onCheckedChanged(RadioGroup radioGroup, int i) {
-        Log.d(TAG,"RG ID "+i);
-        Log.d(TAG,"--------------------");
-        //radioGroup.clearCheck();
-        Log.d(TAG,"RX ID "+radioGroup.getCheckedRadioButtonId());
-
-        mPrihod.setChecked(false);
-        mTovar.setChecked(false);
-        mEGAIS.setChecked(false);
-        mChangePrice.setChecked(false);
-
-        if (i == R.id.dialog_egais) {
-            mPrihod.setChecked(true);
-        }
-        if (i == R.id.dialog_tovar){
-            mTovar.setChecked(true);
-        }
-
-        if (i == R.id.dialog_prixod) {
-            mPrihod.setChecked(true);
-        }
-        if (i == R.id.dialog_changeprise) {
-            mChangePrice.setChecked(true);
-        }
-    }
 
     public interface AddEditNameFileListener {
         public void changeName(String value,int type_file);
@@ -146,12 +120,16 @@ public class AddEditNameFileDialog extends DialogFragment implements View.OnClic
         mChangePrice = (RadioButton) v.findViewById(R.id.dialog_changeprise);
 
         if (type == ConstantManager.FILE_TYPE_PRODUCT) {
+            clearCheck();
             mTovar.setChecked(true);
         } else  if (type == ConstantManager.FILE_TYPE_EGAIS){
+            clearCheck();
             mEGAIS.setChecked(true);
         } else if (type == ConstantManager.FILE_TYPE_PRIHOD) {
+            clearCheck();
             mPrihod.setChecked(true);
         } else  {
+            clearCheck();
             mChangePrice.setChecked(true);
         }
 
@@ -163,35 +141,6 @@ public class AddEditNameFileDialog extends DialogFragment implements View.OnClic
         mPrihod.setOnClickListener(mRbListener);
         mChangePrice.setOnClickListener(mRbListener);
 
-
-        /*
-        mRG1.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup radioGroup, int i) {
-                mPrihod.setChecked(false);
-                mChangePrice.setChecked(false);
-                Log.d(TAG,"RG1 ID "+i);
-                Log.d(TAG,"-----------");
-            }
-        });
-
-        mRG2.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup radioGroup, int i) {
-                mTovar.setChecked(false);
-                mEGAIS.setChecked(false);
-                Log.d(TAG,"RG2 ID "+i);
-                Log.d(TAG,"RG2 chID "+radioGroup.getCheckedRadioButtonId());
-                if (i == R.id.dialog_prixod) {
-                    mPrihod.setChecked(true);
-                }
-                if (i == R.id.dialog_changeprise) {
-                    mChangePrice.setChecked(true);
-                }
-            }
-        });
-        */
-
         mName.setText(nameFile);
 
         mName.setOnEditorActionListener(mNameActionListener);
@@ -199,6 +148,13 @@ public class AddEditNameFileDialog extends DialogFragment implements View.OnClic
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("Имя файла документа").setView(v);
         return builder.create();
+    }
+
+    private void clearCheck() {
+        mTovar.setChecked(false);
+        mEGAIS.setChecked(false);
+        mChangePrice.setChecked(false);
+        mPrihod.setChecked(false);
     }
 
     public void setAddEditNameFileListener(AddEditNameFileListener listener){

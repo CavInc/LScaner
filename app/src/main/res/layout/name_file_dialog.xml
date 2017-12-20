@@ -4,6 +4,7 @@
     android:layout_height="wrap_content"
     android:padding="16dp"
     xmlns:android="http://schemas.android.com/apk/res/android">
+
     <TextView
         android:text="Инвентаризация"
         android:textColor="@color/app_blue"
