@@ -23,6 +23,7 @@ public class PrihodChangePriceDialog extends DialogFragment implements View.OnCl
     private static final String POSITION_OSTATOK = "POSITION_OSTATOK";
     private static final String POSITION_BARCODE = "POSITION_BARCODE";
     private static final String POSITON_ARTICUL = "POSITION_ARTICUL";
+    private static final String POSITION_QUANTITY = "POSITION_QUANTITY";
     private StoreProductModel mProductModel;
     private int mFileType;
     private boolean mEditFlg;
@@ -32,6 +33,7 @@ public class PrihodChangePriceDialog extends DialogFragment implements View.OnCl
     private String mGetName;
     private Double mGetOstatok;
     private Double mGetPrice;
+    private Float mGetQuantity;
 
 
     private EditText mPrice; // поле ввода цены
@@ -50,6 +52,7 @@ public class PrihodChangePriceDialog extends DialogFragment implements View.OnCl
         args.putDouble(POSITION_OSTATOK,productModel.getOstatok());
         args.putString(POSITION_BARCODE,productModel.getBarcode());
         args.putString(POSITON_ARTICUL,productModel.getArticul());
+        args.putFloat(POSITION_QUANTITY,productModel.getQuantity());
 
         PrihodChangePriceDialog dialog = new PrihodChangePriceDialog();
         dialog.setArguments(args);
@@ -69,6 +72,7 @@ public class PrihodChangePriceDialog extends DialogFragment implements View.OnCl
             mGetPrice = getArguments().getDouble(POSITION_PRICE);
             mBarcode = getArguments().getString(POSITION_BARCODE);
             mArticul = getArguments().getString(POSITON_ARTICUL);
+            mGetQuantity = getArguments().getFloat(POSITION_QUANTITY);
         }
     }
 
@@ -82,6 +86,9 @@ public class PrihodChangePriceDialog extends DialogFragment implements View.OnCl
             ((TextView) v.findViewById(R.id.chpr_price)).setText("Текущая: "+mGetPrice);
             ((TextView) v.findViewById(R.id.chpr_ostatok)).setText("Остаток: "+mGetOstatok);
             mPrice = (EditText) v.findViewById(R.id.chpr_newprice);
+            if (mEditFlg) {
+                mPrice.setText(String.valueOf(mGetPrice));
+            }
         } else {
             buildTitle = "Поступление";
             v = LayoutInflater.from(getActivity()).inflate(R.layout.prihod_dialog, null);
@@ -89,6 +96,12 @@ public class PrihodChangePriceDialog extends DialogFragment implements View.OnCl
             mQuantity = (EditText) v.findViewById(R.id.qq_quantity);
             mSumma = (EditText) v.findViewById(R.id.qq_summ);
             ((TextView) v.findViewById(R.id.qq_articul)).setText(mArticul);
+            if (mEditFlg) {
+                mPrice.setText(String.valueOf(mGetPrice));
+                mQuantity.setText(String.valueOf(mGetQuantity));
+                mSumma.setText(String.valueOf(mGetQuantity*mGetPrice));
+
+            }
         }
 
         TextView mName = (TextView) v.findViewById(R.id.qq_title);
