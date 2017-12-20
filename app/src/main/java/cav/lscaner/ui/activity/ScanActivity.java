@@ -463,16 +463,25 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
                 posID = selModel.getPosId();
                 mBar = selModel.getBarCode();
                 mArticul = selModel.getArticul();
-                /*
-                QueryQuantityDialog dialog = QueryQuantityDialog.newInstans(selModel.getName(),
-                        selModel.getQuantity(),
-                        selModel.getQuantity(),editRecord,
-                        selModel.getOstatok(),selModel.getPrice());
-                        */
-                QueryQuantityDialog dialog = QueryQuantityDialog.newInstans(new StoreProductModel(selModel.getBarCode(),selModel.getName(),selModel.getArticul()),
-                        selModel.getQuantity(),selModel.getQuantity(),editRecord);
-                dialog.setQuantityChangeListener(mQuantityChangeListener);
-                dialog.show(getSupportFragmentManager(),"EDITSD");
+                if (fileType == ConstantManager.FILE_TYPE_EGAIS || fileType == ConstantManager.FILE_TYPE_PRODUCT) {
+                    QueryQuantityDialog dialog = QueryQuantityDialog.newInstans(new StoreProductModel(selModel.getBarCode(), selModel.getName(), selModel.getArticul()),
+                            selModel.getQuantity(), selModel.getQuantity(), editRecord);
+                    dialog.setQuantityChangeListener(mQuantityChangeListener);
+                    dialog.show(getSupportFragmentManager(), "EDITSD");
+                } else if (fileType == ConstantManager.FILE_TYPE_CHANGE_PRICE){
+                    PrihodChangePriceDialog dialog = PrihodChangePriceDialog.newInstance(new StoreProductModel(selModel.getBarCode(),
+                            selModel.getName(), selModel.getArticul(),selModel.getPrice(),selModel.getOstatok())
+                            ,fileType,editRecord);
+                    dialog.setPrihodChangePriceListener(mChangePriceListener);
+                    dialog.show(getFragmentManager(),"pcd");
+                } else {
+                    PrihodChangePriceDialog dialog = PrihodChangePriceDialog.newInstance(new StoreProductModel(selModel.getBarCode(),
+                            selModel.getName(), selModel.getArticul(),selModel.getPrice(),selModel.getQuantity(),selModel.getOstatok())
+                            ,fileType,editRecord);
+                    dialog.setPrihodChangePriceListener(mChangePriceListener);
+                    dialog.show(getFragmentManager(),"ppd");
+                }
+
             }
         }
     };

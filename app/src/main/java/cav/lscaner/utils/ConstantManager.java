@@ -13,6 +13,7 @@ public interface ConstantManager{
     String REGISTRY_NUMBER = "REGISTRY_NUMBER";
     String CODE_FILE = "CODE_FILE";
     String SELECTED_FILE_TYPE = "SELECTED_FILE_TYPE";
+
     int FILE_TYPE_PRODUCT = 0;
     int FILE_TYPE_EGAIS = 1;
     int FILE_TYPE_PRIHOD = 2;
