@@ -40,9 +40,6 @@ public class AddEditNameFileDialog extends DialogFragment implements View.OnClic
     private RadioButton mPrihod;
     private RadioButton mChangePrice;
 
-    private RadioGroup mRG1;
-    private RadioGroup mRG2;
-
     private int type;
 
     @Override
@@ -158,14 +155,14 @@ public class AddEditNameFileDialog extends DialogFragment implements View.OnClic
             mChangePrice.setChecked(true);
         }
 
-        mRG1 = (RadioGroup) v.findViewById(R.id.dialog_rg_1);
-        mRG2 = (RadioGroup) v.findViewById(R.id.dialog_rg_2);
-
         mCancelBt.setOnClickListener(this);
         mOkBt.setOnClickListener(this);
 
-        mRG1.setOnCheckedChangeListener(this);
-        mRG2.setOnCheckedChangeListener(this);
+        mTovar.setOnClickListener(mRbListener);
+        mEGAIS.setOnClickListener(mRbListener);
+        mPrihod.setOnClickListener(mRbListener);
+        mChangePrice.setOnClickListener(mRbListener);
+
 
         /*
         mRG1.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
@@ -208,5 +205,29 @@ public class AddEditNameFileDialog extends DialogFragment implements View.OnClic
         mListener = listener;
     }
 
+    View.OnClickListener mRbListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            mTovar.setChecked(false);
+            mEGAIS.setChecked(false);
+            mChangePrice.setChecked(false);
+            mPrihod.setChecked(false);
+            switch (view.getId()){
+                case R.id.dialog_tovar:
+                    mTovar.setChecked(true);
+                    break;
+                case R.id.dialog_egais:
+                    mEGAIS.setChecked(true);
+                    break;
+                case R.id.dialog_changeprise:
+                    mChangePrice.setChecked(true);
+                    break;
+                case R.id.dialog_prixod:
+                    mPrihod.setChecked(true);
+                    break;
+            }
+
+        }
+    };
 
 }
