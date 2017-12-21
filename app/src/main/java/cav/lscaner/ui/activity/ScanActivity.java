@@ -330,9 +330,15 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
             mArticul = mDataModels.get(l).getArticul();
             posID = mDataModels.get(l).getPosId();
            // Func.addLog(debugOutFile,"No Scale : "+mArticul+" :: "+mDataModels.get(l).getName()+" :: "+l); // debug
-            QueryQuantityDialog dialog = QueryQuantityDialog.newInstans(product,0f,qq,editRecord);
-            dialog.setQuantityChangeListener(mQuantityChangeListener);
-            dialog.show(getSupportFragmentManager(), "QQ");
+            if (fileType == ConstantManager.FILE_TYPE_CHANGE_PRICE || fileType == ConstantManager.FILE_TYPE_PRIHOD) {
+                PrihodChangePriceDialog dialog = PrihodChangePriceDialog.newInstance(product,fileType,editRecord);
+                dialog.setPrihodChangePriceListener(mChangePriceListener);
+                dialog.show(getFragmentManager(),"pcd");
+            }else {
+                QueryQuantityDialog dialog = QueryQuantityDialog.newInstans(product, 0f, qq, editRecord);
+                dialog.setQuantityChangeListener(mQuantityChangeListener);
+                dialog.show(getSupportFragmentManager(), "QQ");
+            }
         } else {
             Float oldqq = mDataModels.get(l).getQuantity();
             mArticul = mDataModels.get(l).getArticul();
