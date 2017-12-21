@@ -256,7 +256,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
                 // показываем окно с выбором куда отправлять
                 // Toast.makeText(MainActivity.this,"А тут будет диалог спрашивающий куда отправить",Toast.LENGTH_LONG).show();
                 // вызов отправки
-                fileType =  selModel.getType()
+                fileType =  selModel.getType();
                 pushGD();
 
 
