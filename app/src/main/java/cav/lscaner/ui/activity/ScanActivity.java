@@ -333,6 +333,7 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
             if (fileType == ConstantManager.FILE_TYPE_CHANGE_PRICE || fileType == ConstantManager.FILE_TYPE_PRIHOD) {
                 editRecord = true;
                 product.setPrice(mDataModels.get(l).getPrice());
+                product.setQuantity(qq);
                 PrihodChangePriceDialog dialog = PrihodChangePriceDialog.newInstance(product,fileType,editRecord);
                 dialog.setPrihodChangePriceListener(mChangePriceListener);
                 dialog.show(getFragmentManager(),"pcd");
