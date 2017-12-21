@@ -4,8 +4,10 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -90,6 +92,7 @@ public class PrihodChangePriceDialog extends DialogFragment implements View.OnCl
                 //mPrice.setText(String.valueOf(mGetPrice));
                 mPrice.setHint(String.valueOf(mGetPrice));
             }
+            mPrice.setOnEditorActionListener(mEditorActionListener);
         } else {
             buildTitle = "Поступление";
             v = LayoutInflater.from(getActivity()).inflate(R.layout.prihod_dialog, null);
@@ -162,6 +165,20 @@ public class PrihodChangePriceDialog extends DialogFragment implements View.OnCl
     public void setPrihodChangePriceListener (PrihodChangePriceListener listener){
         mListener = listener;
     }
+
+    TextView.OnEditorActionListener mEditorActionListener = new TextView.OnEditorActionListener() {
+        @Override
+        public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
+            if (actionId == EditorInfo.IME_ACTION_DONE || (keyEvent.getAction() == KeyEvent.ACTION_DOWN &&
+                    keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER
+                    && keyEvent.getRepeatCount() == 0)){
+                storeData();
+                dismiss();
+                return true;
+            }
+            return false;
+        }
+    };
 
     public interface PrihodChangePriceListener {
         public void cancelButton();
