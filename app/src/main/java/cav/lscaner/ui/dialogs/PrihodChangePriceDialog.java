@@ -87,7 +87,8 @@ public class PrihodChangePriceDialog extends DialogFragment implements View.OnCl
             ((TextView) v.findViewById(R.id.chpr_ostatok)).setText("Остаток: "+mGetOstatok);
             mPrice = (EditText) v.findViewById(R.id.chpr_newprice);
             if (mEditFlg) {
-                mPrice.setText(String.valueOf(mGetPrice));
+                //mPrice.setText(String.valueOf(mGetPrice));
+                mPrice.setHint(String.valueOf(mGetPrice));
             }
         } else {
             buildTitle = "Поступление";
@@ -97,10 +98,9 @@ public class PrihodChangePriceDialog extends DialogFragment implements View.OnCl
             mSumma = (EditText) v.findViewById(R.id.qq_summ);
             ((TextView) v.findViewById(R.id.qq_articul)).setText(mArticul);
             if (mEditFlg) {
-                mPrice.setText(String.valueOf(mGetPrice));
-                mQuantity.setText(String.valueOf(mGetQuantity));
-                mSumma.setText(String.valueOf(mGetQuantity*mGetPrice));
-
+                mPrice.setHint(String.valueOf(mGetPrice));
+                mQuantity.setHint(String.valueOf(mGetQuantity));
+                mSumma.setHint(String.valueOf(mGetQuantity*mGetPrice));
             }
         }
 
