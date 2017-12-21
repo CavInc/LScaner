@@ -211,6 +211,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
     }
 
     private ScannedFileModel selModel = null;
+    private int fileType;
 
     @Override
     public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long id) {
@@ -221,6 +222,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
         dialog.show(getFragmentManager(),"SELECT_DIALOG");
         return true;
     }
+
 
     SelectMainDialog.SelectMainDialogListener mSelectMainDialogListener = new SelectMainDialog.SelectMainDialogListener() {
         @Override
@@ -254,6 +256,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
                 // показываем окно с выбором куда отправлять
                 // Toast.makeText(MainActivity.this,"А тут будет диалог спрашивающий куда отправить",Toast.LENGTH_LONG).show();
                 // вызов отправки
+                fileType =  selModel.getType()
                 pushGD();
 
 
@@ -385,7 +388,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
             chooseAccount();
         } else {
             if (directionGD == WRITE_FILE) {
-                new SendRequestTask(mCredential, storeFileFullName).execute();
+                new SendRequestTask(mCredential, storeFileFullName,fileType).execute();
             } else {
                 new RequestDataTask(mCredential,mDataManager.getPreferensManager().getStoreFileName()).execute();
             }
@@ -509,7 +512,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
         private String fn = null;
         private java.io.File filePath = null;
 
-        public SendRequestTask(GoogleAccountCredential credential, String fn){
+        private int filetype;
+
+        public SendRequestTask(GoogleAccountCredential credential, String fn,int filetype){
             this.fn = fn;
 
             HttpTransport transport = AndroidHttp.newCompatibleTransport();
@@ -533,6 +538,20 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
             fileMetadata.setDescription("Scanned file");
             String fname = filePath.getName();
             if (fname.toUpperCase().indexOf(".TXT") == -1){ fname = fname+".txt";}
+
+            if (filetype == ConstantManager.FILE_TYPE_PRODUCT) {
+                fname = ConstantManager.PREFIX_FILE_TOVAR+fname;
+            }
+            if (filetype == ConstantManager.FILE_TYPE_EGAIS) {
+                fname = ConstantManager.PREFIX_FILE_EGAIS+fname;
+            }
+            if (filetype == ConstantManager.FILE_TYPE_CHANGE_PRICE) {
+                fname = ConstantManager.PREFIX_FILE_CHANGEPRICE+fname;
+            }
+            if (filetype == ConstantManager.FILE_TYPE_PRODUCT) {
+                fname = ConstantManager.PREFIX_FILE_PRIHOD+fname;
+            }
+
             fileMetadata.setName(fname);
 
             FileContent mediaContent = new FileContent("text/csv", filePath);
