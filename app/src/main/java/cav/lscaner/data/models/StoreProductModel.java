@@ -97,6 +97,18 @@ public class StoreProductModel implements Parcelable {
         return mQuantity;
     }
 
+    public void setPrice(Double price) {
+        mPrice = price;
+    }
+
+    public void setOstatok(Double ostatok) {
+        mOstatok = ostatok;
+    }
+
+    public void setQuantity(Float quantity) {
+        mQuantity = quantity;
+    }
+
     @Override
     public int describeContents() {
         return 0;
