@@ -11,16 +11,16 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -29,9 +29,6 @@ import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccoun
 import com.google.api.client.googleapis.extensions.android.gms.auth.GooglePlayServicesAvailabilityIOException;
 import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
 import com.google.api.client.http.FileContent;
-import com.google.api.client.http.GenericUrl;
-import com.google.api.client.http.HttpRequest;
-import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
@@ -41,15 +38,11 @@ import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.DriveScopes;
 import com.google.api.services.drive.model.File;
 import com.google.api.services.drive.model.FileList;
-import com.google.api.services.drive.model.Permission;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 import cav.lscaner.R;
@@ -62,6 +55,7 @@ import cav.lscaner.ui.dialogs.SelectMainDialog;
 import cav.lscaner.ui.dialogs.WarningDialog;
 import cav.lscaner.utils.ConstantManager;
 import cav.lscaner.utils.Func;
+import cav.lscaner.utils.SwipeDetector;
 import cav.lscaner.utils.WorkInFile;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
@@ -89,6 +83,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
     private int directionGD = WRITE_FILE ;// что делаем с файлом
 
     private boolean demo = true;
+    private SwipeDetector swipeDetector;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,6 +100,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
         mFAB.setOnClickListener(this);
         mListView.setOnItemClickListener(this);
         mListView.setOnItemLongClickListener(this);
+
+
+        swipeDetector = new SwipeDetector();
+
+        mListView.setOnTouchListener(swipeDetector);
+
 
     }
 
@@ -203,6 +205,18 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+        if (swipeDetector.swipeDetected()) {
+            if (swipeDetector.getAction() == SwipeDetector.Action.LR) {
+                Log.d(TAG,"LEFT");
+                // удаляем
+                deleteRecord(mFileAdapter.getItem(position).getId());
+            }
+            if (swipeDetector.getAction() == SwipeDetector.Action.RL) {
+                Log.d(TAG,"RIGTH");
+            }
+            return;
+        }
+
         Intent intent = new Intent(this,ScanActivity.class);
         intent.putExtra(ConstantManager.SELECTED_FILE,mFileAdapter.getItem(position).getId());
         intent.putExtra(ConstantManager.SELECTED_FILE_NAME,mFileAdapter.getItem(position).getName());
@@ -785,7 +799,5 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
                 .setNegativeButton(R.string.button_close,null).create();
         builder.show();
     }
-
-
 
 }
