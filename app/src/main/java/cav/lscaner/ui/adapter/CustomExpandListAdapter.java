@@ -106,6 +106,7 @@ public class CustomExpandListAdapter  extends BaseExpandableListAdapter {
         }
         ImageView settingButton = (ImageView) v.findViewById(R.id.elg_setting);
 
+
         switch (groupPosition) {
             case 0:
                 v.setBackgroundResource(R.drawable.ligth);
@@ -128,6 +129,7 @@ public class CustomExpandListAdapter  extends BaseExpandableListAdapter {
                 settingButton.setImageResource(R.drawable.settings_2_dark);
                 break;
         }
+
 
 
         settingButton.setOnClickListener(new View.OnClickListener() {

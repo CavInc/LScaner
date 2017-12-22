@@ -19,7 +19,7 @@
     <ImageView
         android:id="@+id/elg_setting"
         android:layout_marginTop="14dp"
-        android:src="@drawable/settings"
+        android:src="@drawable/settings_2_blue"
         android:layout_width="24dp"
         android:layout_height="24dp"/>
 </LinearLayout>
