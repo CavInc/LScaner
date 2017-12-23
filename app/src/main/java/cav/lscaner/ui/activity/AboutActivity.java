@@ -65,4 +65,13 @@ public class AboutActivity extends AppCompatActivity implements View.OnClickList
         ActivateDialog dialog = new ActivateDialog();
         dialog.show(getSupportFragmentManager(),"AD");
     }
+
+    ActivateDialog.ActivateDialogListener mDialogListener = new ActivateDialog.ActivateDialogListener() {
+        @Override
+        public void activateState(boolean state) {
+            if (!mDataManager.getPreferensManager().getDemo()){
+                mActivateTv.setText("(активированна)");
+            }
+        }
+    };
 }

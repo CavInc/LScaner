@@ -21,6 +21,8 @@ public class ActivateDialog extends DialogFragment implements View.OnClickListen
     private DataManager mDataManager;
     private EditText mAcivateCode;
 
+    private ActivateDialogListener mDialogListener;
+
     private String deviceId;
 
     @Override
@@ -61,16 +63,30 @@ public class ActivateDialog extends DialogFragment implements View.OnClickListen
             // здесь проверяем код и пишем если все ок
             // проверяем тот ли номер
             String x = mAcivateCode.getText().toString();
+            boolean flg;
             if (Func.checkSerialNumber(x,deviceId) ) {
                 // сохраняем серийник и флаг что не недемо
                 mDataManager.getPreferensManager().setRegistrationNumber(x);
                 mDataManager.getPreferensManager().setDemo(false);
+                flg = true;
             } else {
                 mDataManager.getPreferensManager().setDemo(true);
+                flg = false;
             }
 
+            if (mDialogListener != null) {
+                mDialogListener.activateState(flg);
+            }
+            
             dismiss();
         }
+    }
 
+    public void setDialogListener (ActivateDialogListener listener){
+        mDialogListener = listener;
+    }
+
+    public interface ActivateDialogListener {
+        public void activateState(boolean state);
     }
 }
