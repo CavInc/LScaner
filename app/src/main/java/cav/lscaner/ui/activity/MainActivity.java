@@ -530,6 +530,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
 
         public SendRequestTask(GoogleAccountCredential credential, String fn,int filetype){
             this.fn = fn;
+            this.filetype = filetype;
 
             HttpTransport transport = AndroidHttp.newCompatibleTransport();
             JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
@@ -553,6 +554,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
             String fname = filePath.getName();
             if (fname.toUpperCase().indexOf(".TXT") == -1){ fname = fname+".txt";}
 
+            fname="_"+fname;
+
             if (filetype == ConstantManager.FILE_TYPE_PRODUCT) {
                 fname = ConstantManager.PREFIX_FILE_TOVAR+fname;
             }
@@ -562,7 +565,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
             if (filetype == ConstantManager.FILE_TYPE_CHANGE_PRICE) {
                 fname = ConstantManager.PREFIX_FILE_CHANGEPRICE+fname;
             }
-            if (filetype == ConstantManager.FILE_TYPE_PRODUCT) {
+            if (filetype == ConstantManager.FILE_TYPE_PRIHOD) {
                 fname = ConstantManager.PREFIX_FILE_PRIHOD+fname;
             }
 
