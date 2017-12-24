@@ -4,6 +4,8 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -41,6 +43,8 @@ public class PrihodChangePriceDialog extends DialogFragment implements View.OnCl
     private EditText mPrice; // поле ввода цены
     private EditText mQuantity; // количество
     private EditText mSumma; // сумма
+
+    private boolean lock = true;
 
     private PrihodChangePriceListener mListener;
 
@@ -100,11 +104,18 @@ public class PrihodChangePriceDialog extends DialogFragment implements View.OnCl
             mQuantity = (EditText) v.findViewById(R.id.qq_quantity);
             mSumma = (EditText) v.findViewById(R.id.qq_summ);
             ((TextView) v.findViewById(R.id.qq_articul)).setText(mArticul);
+
             if (mEditFlg) {
                 mPrice.setHint(String.valueOf(mGetPrice));
                 mQuantity.setHint(String.valueOf(mGetQuantity));
                 mSumma.setHint(String.valueOf(mGetQuantity*mGetPrice));
             }
+
+            mQuantity.addTextChangedListener(mQuantityWatcher);
+            //mPrice.addTextChangedListener(mPriceWatcher);
+            mSumma.addTextChangedListener(mSummWatcher);
+
+            mSumma.setOnEditorActionListener(mEditorActionListener);
         }
 
         TextView mName = (TextView) v.findViewById(R.id.qq_title);
@@ -179,6 +190,84 @@ public class PrihodChangePriceDialog extends DialogFragment implements View.OnCl
             return false;
         }
     };
+
+
+
+    TextWatcher mQuantityWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence charSequence,int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+            if (editable.length() !=0 ) {
+                Float qq = Float.valueOf(editable.toString());
+                Float price = 0.0f;
+                if (mPrice.getText().length()!= 0) {
+                    price = Float.valueOf(mPrice.getText().toString());
+                }
+                qq = qq*price;
+                mSumma.setText(String.valueOf(qq));
+            }
+        }
+    };
+
+    TextWatcher mPriceWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence charSequence, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+            if (editable.length() != 0) {
+                Float price = Float.valueOf(editable.toString());
+                Float qq = 1.0f;
+                if (mQuantity.getText().length() != 0) {
+                    qq = Float.valueOf(mQuantity.getText().toString());
+                }
+                qq = qq*price;
+                mSumma.setText(String.valueOf(qq));
+            }
+        }
+    };
+
+    TextWatcher mSummWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence charSequence, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+            if (editable.length() != 0){
+                Float qq = 1.0f;
+                Float price = 0.0f;
+                if (mQuantity.length() != 0){
+                    qq = Float.valueOf(mQuantity.getText().toString());
+                }
+                qq = Float.valueOf(editable.toString())/qq;
+                mPrice.setText(String.valueOf(qq));
+            }
+        }
+    };
+
 
     public interface PrihodChangePriceListener {
         public void cancelButton();

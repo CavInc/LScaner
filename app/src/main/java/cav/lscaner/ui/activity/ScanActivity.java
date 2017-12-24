@@ -36,6 +36,7 @@ import cav.lscaner.ui.dialogs.SelectItemsDialog;
 import cav.lscaner.ui.dialogs.SelectScanDialog;
 import cav.lscaner.utils.ConstantManager;
 import cav.lscaner.utils.Func;
+import cav.lscaner.utils.SwipeDetector;
 
 public class ScanActivity extends AppCompatActivity implements AdapterView.OnItemLongClickListener{
     private final int MAX_REC = 30;  // количество записей в демо версии
@@ -63,6 +64,8 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
     private boolean mUPCtoEAN = false;
 
     private boolean filterLock = false;
+
+    private SwipeDetector swipeDetector;
 
     private String debugOutFile;
 
@@ -105,6 +108,9 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
 
         // хз
         mListView.setOnFocusChangeListener(mOnFocusChangeListener);
+
+        swipeDetector = new SwipeDetector();
+        mListView.setOnTouchListener(swipeDetector);
 
         setupToolBar();
         updateUI();
