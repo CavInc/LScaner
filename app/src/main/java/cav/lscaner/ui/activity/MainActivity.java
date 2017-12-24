@@ -213,6 +213,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
             }
             if (swipeDetector.getAction() == SwipeDetector.Action.RL) {
                 Log.d(TAG,"RIGTH");
+                selModel = (ScannedFileModel) adapterView.getItemAtPosition(position);
+                editRecord();
             }
             return;
         }
@@ -248,10 +250,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
             if (index == R.id.dialog_edit_item) {
                 // редактируем заголовок
                 //Toast.makeText(MainActivity.this,"А тут будет диалог редактирования заголовка файла",Toast.LENGTH_LONG).show();
-                newRecord = false;
-                AddEditNameFileDialog dialog = AddEditNameFileDialog.newInstance(selModel.getName(),selModel.getType());
-                dialog.setAddEditNameFileListener(mAddEditNameFileListener);
-                dialog.show(getSupportFragmentManager(),"UpdateFile");
+                editRecord();
             }
             if (index == R.id.dialog_send_item) {
                 // отправляем наружу
@@ -277,6 +276,14 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
             }
         }
     };
+
+    // редактируем запись (заголовок)
+    private void editRecord(){
+        newRecord = false;
+        AddEditNameFileDialog dialog = AddEditNameFileDialog.newInstance(selModel.getName(),selModel.getType());
+        dialog.setAddEditNameFileListener(mAddEditNameFileListener);
+        dialog.show(getSupportFragmentManager(),"UpdateFile");
+    }
 
     private void pushGD() {
         // создаем аккаунт и запрашиваем всякое. через OAuth2
