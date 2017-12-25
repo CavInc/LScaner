@@ -44,7 +44,7 @@ public class PrihodChangePriceDialog extends DialogFragment implements View.OnCl
     private EditText mQuantity; // количество
     private EditText mSumma; // сумма
 
-    private boolean lock = true;
+    private boolean lock = false;
 
     private PrihodChangePriceListener mListener;
 
@@ -112,7 +112,7 @@ public class PrihodChangePriceDialog extends DialogFragment implements View.OnCl
             }
 
             mQuantity.addTextChangedListener(mQuantityWatcher);
-            //mPrice.addTextChangedListener(mPriceWatcher);
+            mPrice.addTextChangedListener(mPriceWatcher);
             mSumma.addTextChangedListener(mSummWatcher);
 
             mSumma.setOnEditorActionListener(mEditorActionListener);
@@ -207,6 +207,7 @@ public class PrihodChangePriceDialog extends DialogFragment implements View.OnCl
         @Override
         public void afterTextChanged(Editable editable) {
             if (editable.length() !=0 ) {
+                lock = true;
                 Float qq = Float.valueOf(editable.toString());
                 Float price = 0.0f;
                 if (mPrice.getText().length()!= 0) {
@@ -214,6 +215,7 @@ public class PrihodChangePriceDialog extends DialogFragment implements View.OnCl
                 }
                 qq = qq*price;
                 mSumma.setText(String.valueOf(qq));
+                lock = false;
             }
         }
     };
@@ -231,7 +233,9 @@ public class PrihodChangePriceDialog extends DialogFragment implements View.OnCl
 
         @Override
         public void afterTextChanged(Editable editable) {
+            if (lock) return;
             if (editable.length() != 0) {
+                lock = true;
                 Float price = Float.valueOf(editable.toString());
                 Float qq = 1.0f;
                 if (mQuantity.getText().length() != 0) {
@@ -239,6 +243,7 @@ public class PrihodChangePriceDialog extends DialogFragment implements View.OnCl
                 }
                 qq = qq*price;
                 mSumma.setText(String.valueOf(qq));
+                lock = false;
             }
         }
     };
@@ -256,7 +261,9 @@ public class PrihodChangePriceDialog extends DialogFragment implements View.OnCl
 
         @Override
         public void afterTextChanged(Editable editable) {
+            if (lock) return;
             if (editable.length() != 0){
+                lock = true;
                 Float qq = 1.0f;
                 Float price = 0.0f;
                 if (mQuantity.length() != 0){
@@ -264,6 +271,7 @@ public class PrihodChangePriceDialog extends DialogFragment implements View.OnCl
                 }
                 qq = Float.valueOf(editable.toString())/qq;
                 mPrice.setText(String.valueOf(qq));
+                lock = false;
             }
         }
     };
