@@ -169,14 +169,14 @@ public class PreferensManager {
         int size = mSharedPreferences.getInt(fileLen,0);
         int[] l = new int[size];
         for (int i=0;i<l.length;i++) {
-            l[0] = mSharedPreferences.getInt(fileField+i,-1);
+            l[i] = mSharedPreferences.getInt(fileField+i,-1);
         }
         return l;
     }
     private void setFileField(int[] field,String fileLen,String fileField){
         SharedPreferences.Editor editor = mSharedPreferences.edit();
         for (int i=0;i<field.length;i++){
-            editor.putInt(fileField+i,field[0]);
+            editor.putInt(fileField+i,field[i]);
         }
         editor.putInt(fileLen,field.length);
         editor.apply();

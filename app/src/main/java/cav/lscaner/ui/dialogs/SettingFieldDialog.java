@@ -9,6 +9,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import cav.lscaner.R;
 import cav.lscaner.data.managers.DataManager;
 
@@ -105,11 +108,62 @@ public class SettingFieldDialog extends DialogFragment implements View.OnClickLi
         }
     }
 
+    // собираемы выбранные элементы
+    private int[] getSelect(){
+        List<Integer> l = new ArrayList<>();
+        if (mode == 0) {
+            for (int i = 0; i<mCheckBoxes.length-1;i++){
+                if (mCheckBoxes[i].isChecked()){
+                    l.add(i);
+                }
+            }
+        } else {
+            for (int i = 0; i<mCheckBoxes.length-2;i++){
+                if (i == 2 && mCheckBoxes[8].isChecked()){
+                    l.add(i);
+                }
+                if (i<2){
+                    if (mCheckBoxes[i].isChecked()) l.add(i);
+                }else if(i>2){
+                    if (mCheckBoxes[i+1].isChecked()) l.add(i);
+                }
+            }
+        }
+        int[] x = new int[l.size()];
+        for (int i = 0;i<l.size();i++){
+            x[i] = l.get(i);
+        }
+        return x;
+    }
+
+    private void storeData(){
+        int [] x = getSelect();
+
+        switch (mode){
+            case 0:
+                mDataManager.getPreferensManager().setFieldFileActive(x);
+                break;
+            case 1:
+                mDataManager.getPreferensManager().setFieldOutActive(x);
+                break;
+            case 2:
+                mDataManager.getPreferensManager().setFieldEGAISActive(x);
+                break;
+            case 3:
+                mDataManager.getPreferensManager().setFieldChangePriceActive(x);
+                break;
+            case 4:
+                mDataManager.getPreferensManager().setFieldPrihoxPriceActive(x);
+                break;
+        }
+    }
+
 
     @Override
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.sfd_bt_ok:
+                storeData();
                 dismiss();
                 break;
             case R.id.sfd_bt_cancel:
