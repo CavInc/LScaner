@@ -80,6 +80,14 @@ public class SettingFieldNewActivity extends AppCompatActivity {
 
         mDataManager = DataManager.getInstance();
 
+        storeProductF = mDataManager.getPreferensManager().getFieldFileActive();
+        tovarF = mDataManager.getPreferensManager().getFieldOutActive();
+        egaisF = mDataManager.getPreferensManager().getFieldEGAISActive();
+        changePriceF = mDataManager.getPreferensManager().getFieldChangePriceActive();
+        prihodF = mDataManager.getPreferensManager().getFieldPrihoxActive();
+
+
+
         // заполняем коллекцию групп из массива с названиями групп
         groupData = new ArrayList<Map<String, String>>();
         for (String group : groups) {
@@ -208,7 +216,8 @@ public class SettingFieldNewActivity extends AppCompatActivity {
     CustomExpandListAdapter.GroupCallBackListener mBackListener = new CustomExpandListAdapter.GroupCallBackListener() {
         @Override
         public void ClickSettingButton(int groupPosition) {
-            SettingFieldDialog dialog = new SettingFieldDialog();
+            Log.d(TAG,"GP - "+groupPosition);
+            SettingFieldDialog dialog = SettingFieldDialog.newInstance(groupPosition);
             dialog.show(getFragmentManager(),"sfd");
         }
     };

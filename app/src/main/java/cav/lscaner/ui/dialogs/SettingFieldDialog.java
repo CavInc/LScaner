@@ -13,11 +13,23 @@ import cav.lscaner.R;
 
 public class SettingFieldDialog extends DialogFragment implements View.OnClickListener{
 
+    private static final String MODE = "SFD_MODE";
     private CheckBox[] mCheckBoxes;
 
-    public static SettingFieldDialog newInstance(){
+    private int mode;
+
+    public static SettingFieldDialog newInstance(int mode){
+        Bundle args = new Bundle();
+        args.putInt(MODE,mode);
         SettingFieldDialog dialog = new SettingFieldDialog();
+        dialog.setArguments(args);
         return dialog;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mode = getArguments().getInt(MODE);
     }
 
     @Override
@@ -26,10 +38,29 @@ public class SettingFieldDialog extends DialogFragment implements View.OnClickLi
 
         ((Button) v.findViewById(R.id.sfd_bt_ok)).setOnClickListener(this);
         ((Button) v.findViewById(R.id.sfd_bt_cancel)).setOnClickListener(this);
+        String title = null;
+
+        switch (mode){
+            case 0:
+                title = "Поля базы данных";
+                break;
+            case 1:
+                title = "Поля файла Товар";
+                break;
+            case 2:
+                title = "Поля файла ЕГАИС";
+                break;
+            case 3:
+                title = "Поля файла Переоценка";
+                break;
+            case 4:
+                title = "Поля файла Поступление";
+                break;
+        }
 
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle("Поля базы данных").setView(v);
+        builder.setTitle(title).setView(v);
         return builder.create();
     }
 
@@ -37,8 +68,10 @@ public class SettingFieldDialog extends DialogFragment implements View.OnClickLi
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.sfd_bt_ok:
+                dismiss();
                 break;
             case R.id.sfd_bt_cancel:
+                dismiss();
                 break;
         }
 

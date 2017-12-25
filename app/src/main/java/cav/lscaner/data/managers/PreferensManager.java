@@ -52,6 +52,17 @@ public class PreferensManager {
     private static final String FIELD_OUT_P_EGAIS = "FIELD_OUT_P_EGAIS";
     private static final String FIELD_OUT_P_CODETV = "FIELD_OUT_P_CODETV";
 
+    private static final String FFIN_LEN = "FFIN_LEN";
+    private static final String FFIN = "FFIN_";
+    private static final String FFOUT_LEN = "FFOUT_LEN";
+    private static final String FFOUT = "FFOUT_";
+    private static final String FFEGAIS_LEN = "FFEGAIS_LEN";
+    private static final String FFEGAIS = "FFEGAIS";
+    private static final String FFCP_LEN = "FFCP_LEN";
+    private static final String FFCP = "FFCP";
+    private static final String FFPRIHOD_LEN = "FFPRIHOD_LEN";
+    private static final String FFPRIHOD = "FFPRIHOD";
+
 
     private SharedPreferences mSharedPreferences;
 
@@ -153,7 +164,23 @@ public class PreferensManager {
 
     }
 
-    // сохраняем id файла
+
+    private int[] getFileField(String fileLen,String fileField){
+        int size = mSharedPreferences.getInt(fileLen,0);
+        int[] l = new int[size];
+        for (int i=0;i<l.length;i++) {
+            l[0] = mSharedPreferences.getInt(fileField+i,-1);
+        }
+        return l;
+    }
+    private void setFileField(int[] field,String fileLen,String fileField){
+        SharedPreferences.Editor editor = mSharedPreferences.edit();
+        for (int i=0;i<field.length;i++){
+            editor.putInt(fileField+i,field[0]);
+        }
+        editor.putInt(fileLen,field.length);
+        editor.apply();
+    }
 
     // настроки полей
     public FileFieldModel getFieldFileModel(){
@@ -183,6 +210,18 @@ public class PreferensManager {
         editor.apply();
     }
 
+    public int[] getFieldFileActive(){
+        int[] l = getFileField(FFIN_LEN,FFIN);
+        if (l.length == 0) return new int[] {0,1,2,3,4,5,6,7};
+        return l;
+    }
+
+    public void setFieldFileActive(int[] field){
+        setFileField(field,FFIN_LEN,FFIN);
+    }
+
+
+
     // насройки полей выходного файла
     public FieldOutFile getFieldOutFile(){
         FieldOutFile md = new FieldOutFile(
@@ -209,6 +248,16 @@ public class PreferensManager {
         editor.apply();
     }
 
+    public int[] getFieldOutActive(){
+        int[] l = getFileField(FFOUT_LEN,FFOUT);
+        if (l.length == 0) return new int[] {0,1,2};
+        return l;
+    }
+
+    public void setFieldOutActive(int[] field){
+        setFileField(field,FFOUT_LEN,FFOUT);
+    }
+
     // настройка полей выходного файла ЕГАИС
     public FieldOutFile getFieldOutEgaisFile(){
         FieldOutFile md = new FieldOutFile(
@@ -226,6 +275,16 @@ public class PreferensManager {
         editor.putInt(FIELD_OUT_EGAIS_ARTICUL,field.getArticul());
         editor.putInt(FIELD_OUT_EGAIS_QUANTITY,field.getQuantity());
         editor.apply();
+    }
+
+    public int[] getFieldEGAISActive(){
+        int[] l = getFileField(FFEGAIS_LEN,FFEGAIS);
+        if (l.length == 0) return new int[] {0,1,2,5};
+        return l;
+    }
+
+    public void setFieldEGAISActive(int[] field){
+        setFileField(field,FFEGAIS_LEN,FFEGAIS);
     }
 
     // настройка полей выходоного файла переоценки
@@ -253,6 +312,16 @@ public class PreferensManager {
         editor.apply();
     }
 
+    public int[] getFieldChangePriceActive(){
+        int[] l = getFileField(FFCP_LEN,FFCP);
+        if (l.length == 0) return new int[]{0,1,3};
+        return l;
+    }
+
+    public void setFieldChangePriceActive(int[] field){
+        setFileField(field,FFCP_LEN,FFCP);
+    }
+
     // настройка полей выходного файла прихода
     public FieldOutFile getFieldOutPrixodFile() {
         FieldOutFile md = new FieldOutFile(
@@ -277,6 +346,16 @@ public class PreferensManager {
         editor.putInt(FIELD_OUT_P_BASE_PRICE,field.getBasePrice());
         editor.putInt(FIELD_OUT_P_CODETV,field.getCodeTV());
         editor.apply();
+    }
+
+    public int[] getFieldPrihoxActive(){
+        int[] l = getFileField(FFPRIHOD_LEN,FFPRIHOD);
+        if (l.length == 0) return new int[]{0,1,2,4};
+        return l;
+    }
+
+    public void setFieldPrihoxPriceActive(int[] field){
+        setFileField(field,FFPRIHOD_LEN,FFPRIHOD);
     }
 
 
