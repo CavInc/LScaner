@@ -10,13 +10,17 @@ import android.widget.Button;
 import android.widget.CheckBox;
 
 import cav.lscaner.R;
+import cav.lscaner.data.managers.DataManager;
 
 public class SettingFieldDialog extends DialogFragment implements View.OnClickListener{
 
     private static final String MODE = "SFD_MODE";
     private CheckBox[] mCheckBoxes;
 
+    private DataManager mDataManager;
     private int mode;
+
+    private int[] activeField;
 
     public static SettingFieldDialog newInstance(int mode){
         Bundle args = new Bundle();
@@ -30,39 +34,77 @@ public class SettingFieldDialog extends DialogFragment implements View.OnClickLi
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mode = getArguments().getInt(MODE);
+        mDataManager = DataManager.getInstance();
     }
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         View v = LayoutInflater.from(getActivity()).inflate(R.layout.settin_field_dialog, null);
 
+        mCheckBoxes = new CheckBox[9];
+        mCheckBoxes[0] = (CheckBox) v.findViewById(R.id.sfd_barcode);
+        mCheckBoxes[1] = (CheckBox) v.findViewById(R.id.sfd_articul);
+        mCheckBoxes[2] = (CheckBox) v.findViewById(R.id.sfd_name);
+        mCheckBoxes[3] = (CheckBox) v.findViewById(R.id.sfd_ostatok);
+        mCheckBoxes[4] = (CheckBox) v.findViewById(R.id.sfd_price);
+        mCheckBoxes[5] = (CheckBox) v.findViewById(R.id.sfd_base_price);
+        mCheckBoxes[6] = (CheckBox) v.findViewById(R.id.sfd_egais);
+        mCheckBoxes[7] = (CheckBox) v.findViewById(R.id.sfd_codetv);
+        mCheckBoxes[8] = (CheckBox) v.findViewById(R.id.sfd_quantity);
+
         ((Button) v.findViewById(R.id.sfd_bt_ok)).setOnClickListener(this);
         ((Button) v.findViewById(R.id.sfd_bt_cancel)).setOnClickListener(this);
         String title = null;
 
+        if (mode!=0) {
+            mCheckBoxes[3].setVisibility(View.GONE);
+            mCheckBoxes[2].setVisibility(View.GONE);
+            mCheckBoxes[8].setVisibility(View.VISIBLE);
+        }
+
         switch (mode){
             case 0:
                 title = "Поля базы данных";
+                activeField = mDataManager.getPreferensManager().getFieldFileActive();
                 break;
             case 1:
                 title = "Поля файла Товар";
+                activeField = mDataManager.getPreferensManager().getFieldOutActive();
                 break;
             case 2:
                 title = "Поля файла ЕГАИС";
+                activeField = mDataManager.getPreferensManager().getFieldEGAISActive();
                 break;
             case 3:
                 title = "Поля файла Переоценка";
+                activeField = mDataManager.getPreferensManager().getFieldChangePriceActive();
                 break;
             case 4:
                 title = "Поля файла Поступление";
+                activeField = mDataManager.getPreferensManager().getFieldPrihoxActive();
                 break;
         }
 
+        setCheckItems(mode,activeField);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(title).setView(v);
         return builder.create();
     }
+
+    private void setCheckItems(int mode, int[] activeField) {
+        for (int i = 0;i<activeField.length;i++){
+            if (i<2) {
+                mCheckBoxes[activeField[i]].setChecked(true);
+            }else if(mode == 0) {
+                mCheckBoxes[activeField[i]].setChecked(true);
+            } else {
+                if (activeField[i] == 2) mCheckBoxes[8].setChecked(true);
+                else mCheckBoxes[activeField[i]+1].setChecked(true);
+            }
+        }
+    }
+
 
     @Override
     public void onClick(View view) {
@@ -74,6 +116,5 @@ public class SettingFieldDialog extends DialogFragment implements View.OnClickLi
                 dismiss();
                 break;
         }
-
     }
 }

@@ -20,6 +20,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
     <CheckBox
+        android:id="@+id/sfd_quantity"
+        android:text="Кол-во."
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+    <CheckBox
         android:id="@+id/sfd_ostatok"
         android:text="Остаток"
         android:layout_width="match_parent"
