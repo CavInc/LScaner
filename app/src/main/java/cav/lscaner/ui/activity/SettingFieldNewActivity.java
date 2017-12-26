@@ -80,13 +80,40 @@ public class SettingFieldNewActivity extends AppCompatActivity {
 
         mDataManager = DataManager.getInstance();
 
+        mExpandList = (ExpandableListView) findViewById(R.id.expandableListView);
+
+        updateUI();
+        setupToolBar();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+        }
+        return true;
+    }
+
+
+    public void setupToolBar(){
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar!=null){
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        saveData();
+    }
+
+    private void updateUI() {
         storeProductF = mDataManager.getPreferensManager().getFieldFileActive();
         tovarF = mDataManager.getPreferensManager().getFieldOutActive();
         egaisF = mDataManager.getPreferensManager().getFieldEGAISActive();
         changePriceF = mDataManager.getPreferensManager().getFieldChangePriceActive();
         prihodF = mDataManager.getPreferensManager().getFieldPrihoxActive();
-
-
 
         // заполняем коллекцию групп из массива с названиями групп
         groupData = new ArrayList<Map<String, String>>();
@@ -170,47 +197,24 @@ public class SettingFieldNewActivity extends AppCompatActivity {
         // список ID view-элементов, в которые будет помещены атрибуты элементов
         int childTo[] = new int[] {R.id.expant_list_item_name,R.id.expant_list_item_pos};
 
-
-        adapter = new CustomExpandListAdapter(
-                this,
-                groupData,
-                R.layout.expant_list_group_item,
-                groupFrom,
-                groupTo,
-                childData,
-                R.layout.expand_list_item,
-                childFrom,
-                childTo);
-
-        adapter.setGroupCallBackListener(mBackListener);
-
-
-        mExpandList = (ExpandableListView) findViewById(R.id.expandableListView);
-        mExpandList.setAdapter(adapter);
-
-        setupToolBar();
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            onBackPressed();
+        if (adapter == null) {
+            adapter = new CustomExpandListAdapter(
+                    this,
+                    groupData,
+                    R.layout.expant_list_group_item,
+                    groupFrom,
+                    groupTo,
+                    childData,
+                    R.layout.expand_list_item,
+                    childFrom,
+                    childTo);
+            mExpandList.setAdapter(adapter);
+            adapter.setGroupCallBackListener(mBackListener);
+        }else {
+            adapter.setChildData(childData);
+            adapter.notifyDataSetChanged();
         }
-        return true;
-    }
 
-
-    public void setupToolBar(){
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar!=null){
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        saveData();
     }
 
     CustomExpandListAdapter.GroupCallBackListener mBackListener = new CustomExpandListAdapter.GroupCallBackListener() {
@@ -218,9 +222,24 @@ public class SettingFieldNewActivity extends AppCompatActivity {
         public void ClickSettingButton(int groupPosition) {
             Log.d(TAG,"GP - "+groupPosition);
             SettingFieldDialog dialog = SettingFieldDialog.newInstance(groupPosition);
+            dialog.setSettingFieldDialogListener(mFieldDialogListener);
             dialog.show(getFragmentManager(),"sfd");
         }
     };
+
+    // получили данные с настройки полей
+    SettingFieldDialog.SettingFieldDialogListener mFieldDialogListener = new SettingFieldDialog.SettingFieldDialogListener() {
+        @Override
+        public void onNegativeButton() {
+
+        }
+
+        @Override
+        public void onPostitiveButton() {
+            updateUI();
+        }
+    };
+
 
     // сохраняем данные в preferens
     public void saveData(){

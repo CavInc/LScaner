@@ -23,6 +23,8 @@ public class SettingFieldDialog extends DialogFragment implements View.OnClickLi
     private DataManager mDataManager;
     private int mode;
 
+    private SettingFieldDialogListener mFieldDialogListener;
+
     private int[] activeField;
 
     public static SettingFieldDialog newInstance(int mode){
@@ -164,11 +166,22 @@ public class SettingFieldDialog extends DialogFragment implements View.OnClickLi
         switch (view.getId()){
             case R.id.sfd_bt_ok:
                 storeData();
+                if (mFieldDialogListener != null) mFieldDialogListener.onPostitiveButton();
                 dismiss();
                 break;
             case R.id.sfd_bt_cancel:
+                if (mFieldDialogListener != null) mFieldDialogListener.onNegativeButton();
                 dismiss();
                 break;
         }
+    }
+
+    public void setSettingFieldDialogListener (SettingFieldDialogListener listener){
+        mFieldDialogListener = listener;
+    }
+
+    public interface SettingFieldDialogListener {
+        public void onNegativeButton();
+        public void onPostitiveButton();
     }
 }

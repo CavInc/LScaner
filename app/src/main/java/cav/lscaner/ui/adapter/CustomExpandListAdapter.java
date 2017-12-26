@@ -42,6 +42,10 @@ public class CustomExpandListAdapter  extends BaseExpandableListAdapter {
 
     private GroupCallBackListener mGroupCallBackListener;
 
+    public void setChildData(ArrayList<ArrayList<Map<String, String>>> childData) {
+        mChildData = childData;
+    }
+
     public interface GroupCallBackListener {
         public void ClickSettingButton(int groupPosition);
     }
