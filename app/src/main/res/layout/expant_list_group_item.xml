@@ -23,4 +23,12 @@
         android:src="@drawable/settings_2_blue"
         android:layout_width="24dp"
         android:layout_height="24dp"/>
+    <ImageView
+        android:id="@+id/elg_indicator"
+        android:src="@drawable/ic_arrow_up"
+        android:layout_marginTop="14dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="8dp"
+        android:layout_width="24dp"
+        android:layout_height="24dp"/>
 </LinearLayout>

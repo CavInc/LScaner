@@ -177,6 +177,17 @@ public class Func {
         }
     }
 
+    /*
+    //Convert pixel to dip
+    public static int GetDipsFromPixel(float pixels)
+    {
+        // Get the screen's density scale
+        final float scale = getResources().getDisplayMetrics().density;
+        // Convert the dps to pixels, based on density scale
+        return (int) (pixels * scale + 0.5f);
+    }
+    */
+
 
 
 }

@@ -24,6 +24,8 @@ import java.util.Map;
 
 import cav.lscaner.R;
 
+//https://stackoverflow.com/questions/21706231/put-on-the-right-the-indicator-of-an-expandablelistview-in-android
+
 public class CustomExpandListAdapter  extends BaseExpandableListAdapter {
 
     private ArrayList<ArrayList<String>> mGroups;
@@ -151,6 +153,12 @@ public class CustomExpandListAdapter  extends BaseExpandableListAdapter {
 
             }
         });
+
+        if (isExpanded) {
+           // groupHolder.img.setImageResource(R.drawable.group_down);
+        } else {
+           // groupHolder.img.setImageResource(R.drawable.group_up);
+        }
 
         bindView(v, mGroupData.get(groupPosition), mGroupFrom, mGroupTo);
         return v;
