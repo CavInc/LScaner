@@ -15,6 +15,7 @@
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
         android:minHeight="?android:attr/listPreferredItemHeightSmall"
+        android:textAlignment="viewStart"
         android:layout_weight="1"/>
     <ImageView
         android:id="@+id/elg_setting"

@@ -5,6 +5,7 @@ package cav.lscaner.ui.adapter;
 import android.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -114,22 +115,27 @@ public class CustomExpandListAdapter  extends BaseExpandableListAdapter {
         switch (groupPosition) {
             case 0:
                 v.setBackgroundResource(R.drawable.ligth);
+                ((TextView) v.findViewById(R.id.elg_name)).setTextColor(ContextCompat.getColor(mContext,R.color.app_gray_normal));
                 settingButton.setImageResource(R.drawable.settings_2_gray);
                 break;
             case 1 :
                 v.setBackgroundResource(R.drawable.gren);
+                ((TextView) v.findViewById(R.id.elg_name)).setTextColor(ContextCompat.getColor(mContext,R.color.app_green));
                 settingButton.setImageResource(R.drawable.settings_2_green);
                 break;
             case 2:
                 v.setBackgroundResource(R.drawable.blue);
+                ((TextView) v.findViewById(R.id.elg_name)).setTextColor(ContextCompat.getColor(mContext,R.color.app_blue));
                 settingButton.setImageResource(R.drawable.settings_2_blue);
                 break;
             case 3:
                 v.setBackgroundResource(R.drawable.orange);
+                ((TextView) v.findViewById(R.id.elg_name)).setTextColor(ContextCompat.getColor(mContext,R.color.app_orange_normal));
                 settingButton.setImageResource(R.drawable.settings_2_orange);
                 break;
             case 4:
                 v.setBackgroundResource(R.drawable.dark);
+                ((TextView) v.findViewById(R.id.elg_name)).setTextColor(ContextCompat.getColor(mContext,R.color.app_gray_bt_dark));
                 settingButton.setImageResource(R.drawable.settings_2_dark);
                 break;
         }
