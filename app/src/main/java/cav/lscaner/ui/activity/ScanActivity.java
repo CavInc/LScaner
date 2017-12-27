@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.support.v7.widget.SearchView;
 import android.text.InputFilter;
 import android.text.InputType;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -26,6 +27,7 @@ import java.util.ArrayList;
 import cav.lscaner.R;
 import cav.lscaner.data.managers.DataManager;
 import cav.lscaner.data.models.ScannedDataModel;
+import cav.lscaner.data.models.ScannedFileModel;
 import cav.lscaner.data.models.StoreProductModel;
 import cav.lscaner.ui.adapter.ScannedListAdapter;
 import cav.lscaner.ui.dialogs.DemoDialog;
@@ -38,7 +40,7 @@ import cav.lscaner.utils.ConstantManager;
 import cav.lscaner.utils.Func;
 import cav.lscaner.utils.SwipeDetector;
 
-public class ScanActivity extends AppCompatActivity implements AdapterView.OnItemLongClickListener{
+public class ScanActivity extends AppCompatActivity implements AdapterView.OnItemLongClickListener,AdapterView.OnItemClickListener{
     private final int MAX_REC = 30;  // количество записей в демо версии
 
     private EditText mBarCode;
@@ -94,6 +96,7 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
         mBarCode.setOnEditorActionListener(mEditorActionListener);
 
         mListView.setOnItemLongClickListener(this);
+        mListView.setOnItemClickListener(this);
 
         demo = mDataManager.getPreferensManager().getDemo();
         if (demo) {
@@ -108,6 +111,7 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
 
         // хз
         mListView.setOnFocusChangeListener(mOnFocusChangeListener);
+
 
         swipeDetector = new SwipeDetector();
         mListView.setOnTouchListener(swipeDetector);
@@ -464,13 +468,7 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
         @Override
         public void selectedItem(int item) {
             if (item == R.id.ss_dialog_del_item){
-                deleteRecord(idFile,selModel.getPosId());
-                if (filterLock) {
-                    //android.widget.Filter fl = mAdapter.getFilter();
-                    mAdapter.remove(selModel);
-                    mAdapter.getFilter().filter(filterString);
-                    mAdapter.notifyDataSetChanged();
-                }
+                deleteRec();
             }
 
             if (item == R.id.ss_dialog_edit_item){
@@ -501,6 +499,16 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
         }
     };
 
+    private void deleteRec() {
+        deleteRecord(idFile,selModel.getPosId());
+        if (filterLock) {
+            //android.widget.Filter fl = mAdapter.getFilter();
+            mAdapter.remove(selModel);
+            mAdapter.getFilter().filter(filterString);
+            mAdapter.notifyDataSetChanged();
+        }
+    }
+
     private void deleteRecord(final int selIdFile, final int position) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Удаление")
@@ -526,4 +534,22 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
         }
     };
 
+    @Override
+    public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+        if (swipeDetector.swipeDetected()) {
+            selModel = (ScannedDataModel) adapterView.getItemAtPosition(position);
+            if (swipeDetector.getAction() == SwipeDetector.Action.LR) {
+                Log.d("SA","LEFT");
+                // удаляем
+                //deleteRecord(mFileAdapter.getItem(position).getId());
+                deleteRec();
+            }
+            if (swipeDetector.getAction() == SwipeDetector.Action.RL) {
+                Log.d("SA","RIGTH");
+               // selModel = (ScannedFileModel) adapterView.getItemAtPosition(position);
+               // editRecord();
+            }
+            return;
+        }
+    }
 }
