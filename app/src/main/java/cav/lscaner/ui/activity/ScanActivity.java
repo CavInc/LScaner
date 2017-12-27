@@ -472,32 +472,35 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
             }
 
             if (item == R.id.ss_dialog_edit_item){
-                editRecord = true;
-                posID = selModel.getPosId();
-                mBar = selModel.getBarCode();
-                mArticul = selModel.getArticul();
-                if (fileType == ConstantManager.FILE_TYPE_EGAIS || fileType == ConstantManager.FILE_TYPE_PRODUCT) {
-                    QueryQuantityDialog dialog = QueryQuantityDialog.newInstans(new StoreProductModel(selModel.getBarCode(), selModel.getName(), selModel.getArticul()),
-                            selModel.getQuantity(), selModel.getQuantity(), editRecord);
-                    dialog.setQuantityChangeListener(mQuantityChangeListener);
-                    dialog.show(getSupportFragmentManager(), "EDITSD");
-                } else if (fileType == ConstantManager.FILE_TYPE_CHANGE_PRICE){
-                    PrihodChangePriceDialog dialog = PrihodChangePriceDialog.newInstance(new StoreProductModel(selModel.getBarCode(),
-                            selModel.getName(), selModel.getArticul(),selModel.getPrice(),selModel.getOstatok())
-                            ,fileType,editRecord);
-                    dialog.setPrihodChangePriceListener(mChangePriceListener);
-                    dialog.show(getFragmentManager(),"pcd");
-                } else {
-                    PrihodChangePriceDialog dialog = PrihodChangePriceDialog.newInstance(new StoreProductModel(selModel.getBarCode(),
-                            selModel.getName(), selModel.getArticul(),selModel.getPrice(),selModel.getQuantity(),selModel.getOstatok())
-                            ,fileType,editRecord);
-                    dialog.setPrihodChangePriceListener(mChangePriceListener);
-                    dialog.show(getFragmentManager(),"ppd");
-                }
-
+                editRec();
             }
         }
     };
+
+    private void editRec() {
+        editRecord = true;
+        posID = selModel.getPosId();
+        mBar = selModel.getBarCode();
+        mArticul = selModel.getArticul();
+        if (fileType == ConstantManager.FILE_TYPE_EGAIS || fileType == ConstantManager.FILE_TYPE_PRODUCT) {
+            QueryQuantityDialog dialog = QueryQuantityDialog.newInstans(new StoreProductModel(selModel.getBarCode(), selModel.getName(), selModel.getArticul()),
+                    selModel.getQuantity(), selModel.getQuantity(), editRecord);
+            dialog.setQuantityChangeListener(mQuantityChangeListener);
+            dialog.show(getSupportFragmentManager(), "EDITSD");
+        } else if (fileType == ConstantManager.FILE_TYPE_CHANGE_PRICE){
+            PrihodChangePriceDialog dialog = PrihodChangePriceDialog.newInstance(new StoreProductModel(selModel.getBarCode(),
+                            selModel.getName(), selModel.getArticul(),selModel.getPrice(),selModel.getOstatok())
+                    ,fileType,editRecord);
+            dialog.setPrihodChangePriceListener(mChangePriceListener);
+            dialog.show(getFragmentManager(),"pcd");
+        } else {
+            PrihodChangePriceDialog dialog = PrihodChangePriceDialog.newInstance(new StoreProductModel(selModel.getBarCode(),
+                            selModel.getName(), selModel.getArticul(),selModel.getPrice(),selModel.getQuantity(),selModel.getOstatok())
+                    ,fileType,editRecord);
+            dialog.setPrihodChangePriceListener(mChangePriceListener);
+            dialog.show(getFragmentManager(),"ppd");
+        }
+    }
 
     private void deleteRec() {
         deleteRecord(idFile,selModel.getPosId());
@@ -546,8 +549,7 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
             }
             if (swipeDetector.getAction() == SwipeDetector.Action.RL) {
                 Log.d("SA","RIGTH");
-               // selModel = (ScannedFileModel) adapterView.getItemAtPosition(position);
-               // editRecord();
+                editRec();
             }
             return;
         }
