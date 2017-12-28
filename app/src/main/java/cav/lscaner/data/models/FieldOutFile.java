@@ -120,4 +120,6 @@ public class FieldOutFile {
         return -1;
     }
 
+    // возвращает массив индексов ?
+
 }

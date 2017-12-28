@@ -35,6 +35,7 @@ public class PreferensManager {
     private static final String FIELD_OUT_EGAIS_CODE = "FIELD_OUT_EGAIS_CODE";
     private static final String FIELD_OUT_EGAIS_ARTICUL = "FIELD_OUT_EGAIS_ARTICUL";
     private static final String FIELD_OUT_EGAIS_QUANTITY = "FIELD_OUT_EGAIS_QUANTITY";
+    private static final String FIELD_OUT_EGAIS_EGAIS = "FIELD_OUT_EGAIS_EGAIS";
 
     private static final String FIELD_OUT_CP_BARCODE = "FIELD_OUT_CP_BARCODE";
     private static final String FIELD_OUT_CP_QUANTITY = "FIELD_OUT_CP_QUANTITY";
@@ -62,6 +63,7 @@ public class PreferensManager {
     private static final String FFCP = "FFCP";
     private static final String FFPRIHOD_LEN = "FFPRIHOD_LEN";
     private static final String FFPRIHOD = "FFPRIHOD";
+
 
 
     private SharedPreferences mSharedPreferences;
@@ -260,11 +262,15 @@ public class PreferensManager {
 
     // настройка полей выходного файла ЕГАИС
     public FieldOutFile getFieldOutEgaisFile(){
+        //FieldOutFile(int barcode, int quantity, int price, int articul, int basePrice, int EGAIS, int codeTV) {
         FieldOutFile md = new FieldOutFile(
                 mSharedPreferences.getInt(FIELD_OUT_EGAIS_CODE,1),
-                mSharedPreferences.getInt(FIELD_OUT_EGAIS_QUANTITY,2),
+                mSharedPreferences.getInt(FIELD_OUT_EGAIS_QUANTITY,3),
                 -1,
-                mSharedPreferences.getInt(FIELD_OUT_EGAIS_ARTICUL,-1)
+                mSharedPreferences.getInt(FIELD_OUT_EGAIS_ARTICUL,2),
+                -1,
+                mSharedPreferences.getInt(FIELD_OUT_EGAIS_EGAIS,4),
+                -1
         );
         return md;
     }
@@ -274,6 +280,7 @@ public class PreferensManager {
         editor.putInt(FIELD_OUT_EGAIS_CODE,field.getBarcode());
         editor.putInt(FIELD_OUT_EGAIS_ARTICUL,field.getArticul());
         editor.putInt(FIELD_OUT_EGAIS_QUANTITY,field.getQuantity());
+        editor.putInt(FIELD_OUT_EGAIS_EGAIS,field.getEGAIS());
         editor.apply();
     }
 

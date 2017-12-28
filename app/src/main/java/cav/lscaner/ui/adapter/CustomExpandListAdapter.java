@@ -180,54 +180,65 @@ public class CustomExpandListAdapter  extends BaseExpandableListAdapter {
     @Override
     public View getChildView(final int groupPosition, final int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
         View v;
-        if (convertView == null){
+        if (groupPosition == 0) {
             v = mInflater.inflate(mChildLayout,null);
-        } else {
-            v = convertView;
-        }
 
-        HashMap l = (HashMap) mChildData.get(groupPosition).get(childPosition);
-        System.out.println(l);
-        TextView tv = (TextView) v.findViewById(mChildTo[0]);
-        String s = (String) l.get(mChildFrom[0]);
-        tv.setText(s);
+            HashMap l = (HashMap) mChildData.get(groupPosition).get(childPosition);
+            System.out.println(l);
+            TextView tv = (TextView) v.findViewById(mChildTo[0]);
+            String s = (String) l.get(mChildFrom[0]);
+            tv.setText(s);
 
-        lockEdit = false;
+            lockEdit = false;
 
-        EditText ed = (EditText) v.findViewById(mChildTo[1]);
-        String vl = (String) l.get(mChildFrom[1]);
-        if (!vl.equals("-1")) {
-            ed.setText(vl);
-        } else {
-            ed.setText("");
-        }
-
-        // TODO нужно как то правильно передавать текущие индексы группы и позиции
-
-        ed.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int start, int count, int after) {
-
+            EditText ed = (EditText) v.findViewById(mChildTo[1]);
+            String vl = (String) l.get(mChildFrom[1]);
+            if (!vl.equals("-1")) {
+                ed.setText(vl);
+            } else {
+                ed.setText("");
             }
 
-            @Override
-            public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
+            // TODO нужно как то правильно передавать текущие индексы группы и позиции
 
-            }
+            ed.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence charSequence, int start, int count, int after) {
 
-            @Override
-            public void afterTextChanged(Editable editable) {
-                if (lockEdit ) {
-                    if (editable.length() !=0) {
-                        ((HashMap) mChildData.get(groupPosition).get(childPosition)).put("itemValue", editable.toString());
-                    } else {
-                        ((HashMap) mChildData.get(groupPosition).get(childPosition)).put("itemValue", "-1");
+                }
+
+                @Override
+                public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
+
+                }
+
+                @Override
+                public void afterTextChanged(Editable editable) {
+                    if (lockEdit ) {
+                        if (editable.length() !=0) {
+                            ((HashMap) mChildData.get(groupPosition).get(childPosition)).put("itemValue", editable.toString());
+                        } else {
+                            ((HashMap) mChildData.get(groupPosition).get(childPosition)).put("itemValue", "-1");
+                        }
                     }
                 }
-            }
-        });
+            });
 
-        lockEdit = true;
+            lockEdit = true;
+
+        } else {
+            v = mInflater.inflate(R.layout.expand_list_item2,null);
+
+            HashMap l = (HashMap) mChildData.get(groupPosition).get(childPosition);
+            System.out.println(l);
+            TextView tv = (TextView) v.findViewById(mChildTo[0]);
+            String s = (String) l.get(mChildFrom[0]);
+            tv.setText(s);
+
+            String vl = (String) l.get(mChildFrom[1]);
+            ((TextView) v.findViewById(R.id.expant_list_item_id)).setText("");
+
+        }
 
         return v;
     }
