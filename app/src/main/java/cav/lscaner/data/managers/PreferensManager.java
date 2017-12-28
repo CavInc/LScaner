@@ -333,8 +333,8 @@ public class PreferensManager {
     public FieldOutFile getFieldOutPrixodFile() {
         FieldOutFile md = new FieldOutFile(
                 mSharedPreferences.getInt(FIELD_OUT_P_BARCODE,1),
-                mSharedPreferences.getInt(FIELD_OUT_P_QUANTITY,-1),
-                mSharedPreferences.getInt(FIELD_OUT_P_PRICE,3),
+                mSharedPreferences.getInt(FIELD_OUT_P_QUANTITY,3),
+                mSharedPreferences.getInt(FIELD_OUT_P_PRICE,-1),
                 mSharedPreferences.getInt(FIELD_OUT_P_ARTICUL,2),
                 mSharedPreferences.getInt(FIELD_OUT_P_BASE_PRICE,4),
                 mSharedPreferences.getInt(FIELD_OUT_P_EGAIS,-1),

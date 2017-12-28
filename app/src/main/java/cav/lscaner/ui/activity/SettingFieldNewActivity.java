@@ -81,6 +81,7 @@ public class SettingFieldNewActivity extends AppCompatActivity {
         mDataManager = DataManager.getInstance();
 
         mExpandList = (ExpandableListView) findViewById(R.id.expandableListView);
+        mExpandList.setOnChildClickListener(mChildClickListener);
 
         updateUI();
         setupToolBar();
@@ -370,5 +371,32 @@ public class SettingFieldNewActivity extends AppCompatActivity {
                 break;
         }
     }
+
+    // тыкаем по элементу
+    ExpandableListView.OnChildClickListener mChildClickListener = new ExpandableListView.OnChildClickListener() {
+        @Override
+        public boolean onChildClick(ExpandableListView expandableListView, View view, int groupPosition, int childPosition, long id) {
+            Log.d(TAG,"GP "+groupPosition+" CH "+childPosition);
+            return false;
+        }
+    };
+
+    /*
+    //method to expand all groups
+    private void expandAll() {
+        int count = listAdapter.getGroupCount();
+        for (int i = 0; i < count; i++){
+            simpleExpandableListView.expandGroup(i);
+        }
+    }
+
+    //method to collapse all groups
+    private void collapseAll() {
+        int count = listAdapter.getGroupCount();
+        for (int i = 0; i < count; i++){
+            simpleExpandableListView.collapseGroup(i);
+        }
+    }
+    */
 
 }

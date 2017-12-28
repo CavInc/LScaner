@@ -1,5 +1,8 @@
 package cav.lscaner.data.models;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 public class FieldOutFile {
     private int mBarcode;
     private int mQuantity;
@@ -120,6 +123,14 @@ public class FieldOutFile {
         return -1;
     }
 
-    // возвращает массив индексов ?
+    // возвращает массив индексов
+    public int[] getArrayIndex(){
+        ArrayList<Integer> f = new ArrayList<>();
+        if (mBarcode!=-1) f.add(mBarcode);
+        if (mArticul!=-1) f.add(mArticul);
+        if (mQuantity!=-1) f.add(mQuantity);
+
+        return null;
+    }
 
 }

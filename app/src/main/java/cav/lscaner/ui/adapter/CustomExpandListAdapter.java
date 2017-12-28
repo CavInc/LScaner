@@ -45,6 +45,7 @@ public class CustomExpandListAdapter  extends BaseExpandableListAdapter {
 
     private GroupCallBackListener mGroupCallBackListener;
 
+
     public void setChildData(ArrayList<ArrayList<Map<String, String>>> childData) {
         mChildData = childData;
     }
@@ -184,6 +185,7 @@ public class CustomExpandListAdapter  extends BaseExpandableListAdapter {
             v = mInflater.inflate(mChildLayout,null);
 
             HashMap l = (HashMap) mChildData.get(groupPosition).get(childPosition);
+            System.out.println("GROUP POS "+groupPosition);
             System.out.println(l);
             TextView tv = (TextView) v.findViewById(mChildTo[0]);
             String s = (String) l.get(mChildFrom[0]);
@@ -236,8 +238,19 @@ public class CustomExpandListAdapter  extends BaseExpandableListAdapter {
             tv.setText(s);
 
             String vl = (String) l.get(mChildFrom[1]);
-            ((TextView) v.findViewById(R.id.expant_list_item_id)).setText("");
+            ((TextView) v.findViewById(R.id.expant_list_item_id)).setText(vl);
 
+            ImageView im = (ImageView) v.findViewById(R.id.expant_list_item_bt);
+            im.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Log.d("CE","GP "+groupPosition+" "+" CHL "+childPosition);
+                    int i = Integer.valueOf((String) ((HashMap)mChildData.get(groupPosition).get(childPosition)).get("itemValue"));
+                    i -= 1;
+                    ((HashMap) mChildData.get(groupPosition).get(childPosition)).put("itemValue",String.valueOf(i));
+                    notifyDataSetChanged();
+                }
+            });
         }
 
         return v;
