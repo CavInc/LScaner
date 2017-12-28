@@ -39,7 +39,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:layout_below="@id/qq_old_quantity"
+        android:layout_below="@+id/qq_old_quantity"
         android:orientation="horizontal"
         android:layout_marginTop="16dp"
         android:layout_width="match_parent"
