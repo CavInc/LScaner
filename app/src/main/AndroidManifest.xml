@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest package="cav.lscaner"
-          xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          package="cav.lscaner">
 
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
@@ -44,8 +44,14 @@
 
         <activity android:name=".ui.activity.SettingFieldFileActivity">
         </activity>
-        <activity android:name=".ui.activity.StoreProductActivity"
+        <activity
+            android:name=".ui.activity.StoreProductActivity"
+            android:screenOrientation="portrait"
             android:label="База данных">
+        </activity>
+        <activity android:name=".ui.activity.SettingFieldNewActivity"
+                  android:windowSoftInputMode="adjustPan|stateHidden"
+                  android:screenOrientation="portrait">
         </activity>
     </application>
 

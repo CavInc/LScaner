@@ -73,7 +73,6 @@ public class QueryQuantityDialog extends DialogFragment implements View.OnClickL
     }
 
     public interface QuantityChangeListener {
-       // public void changeQuantity (Float quantity);
         public void changeQuantity(Float quantity,StoreProductModel productModel);
         public void cancelButton();
     }

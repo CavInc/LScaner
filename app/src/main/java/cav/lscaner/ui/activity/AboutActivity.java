@@ -2,26 +2,23 @@ package cav.lscaner.ui.activity;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.KeyEvent;
 import android.view.MenuItem;
-import android.widget.EditText;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import cav.lscaner.BuildConfig;
 import cav.lscaner.R;
 import cav.lscaner.data.managers.DataManager;
-import cav.lscaner.utils.Func;
+import cav.lscaner.ui.dialogs.ActivateDialog;
 
-public class AboutActivity extends AppCompatActivity {
+public class AboutActivity extends AppCompatActivity implements View.OnClickListener {
 
     private DataManager mDataManager;
-    private TextView mDeviceId;
-    private EditText mSerialCode;
-
-    private String deviceId;
 
     private TextView mVersion;
+    private TextView mActivateTv;
+    private Button mActiveButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,25 +27,19 @@ public class AboutActivity extends AppCompatActivity {
 
         mDataManager = DataManager.getInstance();
 
-        mDeviceId = (TextView) findViewById(R.id.ab_device_code);
-        mSerialCode = (EditText) findViewById(R.id.ab_code_et);
 
         mVersion = (TextView) findViewById(R.id.ab_version);
+        mActiveButton = (Button) findViewById(R.id.ab_bt_activate);
+        mActivateTv = (TextView) findViewById(R.id.ab_flg_activate);
 
-        deviceId = mDataManager.getAndroidID();
-        deviceId = deviceId.substring(deviceId.length()-8);
-        mDeviceId.setText(deviceId);
-        //mDeviceId.setText(deviceID);
-
-        mSerialCode.setOnEditorActionListener(mEditorActionListener);
-
-        if (mDataManager.getPreferensManager().getRegistrationNumber() != null){
-            mSerialCode.setText(mDataManager.getPreferensManager().getRegistrationNumber());
+        if (!mDataManager.getPreferensManager().getDemo()){
+            mActivateTv.setText("(активированна)");
         }
 
         // TODO добавить информацию о версии
-       mVersion.setText("Версия : "+BuildConfig.VERSION_NAME);
+        mVersion.setText("v"+BuildConfig.VERSION_NAME);
 
+        mActiveButton.setOnClickListener(this);
 
         setupToolbar();
     }
@@ -68,19 +59,19 @@ public class AboutActivity extends AppCompatActivity {
         return true;
     }
 
-    TextView.OnEditorActionListener mEditorActionListener = new TextView.OnEditorActionListener() {
+    @Override
+    public void onClick(View view) {
+        // показываем диалог активации
+        ActivateDialog dialog = new ActivateDialog();
+        dialog.show(getSupportFragmentManager(),"AD");
+    }
+
+    ActivateDialog.ActivateDialogListener mDialogListener = new ActivateDialog.ActivateDialogListener() {
         @Override
-        public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-            // проверяем тот ли номер
-            String x = textView.getText().toString();
-            if (Func.checkSerialNumber(x,deviceId) ) {
-                // сохраняем серийник и флаг что не недемо
-                mDataManager.getPreferensManager().setRegistrationNumber(x);
-                mDataManager.getPreferensManager().setDemo(false);
-            } else {
-                mDataManager.getPreferensManager().setDemo(true);
+        public void activateState(boolean state) {
+            if (!mDataManager.getPreferensManager().getDemo()){
+                mActivateTv.setText("(активированна)");
             }
-            return false;
         }
     };
 }

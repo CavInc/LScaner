@@ -5,11 +5,11 @@ android {
     buildToolsVersion "23.0.3"
 
     defaultConfig {
-        applicationId "cav.lscaner.v"
+        applicationId "cav.lscaner.v3"
         minSdkVersion 14
         targetSdkVersion 25
         versionCode 26
-        versionName "2.16"
+        versionName "3.0"
         project.ext.set("archivesBaseName", "LScanerV-" + defaultConfig.versionName);
         resConfigs "en", "ru"
     }

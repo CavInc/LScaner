@@ -4,27 +4,61 @@
     android:layout_height="wrap_content"
     android:padding="16dp"
     xmlns:android="http://schemas.android.com/apk/res/android">
-    <RadioGroup
-            android:orientation="horizontal"
+
+    <TextView
+        android:text="Инвентаризация"
+        android:textColor="@color/app_blue"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp">
+        <RadioButton
+            android:id="@+id/dialog_tovar"
+            android:text="Товар"
+            android:textStyle="bold"
+            android:checked="true"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_weight="1"/>
+        <RadioButton
+            android:id="@+id/dialog_egais"
+            android:text="ЕГАИС"
+            android:textStyle="bold"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"/>
+    </LinearLayout>
+
+    <TextView
+        android:text="Товарные операции и переоценки"
+        android:textColor="@color/app_blue"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginBottom="16dp">
-       <RadioButton
-                android:id="@+id/dialog_tovar"
-                android:text="Товар"
-                android:textStyle="bold"
-                android:checked="true"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"/>
-       <RadioButton
-                android:id="@+id/dialog_egais"
-                android:text="ЕГАИС"
-                android:textStyle="bold"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"/>
-    </RadioGroup>
+        <RadioButton
+            android:id="@+id/dialog_prixod"
+            android:text="Поступление"
+            android:layout_weight="1"
+            android:textStyle="bold"
+            android:checked="false"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+        <RadioButton
+            android:id="@+id/dialog_changeprise"
+            android:text="Переоценка"
+            android:layout_weight="1"
+            android:textStyle="bold"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+
 
     <EditText
         android:id="@+id/dialog_file_name"
@@ -36,6 +70,7 @@
         android:focusable="true"
         android:focusableInTouchMode="true"
         android:nextFocusDown="@+id/dialog_file_bt_ok"/>
+
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"

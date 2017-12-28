@@ -15,6 +15,13 @@ public class ScannedDataModel {
     private Double mSumm = 0.0;
     private Double mPrice = 0.0;
     private Double mOstatok = 0.0;
+    private Double mBasePrice = 0.0;
+    private String mCodeArticul = null;
+    private String mEgais;
+    private Double mOldPrice = 0.0;
+
+    private int fileType; // тип файла
+
 
     public ScannedDataModel(int idFile,int posId, String barCode, String name, Float quantity) {
         mIdFile = idFile;
@@ -52,6 +59,20 @@ public class ScannedDataModel {
         mSumm = Double.valueOf(Func.round((float) (quantity * price),2));
     }
 
+    public ScannedDataModel(int idFile, int posId, String barCode, String name, Float quantity, String articul, Double price, Double ostatok,Double oldPrice) {
+        mIdFile = idFile;
+        mPosId = posId;
+        mBarCode = barCode;
+        mName = name;
+        mQuantity = quantity;
+        mArticul = articul;
+        mPrice = price;
+        mOstatok = ostatok;
+        mOldPrice = oldPrice;
+        mSumm = Double.valueOf(Func.round((float) (quantity * price),2));
+    }
+
+
     public int getIdFile() {
         return mIdFile;
     }
@@ -86,6 +107,30 @@ public class ScannedDataModel {
 
     public Double getOstatok() {
         return mOstatok;
+    }
+
+    public Double getBasePrice() {
+        return mBasePrice;
+    }
+
+    public String getCodeArticul() {
+        return mCodeArticul;
+    }
+
+    public String getEgais() {
+        return mEgais;
+    }
+
+    public int getFileType() {
+        return fileType;
+    }
+
+    public Double getOldPrice() {
+        return mOldPrice;
+    }
+
+    public void setOldPrice(Double oldPrice) {
+        mOldPrice = oldPrice;
     }
 
     @Override

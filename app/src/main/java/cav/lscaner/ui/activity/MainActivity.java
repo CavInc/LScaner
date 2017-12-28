@@ -11,16 +11,16 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -29,9 +29,6 @@ import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccoun
 import com.google.api.client.googleapis.extensions.android.gms.auth.GooglePlayServicesAvailabilityIOException;
 import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
 import com.google.api.client.http.FileContent;
-import com.google.api.client.http.GenericUrl;
-import com.google.api.client.http.HttpRequest;
-import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
@@ -41,15 +38,11 @@ import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.DriveScopes;
 import com.google.api.services.drive.model.File;
 import com.google.api.services.drive.model.FileList;
-import com.google.api.services.drive.model.Permission;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 import cav.lscaner.R;
@@ -62,6 +55,7 @@ import cav.lscaner.ui.dialogs.SelectMainDialog;
 import cav.lscaner.ui.dialogs.WarningDialog;
 import cav.lscaner.utils.ConstantManager;
 import cav.lscaner.utils.Func;
+import cav.lscaner.utils.SwipeDetector;
 import cav.lscaner.utils.WorkInFile;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
@@ -73,7 +67,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
     private static final int WRITE_FILE = 1012;
     private static final int READ_FILE = 1010;
 
-    private final int MAX_DEMO_REC = 2;
+    private final int MAX_DEMO_REC = 4;
 
     private FloatingActionButton mFAB;
     private ListView mListView;
@@ -89,6 +83,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
     private int directionGD = WRITE_FILE ;// что делаем с файлом
 
     private boolean demo = true;
+    private SwipeDetector swipeDetector;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,6 +100,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
         mFAB.setOnClickListener(this);
         mListView.setOnItemClickListener(this);
         mListView.setOnItemLongClickListener(this);
+
+
+        swipeDetector = new SwipeDetector();
+
+        mListView.setOnTouchListener(swipeDetector);
+
 
     }
 
@@ -146,7 +148,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
             startActivity(intent);
         }
         if (item.getItemId() == R.id.menu_filefield_setting){
-            Intent intent = new Intent(this,SettingFieldFileActivity.class);
+            //Intent intent = new Intent(this,SettingFieldFileActivity.class);
+            Intent intent = new Intent(this,SettingFieldNewActivity.class);
             startActivity(intent);
         }
         if (item.getItemId() == R.id.menu_store_product){
@@ -175,7 +178,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
         if (view.getId() == R.id.main_fab) {
             newRecord = true;
             int rec_count = mDataManager.getDB().getCountFile();
-            if (demo && (rec_count+1)>2) {
+            if (demo && (rec_count+1)>MAX_DEMO_REC) {
                 Log.d(TAG,"DEMO");
                 new DemoDialog().show(getSupportFragmentManager(),"DEMO");
             } else {
@@ -202,6 +205,20 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+        if (swipeDetector.swipeDetected()) {
+            if (swipeDetector.getAction() == SwipeDetector.Action.LR) {
+                Log.d(TAG,"LEFT");
+                // удаляем
+                deleteRecord(mFileAdapter.getItem(position).getId());
+            }
+            if (swipeDetector.getAction() == SwipeDetector.Action.RL) {
+                Log.d(TAG,"RIGTH");
+                selModel = (ScannedFileModel) adapterView.getItemAtPosition(position);
+                editRecord();
+            }
+            return;
+        }
+
         Intent intent = new Intent(this,ScanActivity.class);
         intent.putExtra(ConstantManager.SELECTED_FILE,mFileAdapter.getItem(position).getId());
         intent.putExtra(ConstantManager.SELECTED_FILE_NAME,mFileAdapter.getItem(position).getName());
@@ -210,6 +227,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
     }
 
     private ScannedFileModel selModel = null;
+    private int fileType;
 
     @Override
     public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long id) {
@@ -221,6 +239,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
         return true;
     }
 
+
     SelectMainDialog.SelectMainDialogListener mSelectMainDialogListener = new SelectMainDialog.SelectMainDialogListener() {
         @Override
         public void selectedItem(int index) {
@@ -231,10 +250,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
             if (index == R.id.dialog_edit_item) {
                 // редактируем заголовок
                 //Toast.makeText(MainActivity.this,"А тут будет диалог редактирования заголовка файла",Toast.LENGTH_LONG).show();
-                newRecord = false;
-                AddEditNameFileDialog dialog = AddEditNameFileDialog.newInstance(selModel.getName(),selModel.getType());
-                dialog.setAddEditNameFileListener(mAddEditNameFileListener);
-                dialog.show(getSupportFragmentManager(),"UpdateFile");
+                editRecord();
             }
             if (index == R.id.dialog_send_item) {
                 // отправляем наружу
@@ -253,12 +269,21 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
                 // показываем окно с выбором куда отправлять
                 // Toast.makeText(MainActivity.this,"А тут будет диалог спрашивающий куда отправить",Toast.LENGTH_LONG).show();
                 // вызов отправки
+                fileType =  selModel.getType();
                 pushGD();
 
 
             }
         }
     };
+
+    // редактируем запись (заголовок)
+    private void editRecord(){
+        newRecord = false;
+        AddEditNameFileDialog dialog = AddEditNameFileDialog.newInstance(selModel.getName(),selModel.getType());
+        dialog.setAddEditNameFileListener(mAddEditNameFileListener);
+        dialog.show(getSupportFragmentManager(),"UpdateFile");
+    }
 
     private void pushGD() {
         // создаем аккаунт и запрашиваем всякое. через OAuth2
@@ -384,7 +409,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
             chooseAccount();
         } else {
             if (directionGD == WRITE_FILE) {
-                new SendRequestTask(mCredential, storeFileFullName).execute();
+                new SendRequestTask(mCredential, storeFileFullName,fileType).execute();
             } else {
                 new RequestDataTask(mCredential,mDataManager.getPreferensManager().getStoreFileName()).execute();
             }
@@ -508,8 +533,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
         private String fn = null;
         private java.io.File filePath = null;
 
-        public SendRequestTask(GoogleAccountCredential credential, String fn){
+        private int filetype;
+
+        public SendRequestTask(GoogleAccountCredential credential, String fn,int filetype){
             this.fn = fn;
+            this.filetype = filetype;
 
             HttpTransport transport = AndroidHttp.newCompatibleTransport();
             JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
@@ -532,6 +560,22 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
             fileMetadata.setDescription("Scanned file");
             String fname = filePath.getName();
             if (fname.toUpperCase().indexOf(".TXT") == -1){ fname = fname+".txt";}
+
+            fname="_"+fname;
+
+            if (filetype == ConstantManager.FILE_TYPE_PRODUCT) {
+                fname = ConstantManager.PREFIX_FILE_TOVAR+fname;
+            }
+            if (filetype == ConstantManager.FILE_TYPE_EGAIS) {
+                fname = ConstantManager.PREFIX_FILE_EGAIS+fname;
+            }
+            if (filetype == ConstantManager.FILE_TYPE_CHANGE_PRICE) {
+                fname = ConstantManager.PREFIX_FILE_CHANGEPRICE+fname;
+            }
+            if (filetype == ConstantManager.FILE_TYPE_PRIHOD) {
+                fname = ConstantManager.PREFIX_FILE_PRIHOD+fname;
+            }
+
             fileMetadata.setName(fname);
 
             FileContent mediaContent = new FileContent("text/csv", filePath);
@@ -550,67 +594,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
                 return null;
             }
 
-
-
-            /*
-            			String extend_file = defAppSettings.getString("extend_file","csv");
-
-            fileMetadata.setName("KarmaReport"+viewDate+"."+extend_file);
-            if (extend_file.equals("csv")) {
-                fileMetadata.setMimeType("application/vnd.google-apps.spreadsheet");
-            } else {
-                // закоментировать нахрен если завтра утром останется таблицей
-               // fileMetadata.setMimeType("application/vnd.google-apps.unknown");
-            }
-
-
-            filePath = new java.io.File(fn);
-            FileContent mediaContent = new FileContent("text/csv", filePath);
-
-            File file = null;
-            try {
-
-                Log.d(TAG,"DATE: " + defAppSettings.getString("GD_DATE","")+" file :"+defAppSettings.getString("GD_FILE",""));
-
-                if (defAppSettings.getString("GD_DATE","").equals(viewDate) &
-                        defAppSettings.getString("GD_FILE","").length()!=0 &
-                        defAppSettings.getString("GD_OLD_EXT","csv").equals(extend_file)){
-                    Log.d(TAG,"YES CONT DATE");
-                    fileMetadata.setModifiedTime(new DateTime(System.currentTimeMillis()));
-                    file = mService.files().update(defAppSettings.getString("GD_FILE",""),fileMetadata,mediaContent)
-                            .setFields("id,modifiedTime")
-                            .execute();
-                    //.setFileId("id, modifiedTime")
-
-                } else {
-
-                    file = mService.files().create(fileMetadata, mediaContent)
-                            .setFields("id,name")
-                            .execute();
-
-                    Editor editor = defAppSettings.edit();
-                    editor.putString("GD_FILE",file.getId());
-                    editor.putString("GD_DATE",viewDate);
-                    editor.putString("GD_NAME",file.getName());
-                    editor.putString("GD_OLD_EXT",defAppSettings.getString("extend_file","csv"));
-
-                    editor.apply();
-                }
-
-            } catch (Exception e) {
-                e.printStackTrace();
-                mLastError = e;
-				// удаление файла здесь не лутшая идея наверно если мы потом перезапускаем отправку
-				//filePath.delete();
-                cancel(true);
-                return null;
-            }
-
-            Log.d(TAG,"File ID: " + file.getId()+" file :"+file.getName());
-			filePath.delete();
-
-             */
-
             return null;
         }
 
@@ -628,25 +611,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
                     })
                     .create();
             builder.show();
-
-            /*
-            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-            builder.setTitle(R.string.app_name)
-                    .setMessage("Загружен файл :"+"File ID: " + defAppSettings.getString("GD_FILE","")
-                            +" file :"+defAppSettings.getString("GD_NAME",""))
-                    .setCancelable(false)
-                    .setNegativeButton("Close",new DialogInterface.OnClickListener(){
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.cancel();
-                        }
-                    });
-            AlertDialog alert = builder.create();
-            alert.show();
-             */
-
-            //resend = false;
-            //count_fail_resend = 0;
         }
 
         @Override
@@ -668,48 +632,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
             } else {
                 Log.d(TAG,"Request cancelled.");
             }
-            /*
-            if (mLastError != null) {
 
-                if (mLastError instanceof GooglePlayServicesAvailabilityIOException) {
-                    showGooglePlayServicesAvailabilityErrorDialog(
-                            ((GooglePlayServicesAvailabilityIOException) mLastError)
-                                    .getConnectionStatusCode());
-                }else if (mLastError instanceof UserRecoverableAuthIOException) {
-                    startActivityForResult(
-                            ((UserRecoverableAuthIOException) mLastError).getIntent(),
-                            MainActivity.REQUEST_AUTHORIZATION);
-
-                } else {
-                    //Log.d(TAG,mLastError.getMessage());
-                    // вот так должно работать
-                    int pref_count_fail =  Integer.parseInt(defAppSettings.getString("count_send", "3"));
-
-                    if (!defAppSettings.getBoolean("resend_on_error",false) | pref_count_fail<count_fail_resend) {
-                        // удаляем файл для пересылки
-                        filePath.delete();
-
-                        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                        builder.setTitle(R.string.app_name)
-                                .setMessage("Error: " + mLastError.toString())
-                                .setCancelable(false)
-                                .setNegativeButton("Close", new DialogInterface.OnClickListener() {
-                                    @Override
-                                   public void onClick(DialogInterface dialog, int which) {
-                                        dialog.cancel();
-                                    }
-                                });
-                        AlertDialog alert = builder.create();
-                        alert.show();
-                    } else {
-                        resend = true;
-                        count_fail_resend +=1;
-                        getResultsFromApi();
-                    }
-                }
-
-            }
-            */
         }
     }
 
@@ -723,6 +646,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
 
         private DateTime createDate;
         private DateTime modifidDate;
+        private boolean resultSearchFlag;
+
 
         public RequestDataTask(GoogleAccountCredential credential, String fn){
             this.fn = fn;
@@ -757,6 +682,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
             //http://javaprogrammernotes.blogspot.ru/2013/01/drive-api-2.html
             String fileId = null;
             String fileName = null;
+            resultSearchFlag = false;
 
             for (Object l:fileList){
                 File lx = (File) l;
@@ -780,6 +706,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
             }
             if (fileId != null) {
                 //mService.files().
+                resultSearchFlag = true;
 
                 Log.d(TAG,"НАШЛИ :"+fileId);
                // System.out.println(new Date());
@@ -818,10 +745,17 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
             hideProgress();
            // System.out.println(new Date());
 
+            String msg;
+            if (resultSearchFlag) {
+                msg = "Скачан файл с товаром:"+fn+"\nсозданный : "+Func.getDateTimeToStr(createDate,"dd.MM.yyyy HH:mm")
+                        +"\nи измененный : "+Func.getDateTimeToStr(modifidDate,"dd.MM.yyyy HH:mm");
+            } else {
+                msg = "Файл "+fn+" отсутствует на GD";
+            }
+
             AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
             builder.setTitle(R.string.app_name)
-                    .setMessage("Скачан файл с товаром:"+fn+"\nсозданный : "+Func.getDateTimeToStr(createDate,"dd.MM.yyyy HH:mm")
-                            +"\nи измененный : "+Func.getDateTimeToStr(modifidDate,"dd.MM.yyyy HH:mm"))
+                    .setMessage(msg)
                     .setCancelable(false)
                     .setNegativeButton(R.string.button_ok, new DialogInterface.OnClickListener() {
                         @Override
@@ -875,7 +809,5 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
                 .setNegativeButton(R.string.button_close,null).create();
         builder.show();
     }
-
-
 
 }

@@ -1,0 +1,85 @@
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <TextView
+        android:id="@+id/qq_title"
+        android:textSize="16sp"
+        android:text="Название"
+        android:textStyle="bold"
+        android:textColor="@android:color/black"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp"/>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="16dp">
+        <TextView
+            android:id="@+id/chpr_price"
+            android:text="Текущая цена"
+            android:layout_weight="1"
+            android:textColor="@color/app_green"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+        <TextView
+            android:id="@+id/chpr_ostatok"
+            android:text="Остаток"
+            android:layout_weight="1"
+            android:gravity="right"
+            android:textColor="@color/app_blue"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+
+    <EditText
+        android:id="@+id/chpr_newprice"
+        android:hint="000"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:inputType="numberDecimal"
+        android:imeOptions="actionDone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:nextFocusDown="@+id/qq_bt_ok">
+        <requestFocus/>
+    </EditText>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp">
+        <Button
+            android:id="@+id/qq_bt_cancel"
+            android:text="@string/button_cancel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/button_gray_background"
+            android:textColor="@android:color/white"
+            android:textStyle="bold"
+            android:focusable="false"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"/>
+        <Button
+            android:id="@+id/qq_bt_ok"
+            android:text="@string/button_ok"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:textStyle="bold"
+            android:textColor="@android:color/white"
+            android:background="@drawable/button_orange_background"
+            android:focusable="false"
+            android:layout_weight="1"/>
+    </LinearLayout>
+
+</LinearLayout>

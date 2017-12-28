@@ -37,6 +37,7 @@ public class ScannedFileAdapter extends ArrayAdapter<ScannedFileModel> {
             holder.mDate = (TextView) row.findViewById(R.id.sd_file_date);
             holder.mTime = (TextView) row.findViewById(R.id.sd_file_time);
             holder.mType = (TextView) row.findViewById(R.id.sd_file_type);
+            holder.mIndicator = row.findViewById(R.id.sd_file_indicator);
             row.setTag(holder);
         }else{
             holder = (ViewHolder)row.getTag();
@@ -49,10 +50,20 @@ public class ScannedFileAdapter extends ArrayAdapter<ScannedFileModel> {
         if (record.getType() == 0 ){
             holder.mType.setText("Товар");
             holder.mType.setTextColor(ContextCompat.getColor(getContext(),R.color.app_green));
+            holder.mIndicator.setBackgroundColor(ContextCompat.getColor(getContext(),R.color.app_green));
 
-        } else {
+        } else if (record.getType() == 1){
             holder.mType.setText("ЕГАИС");
             holder.mType.setTextColor(ContextCompat.getColor(getContext(),R.color.app_blue));
+            holder.mIndicator.setBackgroundColor(ContextCompat.getColor(getContext(),R.color.app_blue));
+        } else if (record.getType() == 2) {
+            holder.mType.setText("Поступление");
+            holder.mType.setTextColor(ContextCompat.getColor(getContext(),R.color.app_gray_bt_dark));
+            holder.mIndicator.setBackgroundColor(ContextCompat.getColor(getContext(),R.color.app_gray_bt_dark));
+        } else {
+            holder.mType.setText("Переоценка");
+            holder.mType.setTextColor(ContextCompat.getColor(getContext(),R.color.app_orange_normal));
+            holder.mIndicator.setBackgroundColor(ContextCompat.getColor(getContext(),R.color.app_orange_normal));
         }
         return row;
     }
@@ -67,6 +78,7 @@ public class ScannedFileAdapter extends ArrayAdapter<ScannedFileModel> {
         public TextView mDate;
         public TextView mTime;
         public TextView mType;
+        public View mIndicator;
 
     }
 }

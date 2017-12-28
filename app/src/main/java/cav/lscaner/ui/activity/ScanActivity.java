@@ -9,12 +9,9 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.SearchView;
-import android.text.Editable;
 import android.text.InputFilter;
 import android.text.InputType;
-import android.text.TextWatcher;
 import android.util.Log;
-import android.view.InputDevice;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -26,23 +23,25 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.logging.Filter;
 
 import cav.lscaner.R;
 import cav.lscaner.data.managers.DataManager;
 import cav.lscaner.data.models.ScannedDataModel;
+import cav.lscaner.data.models.ScannedFileModel;
 import cav.lscaner.data.models.StoreProductModel;
 import cav.lscaner.ui.adapter.ScannedListAdapter;
 import cav.lscaner.ui.dialogs.DemoDialog;
 import cav.lscaner.ui.dialogs.InfoNoValidDialog;
+import cav.lscaner.ui.dialogs.PrihodChangePriceDialog;
 import cav.lscaner.ui.dialogs.QueryQuantityDialog;
 import cav.lscaner.ui.dialogs.SelectItemsDialog;
 import cav.lscaner.ui.dialogs.SelectScanDialog;
 import cav.lscaner.utils.ConstantManager;
 import cav.lscaner.utils.Func;
+import cav.lscaner.utils.SwipeDetector;
 
-public class ScanActivity extends AppCompatActivity implements AdapterView.OnItemLongClickListener{
-    private final int MAX_REC = 10;  // количество записей в демо версии
+public class ScanActivity extends AppCompatActivity implements AdapterView.OnItemLongClickListener,AdapterView.OnItemClickListener{
+    private final int MAX_REC = 30;  // количество записей в демо версии
 
     private EditText mBarCode;
     private ListView mListView;
@@ -67,6 +66,8 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
     private boolean mUPCtoEAN = false;
 
     private boolean filterLock = false;
+
+    private SwipeDetector swipeDetector;
 
     private String debugOutFile;
 
@@ -95,6 +96,7 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
         mBarCode.setOnEditorActionListener(mEditorActionListener);
 
         mListView.setOnItemLongClickListener(this);
+        mListView.setOnItemClickListener(this);
 
         demo = mDataManager.getPreferensManager().getDemo();
         if (demo) {
@@ -109,6 +111,10 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
 
         // хз
         mListView.setOnFocusChangeListener(mOnFocusChangeListener);
+
+
+        swipeDetector = new SwipeDetector();
+        mListView.setOnTouchListener(swipeDetector);
 
         setupToolBar();
         updateUI();
@@ -187,7 +193,11 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
     private void updateUI(){
         mDataModels = mDataManager.getScannedData(idFile,fileType);
         if (mAdapter == null) {
-            mAdapter = new ScannedListAdapter(this,R.layout.scanned_item,mDataModels);
+            int linkLayout = R.layout.scanned_item;
+            if (fileType == ConstantManager.FILE_TYPE_CHANGE_PRICE) {
+                linkLayout = R.layout.change_price_item;
+            }
+            mAdapter = new ScannedListAdapter(this,linkLayout,mDataModels);
             mListView.setAdapter(mAdapter);
         }else {
             mAdapter.setData(mDataModels);
@@ -234,7 +244,6 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
                     return false;
                 }
 
-               // Log.d("SA",textView.getText().toString());
                 mBar = textView.getText().toString();
                 if (mBar.length() == 0) return true;
                 qq = 1f;
@@ -247,12 +256,12 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
                 if (fileType == ConstantManager.FILE_TYPE_EGAIS){
                     if (mBar.startsWith("1") || mBar.length() < 14) {
                         // марка ФСМ
-                        Func.addLog(debugOutFile,"Mark FSM : "+mBar); // debug
+                        //Func.addLog(debugOutFile,"Mark FSM : "+mBar); // debug
                         mBarCode.setText("");
                         return true;
                     }
                     mBar = Func.toEGAISAlcoCode(mBar);
-                    Func.addLog(debugOutFile,"EGAIS code : "+mBar); // debug
+                    //Func.addLog(debugOutFile,"EGAIS code : "+mBar); // debug
                 } else {
                     if (mBar.length()<2) return true;
                     // выкидываем EAN 8 так как его весовым у нас быть не может
@@ -299,7 +308,7 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
                     if (productArray.size() ==1 ) {
                         product = new StoreProductModel(mBar,productArray.get(0).getName(),productArray.get(0).getArticul(),
                                 productArray.get(0).getPrice(),productArray.get(0).getOstatok());
-                        Func.addLog(debugOutFile,"Product : "+product.getArticul()+" :: "+product.getName()); // debug
+                       // Func.addLog(debugOutFile,"Product : "+product.getArticul()+" :: "+product.getName()); // debug
                     } else {
                         SelectItemsDialog dialog = SelectItemsDialog.newInstance(productArray);
                         dialog.setOnSelectItemsChangeListener(mOnSelectItemsChangeListener);
@@ -331,13 +340,18 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
             mArticul = mDataModels.get(l).getArticul();
             posID = mDataModels.get(l).getPosId();
            // Func.addLog(debugOutFile,"No Scale : "+mArticul+" :: "+mDataModels.get(l).getName()+" :: "+l); // debug
-            /*
-            QueryQuantityDialog dialod = QueryQuantityDialog.newInstans(mDataModels.get(l).getName(), 0f, qq, editRecord,
-                    mDataModels.get(l).getOstatok(),mDataModels.get(l).getPrice());
-                    */
-            QueryQuantityDialog dialog = QueryQuantityDialog.newInstans(product,0f,qq,editRecord);
-            dialog.setQuantityChangeListener(mQuantityChangeListener);
-            dialog.show(getSupportFragmentManager(), "QQ");
+            if (fileType == ConstantManager.FILE_TYPE_CHANGE_PRICE || fileType == ConstantManager.FILE_TYPE_PRIHOD) {
+                editRecord = true;
+                product.setPrice(mDataModels.get(l).getPrice());
+                product.setQuantity(qq);
+                PrihodChangePriceDialog dialog = PrihodChangePriceDialog.newInstance(product,fileType,editRecord);
+                dialog.setPrihodChangePriceListener(mChangePriceListener);
+                dialog.show(getFragmentManager(),"pcd");
+            }else {
+                QueryQuantityDialog dialog = QueryQuantityDialog.newInstans(product, 0f, qq, editRecord);
+                dialog.setQuantityChangeListener(mQuantityChangeListener);
+                dialog.show(getSupportFragmentManager(), "QQ");
+            }
         } else {
             Float oldqq = mDataModels.get(l).getQuantity();
             mArticul = mDataModels.get(l).getArticul();
@@ -356,14 +370,21 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
         if (!scaleFlg) {
            // Func.addLog(debugOutFile,"No Scale : "+product.getArticul()+" :: "+product.getName()+" :: "+product.getBarcode()+" :: store "+mBar); // debug
             mArticul = product.getArticul();
-            /*
-            QueryQuantityDialog dialod = QueryQuantityDialog.newInstans(product.getName(), 0f, 0f,
-                    editRecord,product.getOstatok(),product.getPrice());
-                    */
-            QueryQuantityDialog dialog = QueryQuantityDialog.newInstans(product,0f,0f,editRecord);
 
-            dialog.setQuantityChangeListener(mQuantityChangeListener);
-            dialog.show(getSupportFragmentManager(), "QQ");
+            if (fileType == ConstantManager.FILE_TYPE_CHANGE_PRICE) {
+                PrihodChangePriceDialog dialog = PrihodChangePriceDialog.newInstance(product,fileType,editRecord);
+                dialog.setPrihodChangePriceListener(mChangePriceListener);
+                dialog.show(getFragmentManager(),"pcd");
+            } else if (fileType == ConstantManager.FILE_TYPE_PRIHOD) {
+                PrihodChangePriceDialog dialog = PrihodChangePriceDialog.newInstance(product,fileType,editRecord);
+                dialog.setPrihodChangePriceListener(mChangePriceListener);
+                dialog.show(getFragmentManager(),"ppd");
+            }else {
+                QueryQuantityDialog dialog = QueryQuantityDialog.newInstans(product, 0f, 0f, editRecord);
+                dialog.setQuantityChangeListener(mQuantityChangeListener);
+                dialog.show(getSupportFragmentManager(), "QQ");
+            }
+
         } else {
            // Func.addLog(debugOutFile,"Scale : "+product.getArticul()+" :: "+product.getName()); // debug
             mDataManager.getDB().addScannedPositon(idFile, mBar, qq,-1,product.getArticul());
@@ -372,24 +393,28 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
         }
     }
 
-    QueryQuantityDialog.QuantityChangeListener mQuantityChangeListener = new QueryQuantityDialog.QuantityChangeListener(){
-        /*
+    // получаем обратно данные от переоценке или приходе товара
+    PrihodChangePriceDialog.PrihodChangePriceListener mChangePriceListener = new PrihodChangePriceDialog.PrihodChangePriceListener() {
         @Override
-        public void changeQuantity(Float quantity) {
-            if (quantity!=0){
-                Func.addLog(debugOutFile,"Change QQ : "+mArticul+" :: "+mBar+" :: "+posID); // debug
-                mDataManager.getDB().addScannedPositon(idFile,mBar,quantity,posID,mArticul);
-                if (!editRecord) countRecord += 1;
-                updateUI(); // TODO передалать заполнение через добавление в адаптер
-                if (filterLock) {
-                    mAdapter.getFilter().filter(filterString);
-                    mAdapter.notifyDataSetChanged();
-                }
-                mBarCode.setText("");
-                mBarCode.requestFocus();
-            }
+        public void cancelButton() {
+            mBarCode.requestFocus();
         }
-        */
+
+        @Override
+        public void changeQuantity(StoreProductModel productModel) {
+            if (fileType == ConstantManager.FILE_TYPE_CHANGE_PRICE){
+                mDataManager.getDB().addScannedPricePosition(idFile,productModel,posID);
+            } else {
+                mDataManager.getDB().addScannedPrihodPosition(idFile,productModel,posID);
+            }
+            updateUI();
+            mBarCode.setText("");
+            mBarCode.requestFocus();
+        }
+    };
+
+    // получаем обратно данные о количестве
+    QueryQuantityDialog.QuantityChangeListener mQuantityChangeListener = new QueryQuantityDialog.QuantityChangeListener(){
 
         @Override
         public void changeQuantity(Float quantity, StoreProductModel productModel) {
@@ -443,33 +468,49 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
         @Override
         public void selectedItem(int item) {
             if (item == R.id.ss_dialog_del_item){
-                deleteRecord(idFile,selModel.getPosId());
-                if (filterLock) {
-                    //android.widget.Filter fl = mAdapter.getFilter();
-                    mAdapter.remove(selModel);
-                    mAdapter.getFilter().filter(filterString);
-                    mAdapter.notifyDataSetChanged();
-                }
+                deleteRec();
             }
 
             if (item == R.id.ss_dialog_edit_item){
-                editRecord = true;
-                posID = selModel.getPosId();
-                mBar = selModel.getBarCode();
-                mArticul = selModel.getArticul();
-                /*
-                QueryQuantityDialog dialog = QueryQuantityDialog.newInstans(selModel.getName(),
-                        selModel.getQuantity(),
-                        selModel.getQuantity(),editRecord,
-                        selModel.getOstatok(),selModel.getPrice());
-                        */
-                QueryQuantityDialog dialog = QueryQuantityDialog.newInstans(new StoreProductModel(selModel.getBarCode(),selModel.getName(),selModel.getArticul()),
-                        selModel.getQuantity(),selModel.getQuantity(),editRecord);
-                dialog.setQuantityChangeListener(mQuantityChangeListener);
-                dialog.show(getSupportFragmentManager(),"EDITSD");
+                editRec();
             }
         }
     };
+
+    private void editRec() {
+        editRecord = true;
+        posID = selModel.getPosId();
+        mBar = selModel.getBarCode();
+        mArticul = selModel.getArticul();
+        if (fileType == ConstantManager.FILE_TYPE_EGAIS || fileType == ConstantManager.FILE_TYPE_PRODUCT) {
+            QueryQuantityDialog dialog = QueryQuantityDialog.newInstans(new StoreProductModel(selModel.getBarCode(), selModel.getName(), selModel.getArticul()),
+                    selModel.getQuantity(), selModel.getQuantity(), editRecord);
+            dialog.setQuantityChangeListener(mQuantityChangeListener);
+            dialog.show(getSupportFragmentManager(), "EDITSD");
+        } else if (fileType == ConstantManager.FILE_TYPE_CHANGE_PRICE){
+            PrihodChangePriceDialog dialog = PrihodChangePriceDialog.newInstance(new StoreProductModel(selModel.getBarCode(),
+                            selModel.getName(), selModel.getArticul(),selModel.getPrice(),selModel.getOstatok())
+                    ,fileType,editRecord);
+            dialog.setPrihodChangePriceListener(mChangePriceListener);
+            dialog.show(getFragmentManager(),"pcd");
+        } else {
+            PrihodChangePriceDialog dialog = PrihodChangePriceDialog.newInstance(new StoreProductModel(selModel.getBarCode(),
+                            selModel.getName(), selModel.getArticul(),selModel.getPrice(),selModel.getQuantity(),selModel.getOstatok())
+                    ,fileType,editRecord);
+            dialog.setPrihodChangePriceListener(mChangePriceListener);
+            dialog.show(getFragmentManager(),"ppd");
+        }
+    }
+
+    private void deleteRec() {
+        deleteRecord(idFile,selModel.getPosId());
+        if (filterLock) {
+            //android.widget.Filter fl = mAdapter.getFilter();
+            mAdapter.remove(selModel);
+            mAdapter.getFilter().filter(filterString);
+            mAdapter.notifyDataSetChanged();
+        }
+    }
 
     private void deleteRecord(final int selIdFile, final int position) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -496,4 +537,21 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
         }
     };
 
+    @Override
+    public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+        if (swipeDetector.swipeDetected()) {
+            selModel = (ScannedDataModel) adapterView.getItemAtPosition(position);
+            if (swipeDetector.getAction() == SwipeDetector.Action.LR) {
+                Log.d("SA","LEFT");
+                // удаляем
+                //deleteRecord(mFileAdapter.getItem(position).getId());
+                deleteRec();
+            }
+            if (swipeDetector.getAction() == SwipeDetector.Action.RL) {
+                Log.d("SA","RIGTH");
+                editRec();
+            }
+            return;
+        }
+    }
 }

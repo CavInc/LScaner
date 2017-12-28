@@ -144,7 +144,8 @@ public class Func {
     }
 
     public static boolean checkEAN(String barcode){
-        //return true; // debug
+        return true; // debug
+        /*
 
         int easum = 0;
         if (barcode.length() == 8 ){
@@ -162,6 +163,7 @@ public class Func {
         }
         if ((easum % 10) == 0) return true;
         return false;
+        */
     }
 
     public static void addLog(String fname,String msg) {
@@ -174,6 +176,17 @@ public class Func {
             e.printStackTrace();
         }
     }
+
+    /*
+    //Convert pixel to dip
+    public static int GetDipsFromPixel(float pixels)
+    {
+        // Get the screen's density scale
+        final float scale = getResources().getDisplayMetrics().density;
+        // Convert the dps to pixels, based on density scale
+        return (int) (pixels * scale + 0.5f);
+    }
+    */
 
 
 

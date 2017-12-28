@@ -13,12 +13,21 @@ public interface ConstantManager{
     String REGISTRY_NUMBER = "REGISTRY_NUMBER";
     String CODE_FILE = "CODE_FILE";
     String SELECTED_FILE_TYPE = "SELECTED_FILE_TYPE";
+
     int FILE_TYPE_PRODUCT = 0;
     int FILE_TYPE_EGAIS = 1;
+    int FILE_TYPE_PRIHOD = 2;
+    int FILE_TYPE_CHANGE_PRICE = 3;
 
     int RET_OK = 200;
 
     int RET_ERROR = 201;
     int RET_NO_FIELD_MANY = 202;
     int RET_NO_SD = 203;
+
+    String PREFIX_FILE_TOVAR = "{ТОВАР}";
+    String PREFIX_FILE_EGAIS = "{ЕГАИС}";
+    String PREFIX_FILE_CHANGEPRICE = "{Переоценка}";
+    String PREFIX_FILE_PRIHOD = "{Поступление}";
+
 }

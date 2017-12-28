@@ -34,6 +34,7 @@ public class DBHelper extends SQLiteOpenHelper {
                     " id integer not null primary key AUTOINCREMENT,"+
                     "barcode text,"+
                     "name text,"+
+                    "codetv text,"+ // артикул в терминах документации
                     "articul text,"+
                     "price float default 0,"+
                     "egais text,"+
@@ -48,14 +49,18 @@ public class DBHelper extends SQLiteOpenHelper {
                     "name_file text,"+
                     "date text,"+
                     "time text,"+
-                    "type integer default 0)"); // 0 - товары 1 -егаис
+                    "type integer default 0)"); // 0 - товары 1 -егаис 2 - поступление 3 - переоценка
 
             db.execSQL("create table "+SCAN_TABLE_SPEC+"("+
                     "head_id integer not null,"+
                     "pos_id integer not null,"+
                     "barcode text not null,"+
-                    "articul text,"+
+                    "articul text,"+   // код в терминах документации
                     "quantity number default 0,"+
+                    "price float default 0,"+
+                    "baseprice float default 0,"+
+                    "egais_code text,"+
+                    "tv_articul,"+ // артикул в терминах документации
                     "primary key(head_id,pos_id,barcode))");
             db.execSQL("CREATE INDEX \""+SCAN_TABLE_SPEC+"_BA\" on "+SCAN_TABLE_SPEC+" (barcode,articul)");
         }
