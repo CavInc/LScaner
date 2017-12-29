@@ -25,6 +25,9 @@ import java.util.Map;
 import cav.lscaner.R;
 
 //https://stackoverflow.com/questions/21706231/put-on-the-right-the-indicator-of-an-expandablelistview-in-android
+//https://stackoverflow.com/questions/9824074/android-expandablelistview-looking-for-a-tutorial
+//http://abhiandroid.com/ui/expandablelistview
+//http://abhiandroid.com/ui/baseexpandablelistadapter-example-android-studio.html
 
 public class CustomExpandListAdapter  extends BaseExpandableListAdapter {
 
@@ -238,16 +241,33 @@ public class CustomExpandListAdapter  extends BaseExpandableListAdapter {
             tv.setText(s);
 
             String vl = (String) l.get(mChildFrom[1]);
-            ((TextView) v.findViewById(R.id.expant_list_item_id)).setText(vl);
+            ((TextView) v.findViewById(R.id.expant_list_item_id)).setText(vl+".");
 
             ImageView im = (ImageView) v.findViewById(R.id.expant_list_item_bt);
             im.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     Log.d("CE","GP "+groupPosition+" "+" CHL "+childPosition);
-                    int i = Integer.valueOf((String) ((HashMap)mChildData.get(groupPosition).get(childPosition)).get("itemValue"));
-                    i -= 1;
-                    ((HashMap) mChildData.get(groupPosition).get(childPosition)).put("itemValue",String.valueOf(i));
+                    Object x = mChildData.get(groupPosition).get(childPosition);
+                    int pos = mChildData.get(groupPosition).indexOf(x);
+                    Log.d("CE","POS "+pos);
+                    //int i = Integer.valueOf((String) ((HashMap)mChildData.get(groupPosition).get(childPosition)).get("itemValue"));
+                    //i -= 1;
+                    //((HashMap) mChildData.get(groupPosition).get(childPosition)).put("itemValue",String.valueOf(i));
+                    mChildData.get(groupPosition).remove(x);
+                    pos -=1;
+                    if (pos < 0) pos = mChildData.get(groupPosition).size();
+
+                    //((HashMap) x).put("itemValue",String.valueOf(pos+1));
+
+                    mChildData.get(groupPosition).add(pos,x);
+                    //Object x = mChildData.get(groupPosition).get(childPosition);
+                    //mChildData.get(groupPosition).add(i,x);
+                    //mChildData.add(pos-1,x);
+                    for (int i=0;i<mChildData.get(groupPosition).size();i++){
+                        ((HashMap) mChildData.get(groupPosition).get(i)).put("itemValue",String.valueOf(i+1));
+                    }
+
                     notifyDataSetChanged();
                 }
             });
