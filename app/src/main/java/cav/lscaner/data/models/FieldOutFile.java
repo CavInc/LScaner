@@ -2,6 +2,7 @@ package cav.lscaner.data.models;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 
 public class FieldOutFile {
     private int mBarcode;
@@ -124,13 +125,27 @@ public class FieldOutFile {
     }
 
     // возвращает массив индексов
+    // String[] outField = new String[] {"Штрих-код","Код","Кол-во.","Цена","Цена закупочная","Код ЕГАИС","Артикул"};
+
     public int[] getArrayIndex(){
         ArrayList<Integer> f = new ArrayList<>();
-        if (mBarcode!=-1) f.add(mBarcode);
-        if (mArticul!=-1) f.add(mArticul);
-        if (mQuantity!=-1) f.add(mQuantity);
+        HashMap <Integer,Integer> m = new HashMap<>();
+        if (mBarcode!=-1) m.put(mBarcode,0);
+        if (mArticul!=-1) m.put(mArticul,1);
+        if (mQuantity!=-1) m.put(mQuantity,2);
+        if (mPrice!=-1) m.put(mPrice,3);
+        if (mBasePrice!=-1) m.put(mBasePrice,4);
+        if (mEGAIS!=-1) m.put(mEGAIS,5);
+        if (mCodeTV!=-1) m.put(mCodeTV,6);
 
-        return null;
+        for (int i=1;i<=m.size();i++){
+            f.add(m.get(i));
+        }
+        int[] ret = new int[f.size()];
+        for (int i = 0;i<f.size();i++){
+           ret[i] = f.get(i);
+        }
+        return ret;
     }
 
 }

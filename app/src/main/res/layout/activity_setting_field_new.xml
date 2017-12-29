@@ -14,5 +14,6 @@
         android:id="@+id/expandableListView"
         android:groupIndicator="@null"
         android:childDivider="#0f0"
+        android:divider="@android:color/white"
         android:dividerHeight="4dp"/>
 </LinearLayout>

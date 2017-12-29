@@ -148,6 +148,8 @@ public class SettingFieldNewActivity extends AppCompatActivity {
         childData.add(childDataItem);
 
         FieldOutFile outFieldFile = mDataManager.getPreferensManager().getFieldOutFile();
+
+        tovarF = outFieldFile.getArrayIndex();
         // создаем коллекцию элементов для второй группы
         childDataItem = new ArrayList<Map<String, String>>();
         // заполняем список атрибутов для каждого элемента
@@ -161,6 +163,9 @@ public class SettingFieldNewActivity extends AppCompatActivity {
 
 
         outFieldFile = mDataManager.getPreferensManager().getFieldOutEgaisFile();
+
+        egaisF = outFieldFile.getArrayIndex();
+
         // создаем коллекцию элементов для третьей группы
         childDataItem = new ArrayList<Map<String, String>>();
         for (int item : egaisF) {
@@ -172,6 +177,7 @@ public class SettingFieldNewActivity extends AppCompatActivity {
         childData.add(childDataItem);
 
         outFieldFile = mDataManager.getPreferensManager().getFieldOutChangePriceFile();
+        changePriceF = outFieldFile.getArrayIndex();
         // создаем коллекцию элементов для четвертой группы
         childDataItem = new ArrayList<Map<String, String>>();
         for (int item : changePriceF) {
@@ -183,6 +189,7 @@ public class SettingFieldNewActivity extends AppCompatActivity {
         childData.add(childDataItem);
 
         outFieldFile = mDataManager.getPreferensManager().getFieldOutPrixodFile();
+        prihodF = outFieldFile.getArrayIndex();
         // создаем коллекцию элементов для пятой группы
         childDataItem = new ArrayList<Map<String, String>>();
         for (int item : prihodF) {
