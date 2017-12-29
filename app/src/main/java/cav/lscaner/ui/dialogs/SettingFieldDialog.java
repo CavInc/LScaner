@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import cav.lscaner.R;
@@ -74,19 +75,19 @@ public class SettingFieldDialog extends DialogFragment implements View.OnClickLi
                 break;
             case 1:
                 title = "Поля файла Товар";
-                activeField = mDataManager.getPreferensManager().getFieldOutActive();
+                activeField = mDataManager.getPreferensManager().getFieldOutFile().getArrayIndex();
                 break;
             case 2:
                 title = "Поля файла ЕГАИС";
-                activeField = mDataManager.getPreferensManager().getFieldEGAISActive();
+                activeField = mDataManager.getPreferensManager().getFieldOutEgaisFile().getArrayIndex();
                 break;
             case 3:
                 title = "Поля файла Переоценка";
-                activeField = mDataManager.getPreferensManager().getFieldChangePriceActive();
+                activeField = mDataManager.getPreferensManager().getFieldOutChangePriceFile().getArrayIndex();
                 break;
             case 4:
                 title = "Поля файла Поступление";
-                activeField = mDataManager.getPreferensManager().getFieldPrihoxActive();
+                activeField = mDataManager.getPreferensManager().getFieldOutPrixodFile().getArrayIndex();
                 break;
         }
 
@@ -98,6 +99,7 @@ public class SettingFieldDialog extends DialogFragment implements View.OnClickLi
     }
 
     private void setCheckItems(int mode, int[] activeField) {
+        Arrays.sort(activeField);
         for (int i = 0;i<activeField.length;i++){
             if (i<2) {
                 mCheckBoxes[activeField[i]].setChecked(true);

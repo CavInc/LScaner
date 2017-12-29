@@ -111,10 +111,10 @@ public class SettingFieldNewActivity extends AppCompatActivity {
 
     private void updateUI() {
         storeProductF = mDataManager.getPreferensManager().getFieldFileActive();
-        tovarF = mDataManager.getPreferensManager().getFieldOutActive();
-        egaisF = mDataManager.getPreferensManager().getFieldEGAISActive();
-        changePriceF = mDataManager.getPreferensManager().getFieldChangePriceActive();
-        prihodF = mDataManager.getPreferensManager().getFieldPrihoxActive();
+        //tovarF = mDataManager.getPreferensManager().getFieldOutActive();
+        //egaisF = mDataManager.getPreferensManager().getFieldEGAISActive();
+        //changePriceF = mDataManager.getPreferensManager().getFieldChangePriceActive();
+        //prihodF = mDataManager.getPreferensManager().getFieldPrihoxActive();
 
         // заполняем коллекцию групп из массива с названиями групп
         groupData = new ArrayList<Map<String, String>>();
