@@ -12,22 +12,31 @@ import android.support.v7.widget.SearchView;
 import android.text.InputFilter;
 import android.text.InputType;
 import android.util.Log;
+import android.util.SparseArray;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.SurfaceHolder;
+import android.view.SurfaceView;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.android.gms.vision.CameraSource;
+import com.google.android.gms.vision.Detector;
+import com.google.android.gms.vision.barcode.Barcode;
+import com.google.android.gms.vision.barcode.BarcodeDetector;
+
+import java.io.IOException;
 import java.util.ArrayList;
 
 import cav.lscaner.R;
 import cav.lscaner.data.managers.DataManager;
 import cav.lscaner.data.models.ScannedDataModel;
-import cav.lscaner.data.models.ScannedFileModel;
 import cav.lscaner.data.models.StoreProductModel;
 import cav.lscaner.ui.adapter.ScannedListAdapter;
 import cav.lscaner.ui.dialogs.DemoDialog;
@@ -45,6 +54,11 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
 
     private EditText mBarCode;
     private ListView mListView;
+
+    private BarcodeDetector barcodeDetector;
+    private SurfaceView cameraView;
+    private CameraSource cameraSource;
+
 
     private DataManager mDataManager;
 
@@ -88,6 +102,12 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
         idFile = getIntent().getIntExtra(ConstantManager.SELECTED_FILE,-1);
         mFileName = getIntent().getStringExtra(ConstantManager.SELECTED_FILE_NAME);
         fileType = getIntent().getIntExtra(ConstantManager.SELECTED_FILE_TYPE,ConstantManager.FILE_TYPE_PRODUCT);
+
+        // окно для отображения
+        cameraView = (SurfaceView) findViewById(R.id.barcode_scan_v);
+
+
+
 
         mBarCode = (EditText) findViewById(R.id.barcode_et);
 
@@ -190,6 +210,15 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
         return true;
     }
 
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        cameraSource.release();
+        barcodeDetector.release();
+    }
+
     private void updateUI(){
         mDataModels = mDataManager.getScannedData(idFile,fileType);
         if (mAdapter == null) {
@@ -213,6 +242,21 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
     protected void onResume() {
         super.onResume();
        // Func.addLog(debugOutFile,"FORM RESUME : "); // debug
+        barcodeDetector = new BarcodeDetector.Builder(this)
+                .setBarcodeFormats(Barcode.ALL_FORMATS)
+                .build();
+
+        ViewGroup.LayoutParams lp = cameraView.getLayoutParams();
+        int w = lp.width;
+        int h = lp.height;
+
+        cameraSource = new CameraSource.Builder(this, barcodeDetector)
+                .setRequestedPreviewSize(400,280)
+                .setAutoFocusEnabled(true)
+                .build();
+        cameraView.getHolder().addCallback(new HolderCallback());
+
+        barcodeDetector.setProcessor(new BarcodeDetectorCallback());
     }
 
     private String mBar;
@@ -552,6 +596,45 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
                 editRec();
             }
             return;
+        }
+    }
+
+    class HolderCallback implements SurfaceHolder.Callback {
+
+        @Override
+        public void surfaceCreated(SurfaceHolder surfaceHolder) {
+            try {
+                //noinspection MissingPermission
+                cameraSource.start(cameraView.getHolder());
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
+
+        @Override
+        public void surfaceChanged(SurfaceHolder surfaceHolder, int format, int width, int height) {
+
+        }
+
+        @Override
+        public void surfaceDestroyed(SurfaceHolder surfaceHolder) {
+            cameraSource.stop();
+        }
+    }
+
+    class BarcodeDetectorCallback implements Detector.Processor {
+
+        @Override
+        public void release() {
+
+        }
+
+        @Override
+        public void receiveDetections(Detector.Detections detections) {
+            final SparseArray barcodes = detections.getDetectedItems();
+            if (barcodes.size() != 0) {
+
+            }
         }
     }
 }
