@@ -72,6 +72,20 @@ public class ScannedDataModel {
         mSumm = Double.valueOf(Func.round((float) (quantity * price),2));
     }
 
+    public ScannedDataModel(int idFile, int posId, String barCode, String name, Float quantity,
+                            String articul, Double price, Double ostatok, Double oldPrice, Double basePrice) {
+        mIdFile = idFile;
+        mPosId = posId;
+        mBarCode = barCode;
+        mName = name;
+        mQuantity = quantity;
+        mArticul = articul;
+        mPrice = price;
+        mOstatok = ostatok;
+        mOldPrice = oldPrice;
+        mBasePrice = basePrice;
+        mSumm = Double.valueOf(Func.round((float) (quantity * price),2));
+    }
 
     public int getIdFile() {
         return mIdFile;
