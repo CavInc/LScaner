@@ -11,6 +11,7 @@ public class StoreProductModel implements Parcelable {
     private Double mOstatok = 0.0;
     private String mCodeTV;
     private Float mQuantity = 0.0f;
+    private Double mBasePrice = 0.0;
 
     public StoreProductModel(String barcode, String name) {
         mBarcode = barcode;

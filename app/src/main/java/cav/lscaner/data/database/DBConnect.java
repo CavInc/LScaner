@@ -137,6 +137,7 @@ public class DBConnect {
         values.put("pos_id", position);
         values.put("price",productModel.getPrice());
         values.put("quantity",productModel.getQuantity());
+        values.put("baseprice",productModel.getPrice());
 
         database.insertWithOnConflict(DBHelper.SCAN_TABLE_SPEC,null,values,SQLiteDatabase.CONFLICT_REPLACE);
         close();
