@@ -148,4 +148,17 @@ public class FieldOutFile {
         return ret;
     }
 
+    public int getCountField(){
+        HashMap <Integer,Integer> m = new HashMap<>();
+        if (mBarcode!=-1) m.put(mBarcode,0);
+        if (mArticul!=-1) m.put(mArticul,1);
+        if (mQuantity!=-1) m.put(mQuantity,2);
+        if (mPrice!=-1) m.put(mPrice,3);
+        if (mBasePrice!=-1) m.put(mBasePrice,4);
+        if (mEGAIS!=-1) m.put(mEGAIS,5);
+        if (mCodeTV!=-1) m.put(mCodeTV,6);
+
+        return m.size();
+    }
+
 }

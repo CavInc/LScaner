@@ -57,8 +57,23 @@ public class WorkInFile {
         if (manager.isExternalStorageWritable()){
             String delim = manager.getPreferensManager().getDelimiterStoreFile();
             String path = manager.getStorageAppPath();
-            FieldOutFile fieldFile = manager.getPreferensManager().getFieldOutFile();
-            FieldOutFile fieldEgaisFile = manager.getPreferensManager().getFieldOutEgaisFile();
+
+            FieldOutFile fieldFile = null;
+
+            switch (filetype) {
+                case ConstantManager.FILE_TYPE_PRODUCT:
+                    fieldFile = manager.getPreferensManager().getFieldOutFile();
+                    break;
+                case ConstantManager.FILE_TYPE_EGAIS:
+                    fieldFile = manager.getPreferensManager().getFieldOutEgaisFile();
+                    break;
+                case ConstantManager.FILE_TYPE_CHANGE_PRICE:
+                    fieldFile = manager.getPreferensManager().getFieldOutChangePriceFile();
+                    break;
+                case ConstantManager.FILE_TYPE_PRIHOD:
+                    fieldFile = manager.getPreferensManager().getFieldOutPrixodFile();
+                    break;
+            }
 
             //Log.d("WC",path);
             File outfile = new File(path,fname);
@@ -67,13 +82,7 @@ public class WorkInFile {
             try {
                 BufferedWriter bw = new BufferedWriter(new FileWriter(outfile));
                 for (ScannedDataModel l : models){
-                    String cls = null;
-                    if (filetype == ConstantManager.FILE_TYPE_EGAIS) {
-                        cls = getFieldStr(l,fieldEgaisFile,delim);
-                        //cls = l.getBarCode()+delim+l.getQuantity();
-                    } else {
-                        cls = getFieldStr(l,fieldFile,delim);
-                    }
+                    String cls = getFieldStr(l,fieldFile,delim);
                     cls = new String(cls.getBytes("UTF-8"),codeStr);
                     bw.write(cls+"\r\n");
                 }
@@ -87,7 +96,7 @@ public class WorkInFile {
     }
 
     private String getFieldStr(ScannedDataModel model, FieldOutFile fieldFile,String delim) {
-        String[] br = new String[3];
+        String[] br = new String[fieldFile.getCountField()];
         if (fieldFile.getBarcode() != -1){
             br[fieldFile.getBarcode()-1] = model.getBarCode();
         }
@@ -99,6 +108,15 @@ public class WorkInFile {
         }
         if (fieldFile.getPrice() != -1) {
             br[fieldFile.getPrice()-1] = String.valueOf(model.getPrice());
+        }
+        if (fieldFile.getBasePrice() != -1) {
+            br[fieldFile.getBasePrice()-1] = String.valueOf(model.getBasePrice());
+        }
+        if (fieldFile.getCodeTV() != -1 ) {
+            br[fieldFile.getCodeTV()-1] = String.valueOf(model.getCodeArticul());
+        }
+        if (fieldFile.getEGAIS() != -1) {
+            br[fieldFile.getEGAIS()-1] = model.getEgais();
         }
 
         int iMax = br.length - 1;
