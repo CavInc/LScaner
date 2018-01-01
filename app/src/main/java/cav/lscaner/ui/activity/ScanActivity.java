@@ -633,6 +633,7 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
         public void receiveDetections(Detector.Detections detections) {
             final SparseArray barcodes = detections.getDetectedItems();
             if (barcodes.size() != 0) {
+                Log.d("SA",((Barcode) barcodes.valueAt(0)).displayValue);
 
             }
         }
