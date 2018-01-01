@@ -6,6 +6,8 @@ import android.view.SurfaceView;
 
 import com.google.android.gms.vision.CameraSource;
 
+import java.io.IOException;
+
 public class CustomSurfaceView extends SurfaceView implements SurfaceHolder.Callback{
 
     private CameraSource mCameraSource;
@@ -21,7 +23,11 @@ public class CustomSurfaceView extends SurfaceView implements SurfaceHolder.Call
 
     @Override
     public void surfaceCreated(SurfaceHolder surfaceHolder) {
-
+        try {
+            mCameraSource.start(surfaceHolder);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
