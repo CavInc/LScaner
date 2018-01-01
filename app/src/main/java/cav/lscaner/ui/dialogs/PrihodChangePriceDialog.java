@@ -116,6 +116,7 @@ public class PrihodChangePriceDialog extends DialogFragment implements View.OnCl
             mSumma.addTextChangedListener(mSummWatcher);
 
             mSumma.setOnEditorActionListener(mEditorActionListener);
+            mQuantity.requestFocus();
         }
 
         TextView mName = (TextView) v.findViewById(R.id.qq_title);

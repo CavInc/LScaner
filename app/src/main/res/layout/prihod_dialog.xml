@@ -44,7 +44,7 @@
         android:imeOptions="actionNext"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:nextFocusDown="@+id/qq_bt_ok">
+        android:nextFocusDown="@+id/qq_price">
         <requestFocus/>
     </EditText>
 
@@ -57,7 +57,7 @@
         android:imeOptions="actionNext"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:nextFocusDown="@+id/qq_bt_ok">
+        android:nextFocusDown="@+id/qq_summ">
     </EditText>
 
     <EditText
