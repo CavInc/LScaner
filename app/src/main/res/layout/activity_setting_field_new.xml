@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/expandableListView"
         android:groupIndicator="@null"
-        android:childDivider="#0f0"
+        android:childDivider="#d9d9d9"
         android:divider="@android:color/white"
         android:dividerHeight="4dp"/>
 </LinearLayout>
