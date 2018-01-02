@@ -105,10 +105,14 @@ public class PrihodChangePriceDialog extends DialogFragment implements View.OnCl
             mSumma = (EditText) v.findViewById(R.id.qq_summ);
             ((TextView) v.findViewById(R.id.qq_articul)).setText(mArticul);
 
+
+
             if (mEditFlg) {
                 mPrice.setHint(String.valueOf(mGetPrice));
                 mQuantity.setHint(String.valueOf(mGetQuantity));
                 mSumma.setHint(String.valueOf(mGetQuantity*mGetPrice));
+            } else {
+                mPrice.setText(String.valueOf(mGetPrice));
             }
 
             mQuantity.addTextChangedListener(mQuantityWatcher);

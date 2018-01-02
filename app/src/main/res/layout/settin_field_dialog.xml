@@ -61,15 +61,18 @@
             android:text="@string/button_cancel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@drawable/button_gray_backgrount_v3"
+            android:layout_marginLeft="4dp"
+            android:layout_marginRight="4dp"
             android:layout_weight="1"/>
         <Button
             android:id="@+id/sfd_bt_ok"
             android:text="@string/button_ok"
-            android:layout_marginLeft="4dp"
-            android:layout_marginRight="4dp"
             android:textColor="@color/app_orange_normal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="4dp"
+            android:layout_marginRight="4dp"
             android:background="@drawable/button_orange_border"
             android:layout_weight="1"/>
 
