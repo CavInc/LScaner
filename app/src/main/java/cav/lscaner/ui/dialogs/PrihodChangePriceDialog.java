@@ -214,7 +214,7 @@ public class PrihodChangePriceDialog extends DialogFragment implements View.OnCl
             if (editable.length() !=0 ) {
                 lock = true;
                 Float qq = Float.valueOf(editable.toString());
-                Float price = 0.0f;
+                Float price = Float.valueOf(mPrice.getHint().toString());
                 if (mPrice.getText().length()!= 0) {
                     price = Float.valueOf(mPrice.getText().toString());
                 }
@@ -242,7 +242,7 @@ public class PrihodChangePriceDialog extends DialogFragment implements View.OnCl
             if (editable.length() != 0) {
                 lock = true;
                 Float price = Float.valueOf(editable.toString());
-                Float qq = 1.0f;
+                Float qq = Float.valueOf(mQuantity.getHint().toString());
                 if (mQuantity.getText().length() != 0) {
                     qq = Float.valueOf(mQuantity.getText().toString());
                 }
@@ -269,8 +269,7 @@ public class PrihodChangePriceDialog extends DialogFragment implements View.OnCl
             if (lock) return;
             if (editable.length() != 0){
                 lock = true;
-                Float qq = 1.0f;
-                Float price = 0.0f;
+                Float qq = Float.valueOf(mQuantity.getHint().toString());
                 if (mQuantity.length() != 0){
                     qq = Float.valueOf(mQuantity.getText().toString());
                 }

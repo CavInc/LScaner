@@ -1,8 +1,14 @@
 package cav.lscaner.data.models;
 
+import android.content.ContentValues;
+
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
+
+import cav.lscaner.utils.Func;
 
 public class FieldOutFile {
     private int mBarcode;
@@ -159,6 +165,25 @@ public class FieldOutFile {
         if (mCodeTV!=-1) m.put(mCodeTV,6);
 
         return m.size();
+    }
+
+    // включает как максимальные те позиции которых нет в списке
+    public void setPositionItem (int[] value){
+        int[] old = getArrayIndex();
+        ArrayList<Integer> vl = Func.intArrayToArrayList(value);
+        ArrayList<Integer> oldvl = Func.intArrayToArrayList(old);
+        //Collections.addAll(vl, value);
+        //ArrayList<Integer> vll = Arrays.<Integer>asList(value);
+
+        if (old.length < value.length) {
+            // новые длинее старого
+
+
+        } else if (old.length > value.length) {
+            // старый длинее нового
+        } else {
+            // равно но может отличатся внутри
+        }
     }
 
 }
