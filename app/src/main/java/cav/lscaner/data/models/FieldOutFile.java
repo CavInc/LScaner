@@ -227,6 +227,7 @@ public class FieldOutFile {
         if (mEGAIS!=-1) m.put(mEGAIS,5);
         if (mCodeTV!=-1) m.put(mCodeTV,6);
 
+        // нужно что бы выбиралось по порядку
         Integer oldindex = 1;
         for (Integer key:m.keySet()){
             if (key > oldindex+1){
