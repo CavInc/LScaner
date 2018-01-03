@@ -15,6 +15,7 @@ import java.util.List;
 
 import cav.lscaner.R;
 import cav.lscaner.data.managers.DataManager;
+import cav.lscaner.data.models.FieldOutFile;
 
 public class SettingFieldDialog extends DialogFragment implements View.OnClickListener{
 
@@ -148,7 +149,10 @@ public class SettingFieldDialog extends DialogFragment implements View.OnClickLi
                 mDataManager.getPreferensManager().setFieldFileActive(x);
                 break;
             case 1:
-                mDataManager.getPreferensManager().setFieldOutActive(x);
+                FieldOutFile l = mDataManager.getPreferensManager().getFieldOutFile();
+                l.setPositionItem(x);
+                mDataManager.getPreferensManager().setFieldOutFile(l);
+                //mDataManager.getPreferensManager().setFieldOutActive(x);
                 break;
             case 2:
                 mDataManager.getPreferensManager().setFieldEGAISActive(x);

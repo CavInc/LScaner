@@ -167,23 +167,60 @@ public class FieldOutFile {
         return m.size();
     }
 
+    private void setValueInIndex(int index,int value){
+        switch (index){
+            case 0:
+                mBarcode = value;
+                break;
+            case 1:
+                mArticul = value;
+                break;
+            case 2:
+                mQuantity = value;
+                break;
+            case 3:
+                mPrice = value;
+                break;
+            case 4:
+                mBasePrice = value;
+                break;
+            case 5:
+                mEGAIS = value;
+                break;
+            case 6:
+                mCodeTV = value;
+                break;
+        }
+    }
+
     // включает как максимальные те позиции которых нет в списке
     public void setPositionItem (int[] value){
         int[] old = getArrayIndex();
+        int ic = old.length;
         ArrayList<Integer> vl = Func.intArrayToArrayList(value);
-        ArrayList<Integer> oldvl = Func.intArrayToArrayList(old);
+
         //Collections.addAll(vl, value);
         //ArrayList<Integer> vll = Arrays.<Integer>asList(value);
 
-        if (old.length < value.length) {
-            // новые длинее старого
-
-
-        } else if (old.length > value.length) {
-            // старый длинее нового
-        } else {
-            // равно но может отличатся внутри
+        // добавляем в конец то чего нет
+        for (int i=0;i<value.length;i++){
+            if (this.get(value[i]) ==-1){
+                ic += 1;
+                setValueInIndex(value[i],ic);
+            }
         }
+        // убираем лишнее
+        ArrayList<Integer> oldvl = Func.intArrayToArrayList(getArrayIndex());
+        for (Integer x:oldvl){
+            if (!vl.contains(x)) {
+                setValueInIndex(x,-1);
+            }
+        }
+
+        // нормализация индексов.
+
+
+
     }
 
 }
