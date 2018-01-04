@@ -38,7 +38,7 @@ public class PrihodChangePriceDialog extends DialogFragment implements View.OnCl
     private Double mGetOstatok;
     private Double mGetPrice;
     private Float mGetQuantity;
-    private Float mOldQuantity;
+    private Float mOldQuantity = 0.0f;
 
 
     private EditText mPrice; // поле ввода цены
@@ -113,6 +113,8 @@ public class PrihodChangePriceDialog extends DialogFragment implements View.OnCl
                 mSumma.setHint(String.valueOf(mGetQuantity*mGetPrice));
             } else {
                 mPrice.setText(String.valueOf(mGetPrice));
+                mQuantity.setHint(String.valueOf(mGetQuantity));
+                mSumma.setHint(String.valueOf(mGetQuantity*mGetPrice));
                 if (mGetQuantity!=0) mOldQuantity = mGetQuantity;
             }
 
@@ -171,6 +173,9 @@ public class PrihodChangePriceDialog extends DialogFragment implements View.OnCl
                     qq = Float.valueOf(mQuantity.getText().toString());
                 } else {
                     qq = Float.valueOf(mQuantity.getHint().toString());
+                }
+                if (mOldQuantity != 0 && !mEditFlg){
+                    qq = qq + mOldQuantity;
                 }
                 StoreProductModel productModel = new StoreProductModel(mBarcode, mGetName, mArticul,price,qq,0.0);
                 mListener.changeQuantity(productModel);
