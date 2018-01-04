@@ -35,42 +35,52 @@
             android:layout_height="wrap_content"/>
     </LinearLayout>
 
-    <EditText
-        android:id="@+id/qq_quantity"
-        android:hint="1"
-        android:focusable="true"
-        android:focusableInTouchMode="true"
-        android:inputType="numberDecimal"
-        android:imeOptions="actionNext"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:nextFocusDown="@+id/qq_price">
-        <requestFocus/>
-    </EditText>
+        <EditText
+            android:id="@+id/qq_quantity"
+            android:hint="1"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:inputType="numberDecimal"
+            android:imeOptions="actionNext"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:nextFocusDown="@+id/qq_price">
+            <requestFocus/>
+        </EditText>
 
-    <EditText
-        android:id="@+id/qq_price"
-        android:hint="Цена"
-        android:focusable="true"
-        android:focusableInTouchMode="true"
-        android:inputType="numberDecimal"
-        android:imeOptions="actionNext"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:nextFocusDown="@+id/qq_summ">
-    </EditText>
+        <TextView
+            android:text="Цена"
+            android:textColor="@color/app_green"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+        <EditText
+            android:id="@+id/qq_price"
+            android:hint="0.0"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:inputType="numberDecimal"
+            android:imeOptions="actionNext"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:nextFocusDown="@+id/qq_summ">
+        </EditText>
 
-    <EditText
-        android:id="@+id/qq_summ"
-        android:hint="Сумма"
-        android:focusable="true"
-        android:focusableInTouchMode="true"
-        android:inputType="numberDecimal"
-        android:imeOptions="actionDone"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:nextFocusDown="@+id/qq_bt_ok">
-    </EditText>
+        <TextView
+            android:text="Сумма"
+            android:textColor="@color/app_green"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+        <EditText
+            android:id="@+id/qq_summ"
+            android:hint="0.0"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:inputType="numberDecimal"
+            android:imeOptions="actionDone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:nextFocusDown="@+id/qq_bt_ok">
+        </EditText>
 
     <LinearLayout
         android:orientation="horizontal"

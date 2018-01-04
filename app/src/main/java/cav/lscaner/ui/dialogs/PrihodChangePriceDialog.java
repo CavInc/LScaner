@@ -214,7 +214,11 @@ public class PrihodChangePriceDialog extends DialogFragment implements View.OnCl
             if (editable.length() !=0 ) {
                 lock = true;
                 Float qq = Float.valueOf(editable.toString());
-                Float price = Float.valueOf(mPrice.getHint().toString());
+                Float price = 0.0f;
+                if (mPrice.getHint() !=null ) {
+                    price = Float.valueOf(mPrice.getHint().toString());
+                }
+
                 if (mPrice.getText().length()!= 0) {
                     price = Float.valueOf(mPrice.getText().toString());
                 }
