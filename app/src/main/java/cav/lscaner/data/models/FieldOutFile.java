@@ -1,12 +1,14 @@
 package cav.lscaner.data.models;
 
 import android.content.ContentValues;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.TreeMap;
 
 import cav.lscaner.utils.Func;
 
@@ -209,16 +211,27 @@ public class FieldOutFile {
                 setValueInIndex(value[i],ic);
             }
         }
+        ArrayList <Integer> rem = new ArrayList<>();
         // убираем лишнее
         ArrayList<Integer> oldvl = Func.intArrayToArrayList(getArrayIndex());
         for (Integer x:oldvl){
             if (!vl.contains(x)) {
                 setValueInIndex(x,-1);
+                rem.add(x);
             }
         }
+        for (Integer x:rem){
+            oldvl.remove(x);
+        }
+        for (int i= 0;i<oldvl.size();i++){
+            setValueInIndex(oldvl.get(i),i+1);
+        }
 
+
+
+        /*
         // нормализация индексов.
-        HashMap <Integer,Integer> m = new HashMap<>();
+        TreeMap <Integer,Integer> m = new TreeMap<>();
         if (mBarcode!=-1) m.put(mBarcode,0);
         if (mArticul!=-1) m.put(mArticul,1);
         if (mQuantity!=-1) m.put(mQuantity,2);
@@ -230,11 +243,13 @@ public class FieldOutFile {
         // нужно что бы выбиралось по порядку
         Integer oldindex = 1;
         for (Integer key:m.keySet()){
+            Log.d("FOF","KEY :"+key+" VAL:"+m.get(key));
             if (key > oldindex+1){
                 oldindex +=1;
                 setValueInIndex(m.get(key),oldindex);
             }
         }
+        */
     }
 
 }
