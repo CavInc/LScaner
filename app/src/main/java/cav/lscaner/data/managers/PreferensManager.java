@@ -36,6 +36,10 @@ public class PreferensManager {
     private static final String FIELD_OUT_EGAIS_ARTICUL = "FIELD_OUT_EGAIS_ARTICUL";
     private static final String FIELD_OUT_EGAIS_QUANTITY = "FIELD_OUT_EGAIS_QUANTITY";
     private static final String FIELD_OUT_EGAIS_EGAIS = "FIELD_OUT_EGAIS_EGAIS";
+    private static final String FIELD_OUT_EGAIS_PRICE = "FIELD_OUT_EGAIS_PRICE";
+    private static final String FIELD_OUT_EGAIS_BASEPRICE = "FIELD_OUT_EGAIS_BASEPRICE";
+    private static final String FIELD_OUT_EGAIS_CODETV = "FIELD_OUT_EGAIS_CODETV";
+
 
     private static final String FIELD_OUT_CP_BARCODE = "FIELD_OUT_CP_BARCODE";
     private static final String FIELD_OUT_CP_QUANTITY = "FIELD_OUT_CP_QUANTITY";
@@ -266,11 +270,11 @@ public class PreferensManager {
         FieldOutFile md = new FieldOutFile(
                 mSharedPreferences.getInt(FIELD_OUT_EGAIS_CODE,1),
                 mSharedPreferences.getInt(FIELD_OUT_EGAIS_QUANTITY,3),
-                -1,
+                mSharedPreferences.getInt(FIELD_OUT_EGAIS_PRICE,-1),
                 mSharedPreferences.getInt(FIELD_OUT_EGAIS_ARTICUL,2),
-                -1,
+                mSharedPreferences.getInt(FIELD_OUT_EGAIS_BASEPRICE,-1),
                 mSharedPreferences.getInt(FIELD_OUT_EGAIS_EGAIS,4),
-                -1
+                mSharedPreferences.getInt(FIELD_OUT_EGAIS_CODETV,-1)
         );
         return md;
     }
@@ -281,6 +285,9 @@ public class PreferensManager {
         editor.putInt(FIELD_OUT_EGAIS_ARTICUL,field.getArticul());
         editor.putInt(FIELD_OUT_EGAIS_QUANTITY,field.getQuantity());
         editor.putInt(FIELD_OUT_EGAIS_EGAIS,field.getEGAIS());
+        editor.putInt(FIELD_OUT_EGAIS_PRICE,field.getPrice());
+        editor.putInt(FIELD_OUT_EGAIS_BASEPRICE,field.getBasePrice());
+        editor.putInt(FIELD_OUT_EGAIS_CODETV,field.getCodeTV());
         editor.apply();
     }
 

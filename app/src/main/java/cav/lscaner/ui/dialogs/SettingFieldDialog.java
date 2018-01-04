@@ -143,25 +143,35 @@ public class SettingFieldDialog extends DialogFragment implements View.OnClickLi
 
     private void storeData(){
         int [] x = getSelect();
+        FieldOutFile l;
 
         switch (mode){
             case 0:
                 mDataManager.getPreferensManager().setFieldFileActive(x);
                 break;
             case 1:
-                FieldOutFile l = mDataManager.getPreferensManager().getFieldOutFile();
+                l = mDataManager.getPreferensManager().getFieldOutFile();
                 l.setPositionItem(x);
                 mDataManager.getPreferensManager().setFieldOutFile(l);
                 //mDataManager.getPreferensManager().setFieldOutActive(x);
                 break;
             case 2:
-                mDataManager.getPreferensManager().setFieldEGAISActive(x);
+                l = mDataManager.getPreferensManager().getFieldOutEgaisFile();
+                l.setPositionItem(x);
+                mDataManager.getPreferensManager().setFieldOutEgaisFile(l);
+                //mDataManager.getPreferensManager().setFieldEGAISActive(x);
                 break;
             case 3:
-                mDataManager.getPreferensManager().setFieldChangePriceActive(x);
+                l = mDataManager.getPreferensManager().getFieldOutChangePriceFile();
+                l.setPositionItem(x);
+                mDataManager.getPreferensManager().setFieldOutChangePriceFile(l);
+                //mDataManager.getPreferensManager().setFieldChangePriceActive(x);
                 break;
             case 4:
-                mDataManager.getPreferensManager().setFieldPrihoxPriceActive(x);
+                l = mDataManager.getPreferensManager().getFieldOutPrixodFile();
+                l.setPositionItem(x);
+                mDataManager.getPreferensManager().setFieldOutPrixodFile(l);
+                //mDataManager.getPreferensManager().setFieldPrihoxPriceActive(x);
                 break;
         }
     }
