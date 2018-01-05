@@ -55,6 +55,7 @@ public class CustomExpandListAdapter  extends BaseExpandableListAdapter {
 
     public interface GroupCallBackListener {
         public void ClickSettingButton(int groupPosition);
+        public void changeDataEditText();
     }
 
     public CustomExpandListAdapter(Context context, List<? extends Map> groupData, int groupLayout,
@@ -224,8 +225,12 @@ public class CustomExpandListAdapter  extends BaseExpandableListAdapter {
                     if (lockEdit ) {
                         if (editable.length() !=0) {
                             ((HashMap) mChildData.get(groupPosition).get(childPosition)).put("itemValue", editable.toString());
+                            // для того что бы сразу сохранить измененное значение (а то при добавлении удалении полей сбрасывается)
+                            if (mGroupCallBackListener != null) mGroupCallBackListener.changeDataEditText();
                         } else {
                             ((HashMap) mChildData.get(groupPosition).get(childPosition)).put("itemValue", "-1");
+                            // для того что бы сразу сохранить измененное значение (а то при добавлении удалении полей сбрасывается)
+                            if (mGroupCallBackListener != null) mGroupCallBackListener.changeDataEditText();
                         }
                     }
                 }
