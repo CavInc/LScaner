@@ -1,8 +1,16 @@
 package cav.lscaner.data.models;
 
+import android.content.ContentValues;
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
+import java.util.TreeMap;
+
+import cav.lscaner.utils.Func;
 
 public class FieldOutFile {
     private int mBarcode;
@@ -159,6 +167,89 @@ public class FieldOutFile {
         if (mCodeTV!=-1) m.put(mCodeTV,6);
 
         return m.size();
+    }
+
+    private void setValueInIndex(int index,int value){
+        switch (index){
+            case 0:
+                mBarcode = value;
+                break;
+            case 1:
+                mArticul = value;
+                break;
+            case 2:
+                mQuantity = value;
+                break;
+            case 3:
+                mPrice = value;
+                break;
+            case 4:
+                mBasePrice = value;
+                break;
+            case 5:
+                mEGAIS = value;
+                break;
+            case 6:
+                mCodeTV = value;
+                break;
+        }
+    }
+
+    // включает как максимальные те позиции которых нет в списке
+    public void setPositionItem (int[] value){
+        int[] old = getArrayIndex();
+        int ic = old.length;
+        ArrayList<Integer> vl = Func.intArrayToArrayList(value);
+
+        //Collections.addAll(vl, value);
+        //ArrayList<Integer> vll = Arrays.<Integer>asList(value);
+
+        // добавляем в конец то чего нет
+        for (int i=0;i<value.length;i++){
+            if (this.get(value[i]) ==-1){
+                ic += 1;
+                setValueInIndex(value[i],ic);
+            }
+        }
+        ArrayList <Integer> rem = new ArrayList<>();
+        // убираем лишнее
+        ArrayList<Integer> oldvl = Func.intArrayToArrayList(getArrayIndex());
+        for (Integer x:oldvl){
+            if (!vl.contains(x)) {
+                setValueInIndex(x,-1);
+                rem.add(x);
+            }
+        }
+        for (Integer x:rem){
+            oldvl.remove(x);
+        }
+        for (int i= 0;i<oldvl.size();i++){
+            setValueInIndex(oldvl.get(i),i+1);
+        }
+
+
+
+        /*
+        // нормализация индексов.
+        TreeMap <Integer,Integer> m = new TreeMap<>();
+        if (mBarcode!=-1) m.put(mBarcode,0);
+        if (mArticul!=-1) m.put(mArticul,1);
+        if (mQuantity!=-1) m.put(mQuantity,2);
+        if (mPrice!=-1) m.put(mPrice,3);
+        if (mBasePrice!=-1) m.put(mBasePrice,4);
+        if (mEGAIS!=-1) m.put(mEGAIS,5);
+        if (mCodeTV!=-1) m.put(mCodeTV,6);
+
+        // нужно что бы выбиралось по порядку
+        Integer oldindex = 1;
+        for (Integer key:m.keySet()){
+            Log.d("FOF","KEY :"+key+" VAL:"+m.get(key));
+            if (key > oldindex+1){
+                oldindex +=1;
+                setValueInIndex(m.get(key),oldindex);
+            }
+        }
+        */
     }
 
 }

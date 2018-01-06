@@ -15,6 +15,7 @@ import java.util.List;
 
 import cav.lscaner.R;
 import cav.lscaner.data.managers.DataManager;
+import cav.lscaner.data.models.FieldOutFile;
 
 public class SettingFieldDialog extends DialogFragment implements View.OnClickListener{
 
@@ -101,7 +102,7 @@ public class SettingFieldDialog extends DialogFragment implements View.OnClickLi
     private void setCheckItems(int mode, int[] activeField) {
         Arrays.sort(activeField);
         for (int i = 0;i<activeField.length;i++){
-            if (i<2) {
+            if (activeField[i] < 2) {
                 mCheckBoxes[activeField[i]].setChecked(true);
             }else if(mode == 0) {
                 mCheckBoxes[activeField[i]].setChecked(true);
@@ -142,22 +143,35 @@ public class SettingFieldDialog extends DialogFragment implements View.OnClickLi
 
     private void storeData(){
         int [] x = getSelect();
+        FieldOutFile l;
 
         switch (mode){
             case 0:
                 mDataManager.getPreferensManager().setFieldFileActive(x);
                 break;
             case 1:
-                mDataManager.getPreferensManager().setFieldOutActive(x);
+                l = mDataManager.getPreferensManager().getFieldOutFile();
+                l.setPositionItem(x);
+                mDataManager.getPreferensManager().setFieldOutFile(l);
+                //mDataManager.getPreferensManager().setFieldOutActive(x);
                 break;
             case 2:
-                mDataManager.getPreferensManager().setFieldEGAISActive(x);
+                l = mDataManager.getPreferensManager().getFieldOutEgaisFile();
+                l.setPositionItem(x);
+                mDataManager.getPreferensManager().setFieldOutEgaisFile(l);
+                //mDataManager.getPreferensManager().setFieldEGAISActive(x);
                 break;
             case 3:
-                mDataManager.getPreferensManager().setFieldChangePriceActive(x);
+                l = mDataManager.getPreferensManager().getFieldOutChangePriceFile();
+                l.setPositionItem(x);
+                mDataManager.getPreferensManager().setFieldOutChangePriceFile(l);
+                //mDataManager.getPreferensManager().setFieldChangePriceActive(x);
                 break;
             case 4:
-                mDataManager.getPreferensManager().setFieldPrihoxPriceActive(x);
+                l = mDataManager.getPreferensManager().getFieldOutPrixodFile();
+                l.setPositionItem(x);
+                mDataManager.getPreferensManager().setFieldOutPrixodFile(l);
+                //mDataManager.getPreferensManager().setFieldPrihoxPriceActive(x);
                 break;
         }
     }

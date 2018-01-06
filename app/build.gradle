@@ -8,7 +8,7 @@ android {
         applicationId "cav.lscaner.v3"
         minSdkVersion 14
         targetSdkVersion 25
-        versionCode 26
+        versionCode 27
         versionName "3.0"
         project.ext.set("archivesBaseName", "LScanerV-" + defaultConfig.versionName);
         resConfigs "en", "ru"

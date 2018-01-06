@@ -46,6 +46,10 @@ public class ActivateDialog extends DialogFragment implements View.OnClickListen
         ((Button) v.findViewById(R.id.activate_dlg_ok)).setOnClickListener(this);
         ((Button) v.findViewById(R.id.activate_dlg_cancel)).setOnClickListener(this);
 
+        if (!mDataManager.getPreferensManager().getDemo()) {
+            mAcivateCode.setText(mDataManager.getPreferensManager().getRegistrationNumber());
+        }
+
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("Активация")

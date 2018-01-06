@@ -145,6 +145,10 @@ public class FileFieldModel implements Parcelable {
         return mCodeTV;
     }
 
+    public void setCodeTV(int codeTV) {
+        mCodeTV = codeTV;
+    }
+
     // возвращает код
     // "Штрих-код","Код","Наименование",Остаток","Цена","Цена закупочная","Код ЕГАИС","Артикул"
     public int get(int i){

@@ -188,6 +188,23 @@ public class Func {
     }
     */
 
+    public static Integer[] intArrayToIntegerArray(int[] value){
+        Integer[] ret = new Integer[value.length];
+        for (int i=0;i<value.length;i++){
+            ret[i]=value[i];
+        }
+        return ret;
+    }
+
+    public static ArrayList<Integer> intArrayToArrayList(int[] value){
+        ArrayList<Integer> ret = new ArrayList<>();
+        for (int i = 0 ;i<value.length;i++){
+            ret.add(value[i]);
+        }
+        return ret;
+    }
+
+
 
 
 }

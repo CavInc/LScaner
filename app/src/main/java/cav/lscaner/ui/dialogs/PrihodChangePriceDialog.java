@@ -38,6 +38,7 @@ public class PrihodChangePriceDialog extends DialogFragment implements View.OnCl
     private Double mGetOstatok;
     private Double mGetPrice;
     private Float mGetQuantity;
+    private Float mOldQuantity = 0.0f;
 
 
     private EditText mPrice; // поле ввода цены
@@ -105,10 +106,16 @@ public class PrihodChangePriceDialog extends DialogFragment implements View.OnCl
             mSumma = (EditText) v.findViewById(R.id.qq_summ);
             ((TextView) v.findViewById(R.id.qq_articul)).setText(mArticul);
 
+
             if (mEditFlg) {
                 mPrice.setHint(String.valueOf(mGetPrice));
                 mQuantity.setHint(String.valueOf(mGetQuantity));
                 mSumma.setHint(String.valueOf(mGetQuantity*mGetPrice));
+            } else {
+                mPrice.setText(String.valueOf(mGetPrice));
+                mQuantity.setHint(String.valueOf(mGetQuantity));
+                mSumma.setHint(String.valueOf(mGetQuantity*mGetPrice));
+                if (mGetQuantity!=0) mOldQuantity = mGetQuantity;
             }
 
             mQuantity.addTextChangedListener(mQuantityWatcher);
@@ -116,6 +123,7 @@ public class PrihodChangePriceDialog extends DialogFragment implements View.OnCl
             mSumma.addTextChangedListener(mSummWatcher);
 
             mSumma.setOnEditorActionListener(mEditorActionListener);
+            mQuantity.requestFocus();
         }
 
         TextView mName = (TextView) v.findViewById(R.id.qq_title);
@@ -151,7 +159,7 @@ public class PrihodChangePriceDialog extends DialogFragment implements View.OnCl
 
     private void storeData() {
         if (mListener != null ) {
-            Double price = 0.0;
+            Double price = Double.parseDouble(mPrice.getHint().toString());
             if (mPrice.getText().length() !=  0){
                 price = Double.parseDouble(mPrice.getText().toString());
             }
@@ -164,7 +172,10 @@ public class PrihodChangePriceDialog extends DialogFragment implements View.OnCl
                 if (mQuantity.getText().length()!=0) {
                     qq = Float.valueOf(mQuantity.getText().toString());
                 } else {
-                    qq = 1f;
+                    qq = Float.valueOf(mQuantity.getHint().toString());
+                }
+                if (mOldQuantity != 0 && !mEditFlg){
+                    qq = qq + mOldQuantity;
                 }
                 StoreProductModel productModel = new StoreProductModel(mBarcode, mGetName, mArticul,price,qq,0.0);
                 mListener.changeQuantity(productModel);
@@ -210,6 +221,10 @@ public class PrihodChangePriceDialog extends DialogFragment implements View.OnCl
                 lock = true;
                 Float qq = Float.valueOf(editable.toString());
                 Float price = 0.0f;
+                if (mPrice.getHint() !=null ) {
+                    price = Float.valueOf(mPrice.getHint().toString());
+                }
+
                 if (mPrice.getText().length()!= 0) {
                     price = Float.valueOf(mPrice.getText().toString());
                 }
@@ -237,7 +252,7 @@ public class PrihodChangePriceDialog extends DialogFragment implements View.OnCl
             if (editable.length() != 0) {
                 lock = true;
                 Float price = Float.valueOf(editable.toString());
-                Float qq = 1.0f;
+                Float qq = Float.valueOf(mQuantity.getHint().toString());
                 if (mQuantity.getText().length() != 0) {
                     qq = Float.valueOf(mQuantity.getText().toString());
                 }
@@ -264,8 +279,7 @@ public class PrihodChangePriceDialog extends DialogFragment implements View.OnCl
             if (lock) return;
             if (editable.length() != 0){
                 lock = true;
-                Float qq = 1.0f;
-                Float price = 0.0f;
+                Float qq = Float.valueOf(mQuantity.getHint().toString());
                 if (mQuantity.length() != 0){
                     qq = Float.valueOf(mQuantity.getText().toString());
                 }

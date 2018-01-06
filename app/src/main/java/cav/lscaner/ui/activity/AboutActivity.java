@@ -63,6 +63,7 @@ public class AboutActivity extends AppCompatActivity implements View.OnClickList
     public void onClick(View view) {
         // показываем диалог активации
         ActivateDialog dialog = new ActivateDialog();
+        dialog.setDialogListener(mDialogListener);
         dialog.show(getSupportFragmentManager(),"AD");
     }
 

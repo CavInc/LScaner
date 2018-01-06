@@ -82,8 +82,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@drawable/button_gray_background"
-            android:textColor="@android:color/white"
+            android:background="@drawable/button_gray_backgrount_v3"
             android:textStyle="bold"
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"/>
@@ -95,8 +94,8 @@
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"
             android:textStyle="bold"
-            android:textColor="@android:color/white"
-            android:background="@drawable/button_orange_background"
+            android:textColor="@color/app_orange_normal"
+            android:background="@drawable/button_orange_border"
             android:layout_weight="1"/>
     </LinearLayout>
 </LinearLayout>

@@ -385,7 +385,7 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
             posID = mDataModels.get(l).getPosId();
            // Func.addLog(debugOutFile,"No Scale : "+mArticul+" :: "+mDataModels.get(l).getName()+" :: "+l); // debug
             if (fileType == ConstantManager.FILE_TYPE_CHANGE_PRICE || fileType == ConstantManager.FILE_TYPE_PRIHOD) {
-                editRecord = true;
+               // editRecord = true;
                 product.setPrice(mDataModels.get(l).getPrice());
                 product.setQuantity(qq);
                 PrihodChangePriceDialog dialog = PrihodChangePriceDialog.newInstance(product,fileType,editRecord);

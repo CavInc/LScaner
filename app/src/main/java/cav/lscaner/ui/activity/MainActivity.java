@@ -148,7 +148,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
             startActivity(intent);
         }
         if (item.getItemId() == R.id.menu_filefield_setting){
-            //Intent intent = new Intent(this,SettingFieldFileActivity.class);
             Intent intent = new Intent(this,SettingFieldNewActivity.class);
             startActivity(intent);
         }

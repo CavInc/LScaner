@@ -233,6 +233,11 @@ public class SettingFieldNewActivity extends AppCompatActivity {
             dialog.setSettingFieldDialogListener(mFieldDialogListener);
             dialog.show(getFragmentManager(),"sfd");
         }
+
+        @Override
+        public void changeDataEditText() {
+            saveStoreProduct(0);
+        }
     };
 
     // получили данные с настройки полей
@@ -317,7 +322,7 @@ public class SettingFieldNewActivity extends AppCompatActivity {
             }
             // артикул - codtv
             if (lx.get("itemText").equals(storeProduct[7])) {
-
+                field.setCodeTV(Integer.parseInt(lx.get("itemValue").toString()));
             }
         }
         mDataManager.getPreferensManager().setFieldFileModel(field);
