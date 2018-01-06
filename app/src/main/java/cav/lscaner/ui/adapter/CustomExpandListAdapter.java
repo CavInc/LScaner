@@ -159,12 +159,13 @@ public class CustomExpandListAdapter  extends BaseExpandableListAdapter {
             }
         });
 
+
         if (isExpanded) {
            // groupHolder.img.setImageResource(R.drawable.group_down);
-            ((ImageView) v.findViewById(R.id.elg_indicator)).setImageResource(R.drawable.navigation_orange_up);
+            ((ImageView) v.findViewById(R.id.elg_indicator)).setImageResource(android.R.drawable.arrow_up_float);
         } else {
            // groupHolder.img.setImageResource(R.drawable.group_up);
-            ((ImageView) v.findViewById(R.id.elg_indicator)).setImageResource(R.drawable.navigation_orange_down);
+            ((ImageView) v.findViewById(R.id.elg_indicator)).setImageResource(android.R.drawable.arrow_down_float);
         }
 
         bindView(v, mGroupData.get(groupPosition), mGroupFrom, mGroupTo);

@@ -102,7 +102,7 @@ public class SettingFieldDialog extends DialogFragment implements View.OnClickLi
     private void setCheckItems(int mode, int[] activeField) {
         Arrays.sort(activeField);
         for (int i = 0;i<activeField.length;i++){
-            if (i<2) {
+            if (activeField[i] < 2) {
                 mCheckBoxes[activeField[i]].setChecked(true);
             }else if(mode == 0) {
                 mCheckBoxes[activeField[i]].setChecked(true);
