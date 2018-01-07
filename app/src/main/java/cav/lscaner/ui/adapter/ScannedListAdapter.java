@@ -14,6 +14,7 @@ import cav.lscaner.R;
 import cav.lscaner.data.managers.DataManager;
 import cav.lscaner.data.models.FileFieldModel;
 import cav.lscaner.data.models.ScannedDataModel;
+import cav.lscaner.utils.ConstantManager;
 import cav.lscaner.utils.Func;
 
 public class ScannedListAdapter extends ArrayAdapter<ScannedDataModel>{
@@ -65,12 +66,17 @@ public class ScannedListAdapter extends ArrayAdapter<ScannedDataModel>{
         holder.mBarcode.setText(rec.getBarCode());
         //holder.mPosId.setText(String.valueOf(rec.getPosId())); // крзиция
 
+
         if (holder.mPosId != null) {
             if (ostatokFlg == -1) {
                 holder.mPosId.setVisibility(View.INVISIBLE);
             } else {
                 holder.mPosId.setVisibility(View.VISIBLE);
                 holder.mPosId.setText("Остаток: " + Func.viewOstatok(rec.getOstatok()));
+            }
+            if (rec.getFileType() == ConstantManager.FILE_TYPE_PRIHOD) {
+                holder.mPosId.setVisibility(View.VISIBLE);
+                holder.mPosId.setText("№: "+rec.getPosId());
             }
         }
 
