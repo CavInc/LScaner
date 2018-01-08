@@ -46,6 +46,7 @@ import cav.lscaner.ui.dialogs.QueryQuantityDialog;
 import cav.lscaner.ui.dialogs.SelectItemsDialog;
 import cav.lscaner.ui.dialogs.SelectScanDialog;
 import cav.lscaner.utils.ConstantManager;
+import cav.lscaner.utils.CustomBarcodeDetector;
 import cav.lscaner.utils.Func;
 import cav.lscaner.utils.SwipeDetector;
 
@@ -256,7 +257,10 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
                 .build();
         cameraView.getHolder().addCallback(new HolderCallback());
 
-        barcodeDetector.setProcessor(new BarcodeDetectorCallback());
+        //barcodeDetector.setProcessor(new BarcodeDetectorCallback());
+        CustomBarcodeDetector detector = new CustomBarcodeDetector();
+        detector.setBarcodeDetectorCallback(mBarcodeDetectorCallback);
+        barcodeDetector.setProcessor(detector);
     }
 
     private String mBar;
@@ -599,6 +603,21 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
         }
     }
 
+    CustomBarcodeDetector.BarcodeDetectorCallback mBarcodeDetectorCallback = new CustomBarcodeDetector.BarcodeDetectorCallback() {
+        @Override
+        public void OnBarcode(final String barcode) {
+            Log.d("SA",barcode);
+            //mBarCode.setText(barcode);
+            mBarCode.post(new Runnable() {
+                @Override
+                public void run() {
+                    mBarCode.setText(barcode);
+                }
+            });
+        }
+    };
+
+
     class HolderCallback implements SurfaceHolder.Callback {
 
         @Override
@@ -622,6 +641,7 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
         }
     }
 
+    /*
     class BarcodeDetectorCallback implements Detector.Processor {
 
         @Override
@@ -643,4 +663,5 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
             }
         }
     }
+    */
 }
