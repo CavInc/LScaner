@@ -382,6 +382,12 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
         }
     };
 
+
+    // обрабатываем полученный штрихкод
+    private void workingBarcode(){
+
+    }
+
     private void showExistsQQ(StoreProductModel product, int l) {
         if (!scaleFlg) {
             Float qq = mDataModels.get(l).getQuantity();
@@ -614,6 +620,7 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
                     mBarCode.setText(barcode);
                 }
             });
+            barcodeDetector.release();
         }
     };
 
