@@ -85,6 +85,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
     private boolean demo = true;
     private SwipeDetector swipeDetector;
 
+    private boolean multiSelectFlg = false;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -155,6 +157,16 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
             Intent intent = new Intent(this,StoreProductActivity.class);
             startActivity(intent);
         }
+        // множествееный выбор
+        if (item.getItemId() == R.id.menu_multi_select) {
+            if (!multiSelectFlg) {
+                multiSelectFlg = true;
+                mListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+                Log.d(TAG, "SET ON MULTISELECT");
+            } else {
+                multiSelectFlg = false;
+            }
+        }
 
         return true;
     }
@@ -217,12 +229,16 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
             }
             return;
         }
-
-        Intent intent = new Intent(this,ScanActivity.class);
-        intent.putExtra(ConstantManager.SELECTED_FILE,mFileAdapter.getItem(position).getId());
-        intent.putExtra(ConstantManager.SELECTED_FILE_NAME,mFileAdapter.getItem(position).getName());
-        intent.putExtra(ConstantManager.SELECTED_FILE_TYPE,mFileAdapter.getItem(position).getType());
-        startActivity(intent);
+        if (!multiSelectFlg) {
+            Intent intent = new Intent(this, ScanActivity.class);
+            intent.putExtra(ConstantManager.SELECTED_FILE, mFileAdapter.getItem(position).getId());
+            intent.putExtra(ConstantManager.SELECTED_FILE_NAME, mFileAdapter.getItem(position).getName());
+            intent.putExtra(ConstantManager.SELECTED_FILE_TYPE, mFileAdapter.getItem(position).getType());
+            startActivity(intent);
+        } else {
+            //TODO а здесь выделяем или снимаем выделение
+            mFileAdapter.getItem(position).setSelected(!mFileAdapter.getItem(position).isSelected());
+        }
     }
 
     private ScannedFileModel selModel = null;
