@@ -1,0 +1,17 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape android:shape="ring"
+               android:innerRadiusRatio="3"
+               android:thickness="4dp"
+               android:useLevel="false"
+               android:padding="4dp">
+            <solid android:color="@color/app_green"/>
+        </shape>
+    </item>
+    <item>
+        <shape android:shape="oval">
+            <solid android:color="@color/app_blue"/>
+        </shape>
+    </item>
+
+</layer-list>
