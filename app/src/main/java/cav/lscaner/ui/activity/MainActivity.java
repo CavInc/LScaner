@@ -186,6 +186,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
                     .create();
             builder.show();
         }
+        // групповая отправка файлов
+        if (item.getItemId() == R.id.menu_send_select) {
+            multiSelectSend();
+        }
         return true;
     }
 
@@ -205,6 +209,35 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
             MenuInflater inflater = getMenuInflater();
             inflater.inflate(R.menu.main_menu, menu);
         }
+    }
+
+    // отправка выделенных файлов на сервер
+    private void multiSelectSend(){
+        // отправляем наружу
+        if (!mDataManager.isOnline()){
+            // показываем что нет сети
+            showNoNetwork();
+            return;
+        }
+
+        directionGD = WRITE_FILE;
+        // сохраняем файл
+        WorkInFile workInFile = new WorkInFile(mDataManager.getPreferensManager().getCodeFile());
+
+        for (int i = 0;i < mFileAdapter.getCount();i++){
+            if (mFileAdapter.getItem(i).isSelected()) {
+               // mDataManager.getDB().deleteFile(mFileAdapter.getItem(i).getId());
+                selModel = mFileAdapter.getItem(i);
+                workInFile.saveFile(selModel.getId(),selModel.getName(),mDataManager,selModel.getType());
+                Log.d(TAG,workInFile.getSavedFile());
+
+                storeFileFullName = workInFile.getSavedFile();
+                fileType =  selModel.getType();
+                pushGD();
+            }
+        }
+        multiSelectChange();
+        updateUI();
     }
 
     private void updateUI(){
@@ -329,8 +362,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
                 // вызов отправки
                 fileType =  selModel.getType();
                 pushGD();
-
-
             }
         }
     };
