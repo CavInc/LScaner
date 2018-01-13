@@ -305,7 +305,7 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
                     product = new StoreProductModel(mBar,"Новый");
                    // Func.addLog(debugOutFile,"New product : "+mBar); // debug
                 } else {
-                    if (productArray.size() ==1 ) {
+                    if (productArray.size() == 1 ) {
                         product = new StoreProductModel(mBar,productArray.get(0).getName(),productArray.get(0).getArticul(),
                                 productArray.get(0).getPrice(),productArray.get(0).getOstatok());
                        // Func.addLog(debugOutFile,"Product : "+product.getArticul()+" :: "+product.getName()); // debug
@@ -495,7 +495,8 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
             dialog.show(getFragmentManager(),"pcd");
         } else {
             PrihodChangePriceDialog dialog = PrihodChangePriceDialog.newInstance(new StoreProductModel(selModel.getBarCode(),
-                            selModel.getName(), selModel.getArticul(),selModel.getPrice(),selModel.getQuantity(),selModel.getOstatok())
+                            selModel.getName(), selModel.getArticul(),selModel.getPrice(),selModel.getQuantity(),
+                    selModel.getOstatok(),"",selModel.getBasePrice())
                     ,fileType,editRecord);
             dialog.setPrihodChangePriceListener(mChangePriceListener);
             dialog.show(getFragmentManager(),"ppd");

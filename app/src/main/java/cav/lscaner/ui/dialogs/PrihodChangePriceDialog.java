@@ -28,6 +28,7 @@ public class PrihodChangePriceDialog extends DialogFragment implements View.OnCl
     private static final String POSITION_BARCODE = "POSITION_BARCODE";
     private static final String POSITON_ARTICUL = "POSITION_ARTICUL";
     private static final String POSITION_QUANTITY = "POSITION_QUANTITY";
+    private static final String POSITION_BASEPRICE = "POSITION_BASEPRICE";
     private StoreProductModel mProductModel;
     private int mFileType;
     private boolean mEditFlg;
@@ -37,6 +38,7 @@ public class PrihodChangePriceDialog extends DialogFragment implements View.OnCl
     private String mGetName;
     private Double mGetOstatok;
     private Double mGetPrice;
+    private Double mGetBasePrice;
     private Float mGetQuantity;
     private Float mOldQuantity = 0.0f;
 
@@ -60,6 +62,7 @@ public class PrihodChangePriceDialog extends DialogFragment implements View.OnCl
         args.putString(POSITION_BARCODE,productModel.getBarcode());
         args.putString(POSITON_ARTICUL,productModel.getArticul());
         args.putFloat(POSITION_QUANTITY,productModel.getQuantity());
+        args.putDouble(POSITION_BASEPRICE,productModel.getBasePrice());
 
         PrihodChangePriceDialog dialog = new PrihodChangePriceDialog();
         dialog.setArguments(args);
@@ -80,6 +83,7 @@ public class PrihodChangePriceDialog extends DialogFragment implements View.OnCl
             mBarcode = getArguments().getString(POSITION_BARCODE);
             mArticul = getArguments().getString(POSITON_ARTICUL);
             mGetQuantity = getArguments().getFloat(POSITION_QUANTITY);
+            mGetBasePrice = getArguments().getDouble(POSITION_BASEPRICE);
         }
     }
 
@@ -108,13 +112,13 @@ public class PrihodChangePriceDialog extends DialogFragment implements View.OnCl
 
 
             if (mEditFlg) {
-                mPrice.setHint(String.valueOf(mGetPrice));
+                mPrice.setHint(String.valueOf(mGetBasePrice));
                 mQuantity.setHint(String.valueOf(mGetQuantity));
-                mSumma.setHint(String.valueOf(mGetQuantity*mGetPrice));
+                mSumma.setHint(String.valueOf(mGetQuantity*mGetBasePrice));
             } else {
-                mPrice.setText(String.valueOf(mGetPrice));
+                mPrice.setText(String.valueOf(mGetBasePrice));
                 mQuantity.setHint(String.valueOf(mGetQuantity));
-                mSumma.setHint(String.valueOf(mGetQuantity*mGetPrice));
+                mSumma.setHint(String.valueOf(mGetQuantity*mGetBasePrice));
                 if (mGetQuantity!=0) mOldQuantity = mGetQuantity;
             }
 
@@ -178,6 +182,7 @@ public class PrihodChangePriceDialog extends DialogFragment implements View.OnCl
                     qq = qq + mOldQuantity;
                 }
                 StoreProductModel productModel = new StoreProductModel(mBarcode, mGetName, mArticul,price,qq,0.0);
+                productModel.setBasePrice(price);
                 mListener.changeQuantity(productModel);
             }
 

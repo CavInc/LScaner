@@ -59,6 +59,19 @@ public class StoreProductModel implements Parcelable {
         mBasePrice = basePrice;
     }
 
+    public StoreProductModel(String barcode, String name, String articul, Double price,
+                             Float quantity, Double ostatok, String codeTV, Double basePrice) {
+        mBarcode = barcode;
+        mName = name;
+        mArticul = articul;
+        mPrice = price;
+        mQuantity = quantity;
+        mOstatok = ostatok;
+        mCodeTV = codeTV;
+        mBasePrice = basePrice;
+    }
+
+
     protected StoreProductModel(Parcel in) {
         mBarcode = in.readString();
         mName = in.readString();
@@ -81,6 +94,8 @@ public class StoreProductModel implements Parcelable {
             return new StoreProductModel[size];
         }
     };
+
+
 
     public String getBarcode() {
         return mBarcode;
