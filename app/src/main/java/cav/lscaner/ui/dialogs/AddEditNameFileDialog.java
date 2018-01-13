@@ -144,9 +144,15 @@ public class AddEditNameFileDialog extends DialogFragment implements View.OnClic
         mName.setText(nameFile);
 
         mName.setOnEditorActionListener(mNameActionListener);
+        String title;
+        if (nameFile == null || nameFile.length() == 0){
+            title = "Новый документ";
+        } else {
+            title = "Редактировать документ";
+        }
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle("Новый документ").setView(v);
+        builder.setTitle(title).setView(v);
         return builder.create();
     }
 
