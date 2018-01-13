@@ -53,6 +53,7 @@
             android:label="База данных">
         </activity>
         <activity android:name=".ui.activity.SettingFieldNewActivity"
+                  android:label="Настройка полей"
                   android:windowSoftInputMode="adjustPan|stateHidden"
                   android:screenOrientation="portrait">
         </activity>
