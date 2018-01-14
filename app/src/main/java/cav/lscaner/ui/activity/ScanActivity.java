@@ -337,7 +337,7 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
     @Override
     protected void onResume() {
         super.onResume();
-        //getPermissionCamera();
+       // getPermissionCamera();
         /*
        // Func.addLog(debugOutFile,"FORM RESUME : "); // debug
         barcodeDetector = new BarcodeDetector.Builder(this)
