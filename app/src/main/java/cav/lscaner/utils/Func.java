@@ -1,5 +1,7 @@
 package cav.lscaner.utils;
 
+import android.content.Context;
+import android.os.Vibrator;
 import android.util.Log;
 
 import com.google.api.client.util.DateTime;
@@ -202,6 +204,13 @@ public class Func {
             ret.add(value[i]);
         }
         return ret;
+    }
+
+    // вибрация
+    public static void playMessage(Context context){
+        long mills = 300L;
+        Vibrator vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
+        vibrator.vibrate(mills);
     }
 
 

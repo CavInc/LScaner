@@ -701,6 +701,7 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
                 @Override
                 public void run() {
                     mBarCode.setText(barcode);
+                    Func.playMessage(ScanActivity.this);
                     workingBarcode(mBarCode);
                 }
             });
