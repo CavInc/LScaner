@@ -46,6 +46,7 @@ import cav.lscaner.ui.dialogs.PrihodChangePriceDialog;
 import cav.lscaner.ui.dialogs.QueryQuantityDialog;
 import cav.lscaner.ui.dialogs.SelectItemsDialog;
 import cav.lscaner.ui.dialogs.SelectScanDialog;
+import cav.lscaner.utils.CameraUtils;
 import cav.lscaner.utils.ConstantManager;
 import cav.lscaner.utils.CustomBarcodeDetector;
 import cav.lscaner.utils.Func;
@@ -206,7 +207,11 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
             }
         });
 
-
+        CameraUtils cameraUtils = new CameraUtils();
+        if (!cameraUtils.isCameraExists()) {
+            MenuItem item = menu.findItem(R.id.scan_menu_photo);
+            item.setEnabled(false);
+        }
         return true;
     }
 
@@ -218,12 +223,13 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
         if (item.getItemId() == R.id.scan_menu_photo) {
             if (frameScanVisible) {
                 // гасим камеру и скрываем окно
+                closeCamera();
                 mFrameLayout.setVisibility(View.GONE);
                 item.setIcon(R.drawable.ic_local_see_white_24dp);
             } else {
                 // включаем камеру и открываем окно
-
                 mFrameLayout.setVisibility(View.VISIBLE);
+                iniCamera();
                 item.setIcon(R.drawable.ic_photo_camera_green_24dp);
             }
             frameScanVisible = !frameScanVisible;
@@ -236,10 +242,7 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (cameraSource != null) {
-            cameraSource.release();
-            barcodeDetector.release();
-        }
+        closeCamera();
     }
 
     private void updateUI(){
@@ -259,6 +262,36 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
             mListView.setSelection(0);
         }
         mBarCode.requestFocus();
+    }
+
+    private void iniCamera(){
+        barcodeDetector = null;
+        cameraSource = null;
+
+        barcodeDetector = new BarcodeDetector.Builder(this)
+                .setBarcodeFormats(Barcode.ALL_FORMATS)
+                .build();
+
+        ViewGroup.LayoutParams lp = cameraView.getLayoutParams();
+        int w = lp.width;
+        int h = lp.height;
+
+        cameraSource = new CameraSource.Builder(this, barcodeDetector)
+                .setRequestedPreviewSize(400,280)
+                .setAutoFocusEnabled(true)
+                .build();
+        cameraView.getHolder().addCallback(new HolderCallback());
+
+        CustomBarcodeDetector detector = new CustomBarcodeDetector();
+        detector.setBarcodeDetectorCallback(mBarcodeDetectorCallback);
+        barcodeDetector.setProcessor(detector);
+    }
+
+    private void closeCamera(){
+        if (cameraSource != null) {
+            cameraSource.release();
+            barcodeDetector.release();
+        }
     }
 
     @Override
