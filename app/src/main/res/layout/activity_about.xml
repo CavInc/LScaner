@@ -17,7 +17,7 @@
             android:layout_height="@dimen/height_about_logo"/>
     <TextView
         android:id="@+id/ab_mess"
-        android:text="Сканер ТДС"
+        android:text="Сканер ТСД"
         android:layout_below="@+id/ab_up_lv"
         android:layout_marginTop="16dp"
         android:gravity="center"
@@ -50,7 +50,7 @@
         android:layout_below="@id/ab_flg_activate"
         android:gravity="center"
         android:textSize="20sp"
-        android:text="Универсальная программа для ТДС под управлением ОС Андройд"
+        android:text="Универсальная программа для ТСД под управлением ОС Андройд"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
     <Button

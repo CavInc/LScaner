@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -38,6 +39,7 @@ public class ScannedFileAdapter extends ArrayAdapter<ScannedFileModel> {
             holder.mTime = (TextView) row.findViewById(R.id.sd_file_time);
             holder.mType = (TextView) row.findViewById(R.id.sd_file_type);
             holder.mIndicator = row.findViewById(R.id.sd_file_indicator);
+            holder.mSelected = (ImageView) row.findViewById(R.id.sd_file_check);
             row.setTag(holder);
         }else{
             holder = (ViewHolder)row.getTag();
@@ -65,6 +67,13 @@ public class ScannedFileAdapter extends ArrayAdapter<ScannedFileModel> {
             holder.mType.setTextColor(ContextCompat.getColor(getContext(),R.color.app_orange_normal));
             holder.mIndicator.setBackgroundColor(ContextCompat.getColor(getContext(),R.color.app_orange_normal));
         }
+
+        if (record.isSelected()) {
+          holder.mSelected.setVisibility(View.VISIBLE);
+        } else {
+          holder.mSelected.setVisibility(View.GONE);
+        }
+
         return row;
     }
 
@@ -79,6 +88,6 @@ public class ScannedFileAdapter extends ArrayAdapter<ScannedFileModel> {
         public TextView mTime;
         public TextView mType;
         public View mIndicator;
-
+        public ImageView mSelected;
     }
 }

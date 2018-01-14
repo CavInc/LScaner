@@ -6,7 +6,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
     <TextView
         android:text="Для активации программы отправьте код:"
-        android:textSize="20sp"
+        android:textSize="22sp"
         android:gravity="center"
         android:textColor="@android:color/black"
         android:layout_width="match_parent"
@@ -18,14 +18,18 @@
         android:text="00000000"
         android:textColor="@color/app_orange_normal"
         android:textStyle="bold"
-        android:textSize="24sp"
+        android:textSize="28sp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"/>
     <TextView
-        android:text="на info@chupkov.net или позвоните по телефону +7 (965) 482-72-72"
+        android:id="@+id/activate_link_msg"
+        android:text="@string/activate_msg"
         android:gravity="center"
+        android:autoLink="email|phone"
+        android:textSize="22sp"
         android:textColor="@android:color/black"
+        android:textColorLink="@color/app_blue"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"/>

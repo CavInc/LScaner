@@ -8,6 +8,7 @@ public class ScannedFileModel {
     private Date mCreateDate;
     private String mTime;
     private int mType;
+    private boolean mSelected;
 
     public ScannedFileModel(int id, String name, Date createDate, String time) {
         mId = id;
@@ -42,6 +43,14 @@ public class ScannedFileModel {
 
     public int getType() {
         return mType;
+    }
+
+    public boolean isSelected() {
+        return mSelected;
+    }
+
+    public void setSelected(boolean selected) {
+        mSelected = selected;
     }
 }
 

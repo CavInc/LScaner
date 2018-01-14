@@ -2,6 +2,7 @@ package cav.lscaner.ui.activity;
 
 import android.Manifest;
 import android.accounts.AccountManager;
+import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -13,11 +14,9 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -85,6 +84,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
     private boolean demo = true;
     private SwipeDetector swipeDetector;
 
+    private boolean multiSelectFlg = false;
+
+    private ActionBar mActionBar;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,7 +109,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
 
         mListView.setOnTouchListener(swipeDetector);
 
-
+        mActionBar = getActionBar();
     }
 
     @Override
@@ -117,8 +120,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
         updateUI();
     }
 
+    private Menu menu;
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        this.menu = menu;
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main_menu, menu);
         return true;
@@ -155,10 +160,85 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
             Intent intent = new Intent(this,StoreProductActivity.class);
             startActivity(intent);
         }
+        // множествееный выбор
+        if (item.getItemId() == R.id.menu_multi_select) {
+            multiSelectChange();
+        }
 
+        // групповое удаление
+        if (item.getItemId() == R.id.menu_delete_select) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Удаление")
+                    .setMessage("Удаляем ? Вы уверены ?")
+                    .setPositiveButton(R.string.button_ok,new DialogInterface.OnClickListener(){
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int witch) {
+                            for (int i = 0;i < mFileAdapter.getCount();i++){
+                                if (mFileAdapter.getItem(i).isSelected()) {
+                                    mDataManager.getDB().deleteFile(mFileAdapter.getItem(i).getId());
+                                }
+                            }
+                            multiSelectChange();
+                            updateUI();
+                        }
+                    })
+                    .setNegativeButton(R.string.button_cancel,null)
+                    .create();
+            builder.show();
+        }
+        // групповая отправка файлов
+        if (item.getItemId() == R.id.menu_send_select) {
+            multiSelectSend();
+        }
         return true;
     }
 
+    private void multiSelectChange(){
+        if (!multiSelectFlg) {
+            multiSelectFlg = true;
+            mListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+            menu.clear();
+            MenuInflater inflater = getMenuInflater();
+            inflater.inflate(R.menu.main_menu2, menu);
+
+        } else {
+            multiSelectFlg = false;
+            // убираем отметки
+            clearSelectModel();
+            menu.clear();
+            MenuInflater inflater = getMenuInflater();
+            inflater.inflate(R.menu.main_menu, menu);
+        }
+    }
+
+    // отправка выделенных файлов на сервер
+    private void multiSelectSend(){
+        // отправляем наружу
+        if (!mDataManager.isOnline()){
+            // показываем что нет сети
+            showNoNetwork();
+            return;
+        }
+
+        directionGD = WRITE_FILE;
+        // сохраняем файл
+        WorkInFile workInFile = new WorkInFile(mDataManager.getPreferensManager().getCodeFile());
+
+        for (int i = 0;i < mFileAdapter.getCount();i++){
+            if (mFileAdapter.getItem(i).isSelected()) {
+               // mDataManager.getDB().deleteFile(mFileAdapter.getItem(i).getId());
+                selModel = mFileAdapter.getItem(i);
+                workInFile.saveFile(selModel.getId(),selModel.getName(),mDataManager,selModel.getType());
+                Log.d(TAG,workInFile.getSavedFile());
+
+                storeFileFullName = workInFile.getSavedFile();
+                fileType =  selModel.getType();
+                pushGD();
+            }
+        }
+        multiSelectChange();
+        updateUI();
+    }
 
     private void updateUI(){
         ArrayList<ScannedFileModel> model = mDataManager.getScannedFile();
@@ -169,7 +249,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
             mFileAdapter.setDate(model);
             mFileAdapter.notifyDataSetChanged();
         }
-
     }
 
     @Override
@@ -217,12 +296,25 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
             }
             return;
         }
+        if (!multiSelectFlg) {
+            Intent intent = new Intent(this, ScanActivity.class);
+            intent.putExtra(ConstantManager.SELECTED_FILE, mFileAdapter.getItem(position).getId());
+            intent.putExtra(ConstantManager.SELECTED_FILE_NAME, mFileAdapter.getItem(position).getName());
+            intent.putExtra(ConstantManager.SELECTED_FILE_TYPE, mFileAdapter.getItem(position).getType());
+            startActivity(intent);
+        } else {
+            //TODO а здесь выделяем или снимаем выделение
+            mFileAdapter.getItem(position).setSelected(!mFileAdapter.getItem(position).isSelected());
+            mFileAdapter.notifyDataSetChanged();
+        }
+    }
 
-        Intent intent = new Intent(this,ScanActivity.class);
-        intent.putExtra(ConstantManager.SELECTED_FILE,mFileAdapter.getItem(position).getId());
-        intent.putExtra(ConstantManager.SELECTED_FILE_NAME,mFileAdapter.getItem(position).getName());
-        intent.putExtra(ConstantManager.SELECTED_FILE_TYPE,mFileAdapter.getItem(position).getType());
-        startActivity(intent);
+    // сбрасываем выделенные отметки
+    private void clearSelectModel() {
+        for (int i=0;i < mFileAdapter.getCount(); i++){
+         mFileAdapter.getItem(i).setSelected(false);
+        }
+        mFileAdapter.notifyDataSetChanged();
     }
 
     private ScannedFileModel selModel = null;
@@ -270,8 +362,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
                 // вызов отправки
                 fileType =  selModel.getType();
                 pushGD();
-
-
             }
         }
     };

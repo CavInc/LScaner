@@ -20,9 +20,7 @@
         android:id="@+id/menu_multi_select"
         android:title="Множественный выбор"
         android:icon="@drawable/ic_done_all_black_24dp"
-        app:showAsAction="ifRoom"
-        >
-    </item>
+        app:showAsAction="ifRoom"/>
     <item
         android:id="@+id/menu_about"
         android:title="О программе"/>

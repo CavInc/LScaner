@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -42,6 +44,10 @@ public class ActivateDialog extends DialogFragment implements View.OnClickListen
         deviceId = deviceId.substring(deviceId.length()-8);
 
         ((TextView) v.findViewById(R.id.activate_code)).setText(deviceId);
+
+        TextView activate_msg = ((TextView) v.findViewById(R.id.activate_link_msg));
+        //activate_msg.setText(Html.fromHtml(getResources().getString(R.string.activate_msg)));
+        activate_msg.setMovementMethod(LinkMovementMethod.getInstance());
 
         ((Button) v.findViewById(R.id.activate_dlg_ok)).setOnClickListener(this);
         ((Button) v.findViewById(R.id.activate_dlg_cancel)).setOnClickListener(this);
