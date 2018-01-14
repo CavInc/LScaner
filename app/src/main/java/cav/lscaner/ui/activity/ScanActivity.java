@@ -23,6 +23,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -67,6 +68,7 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
 
     private ScannedListAdapter mAdapter;
     private ArrayList<ScannedDataModel> mDataModels;
+    private FrameLayout mFrameLayout;
 
     private ArrayList<String> prefixScale;
     private int sizeScale = -1;
@@ -83,6 +85,10 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
     private boolean filterLock = false;
 
     private SwipeDetector swipeDetector;
+
+    private boolean frameScanVisible = false;
+
+
 
     private String debugOutFile;
 
@@ -105,6 +111,7 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
         fileType = getIntent().getIntExtra(ConstantManager.SELECTED_FILE_TYPE,ConstantManager.FILE_TYPE_PRODUCT);
 
         // окно для отображения
+        mFrameLayout = (FrameLayout) findViewById(R.id.barcode_frame);
         cameraView = (SurfaceView) findViewById(R.id.barcode_scan_v);
 
 
@@ -208,6 +215,19 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
         if (item.getItemId() == android.R.id.home) {
             onBackPressed();
         }
+        if (item.getItemId() == R.id.scan_menu_photo) {
+            if (frameScanVisible) {
+                // гасим камеру и скрываем окно
+                mFrameLayout.setVisibility(View.GONE);
+                item.setIcon(R.drawable.ic_local_see_white_24dp);
+            } else {
+                // включаем камеру и открываем окно
+
+                mFrameLayout.setVisibility(View.VISIBLE);
+                item.setIcon(R.drawable.ic_photo_camera_green_24dp);
+            }
+            frameScanVisible = !frameScanVisible;
+        }
         return true;
     }
 
@@ -216,8 +236,10 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        cameraSource.release();
-        barcodeDetector.release();
+        if (cameraSource != null) {
+            cameraSource.release();
+            barcodeDetector.release();
+        }
     }
 
     private void updateUI(){
@@ -242,6 +264,7 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
     @Override
     protected void onResume() {
         super.onResume();
+        /*
        // Func.addLog(debugOutFile,"FORM RESUME : "); // debug
         barcodeDetector = new BarcodeDetector.Builder(this)
                 .setBarcodeFormats(Barcode.ALL_FORMATS)
@@ -261,6 +284,7 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
         CustomBarcodeDetector detector = new CustomBarcodeDetector();
         detector.setBarcodeDetectorCallback(mBarcodeDetectorCallback);
         barcodeDetector.setProcessor(detector);
+        */
     }
 
     private String mBar;

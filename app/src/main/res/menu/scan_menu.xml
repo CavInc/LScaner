@@ -7,4 +7,9 @@
         app:showAsAction="always|collapseActionView"
         app:actionViewClass="android.support.v7.widget.SearchView"
         android:icon="@android:drawable/ic_menu_search"/>
+    <item
+        android:id="@+id/scan_menu_photo"
+        android:icon="@drawable/ic_local_see_white_24dp"
+        android:title="Использовать камеру"
+        app:showAsAction="always|collapseActionView"/>
 </menu>
