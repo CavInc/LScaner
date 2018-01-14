@@ -199,7 +199,9 @@ public class DBConnect {
     public ArrayList<StoreProductModel> searchStoreEgaisArray(String alcocode){
         ArrayList<StoreProductModel> rec = new ArrayList<>();
         open();
-        Cursor cursor = database.query(DBHelper.STORE_PRODUCT,new String[]{"egais","name","articul","price","ostatok"},"egais='"+alcocode+"'",null,null,null,null);
+        Cursor cursor = database.query(DBHelper.STORE_PRODUCT,
+                new String[]{"egais","name","articul","price","ostatok","barcode"},
+                "egais='"+alcocode+"'",null,null,null,null);
         while (cursor.moveToNext()){
             rec.add(new StoreProductModel(cursor.getString(cursor.getColumnIndex("egais")),
                     cursor.getString(cursor.getColumnIndex("name")),
