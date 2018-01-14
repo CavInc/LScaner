@@ -265,8 +265,6 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
     }
 
     private void iniCamera(){
-        barcodeDetector = null;
-        cameraSource = null;
 
         barcodeDetector = new BarcodeDetector.Builder(this)
                 .setBarcodeFormats(Barcode.ALL_FORMATS)
@@ -282,16 +280,22 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
                 .build();
         cameraView.getHolder().addCallback(new HolderCallback());
 
-        CustomBarcodeDetector detector = new CustomBarcodeDetector();
-        detector.setBarcodeDetectorCallback(mBarcodeDetectorCallback);
-        barcodeDetector.setProcessor(detector);
+        setDetector();
     }
 
     private void closeCamera(){
         if (cameraSource != null) {
             cameraSource.release();
             barcodeDetector.release();
+            cameraSource = null;
+            barcodeDetector = null;
         }
+    }
+
+    private void setDetector(){
+        CustomBarcodeDetector detector = new CustomBarcodeDetector();
+        detector.setBarcodeDetectorCallback(mBarcodeDetectorCallback);
+        barcodeDetector.setProcessor(detector);
     }
 
     @Override
@@ -336,104 +340,14 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
             if (actionId == EditorInfo.IME_ACTION_DONE ||
                     (keyEvent.getAction() == KeyEvent.ACTION_DOWN
                             && keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER
-                            && keyEvent.getRepeatCount() == 0)){
-               // Log.d("SA KEY", "EVENT KEY ");
-              //  Func.addLog(debugOutFile," обрабатываем ввод"); // debug
+                            && keyEvent.getRepeatCount() == 0)) {
+                // Log.d("SA KEY", "EVENT KEY ");
+                //  Func.addLog(debugOutFile," обрабатываем ввод"); // debug
                 /*
                 InputDevice lxDev = keyEvent.getDevice();
                 Log.d("SA "," KEY DES "+lxDev.getDescriptor()+" "+lxDev.getName());
                 */
-
-                if (demo && countRecord >=10 ) {
-                    new DemoDialog().show(getSupportFragmentManager(),"DEMO");
-                    return false;
-                }
-
-                mBar = textView.getText().toString();
-                if (mBar.length() == 0) return true;
-                qq = 1f;
-                posID = -1;
-                scaleFlg = false;
-                editRecord = false;
-                //Func.addLog(debugOutFile,"---------------------------------------"); // debug
-               // Func.addLog(debugOutFile,"RAW Scanned code : "+mBar); // debug
-
-                if (fileType == ConstantManager.FILE_TYPE_EGAIS){
-                    if (mBar.startsWith("1") || mBar.length() < 14) {
-                        // марка ФСМ
-                        //Func.addLog(debugOutFile,"Mark FSM : "+mBar); // debug
-                        mBarCode.setText("");
-                        return true;
-                    }
-                    mBar = Func.toEGAISAlcoCode(mBar);
-                    //Func.addLog(debugOutFile,"EGAIS code : "+mBar); // debug
-                } else {
-                    if (mBar.length()<2) return true;
-                    // выкидываем EAN 8 так как его весовым у нас быть не может
-                    if (prefixScale.contains(mBar.substring(0,2)) && (mBar.length() == 13 || mBar.length() == sizeScale)){
-                        // Log.d("SA","SCALE KODE");
-                        scaleFlg = true;
-                        if (mBar.length() != sizeScale) {
-                            String lq = mBar.substring(sizeScale, mBar.length() - 1);
-                            lq = lq.substring(0, 2) + "." + lq.substring(2);
-                            qq = Float.parseFloat(lq);
-                        } else {
-                            scaleFlg = false;
-                        }
-                        mBar = mBar.substring(0,sizeScale);
-                    } else if (! mBar.startsWith("0") &&  !Func.checkEAN(mBar)) {
-                        // покажем онко что куй а не код
-                        InfoNoValidDialog dialog = new InfoNoValidDialog();
-                        dialog.show(getSupportFragmentManager(),"INFD");
-                        mBarCode.setText("");
-                        return false;
-                    }
-                    // получили UPC-A сконвертированный в EAN
-                    if (mBar.startsWith("0") && mBar.length() == 13) {
-                        if (! mUPCtoEAN) {
-                            mBar = mBar.substring(1, 13);
-                        }
-                    }
-                    //Func.addLog(debugOutFile,"Scanned code : "+mBar); // debug
-                }
-
-                // ищем код и артикул в базе. (в основном артикул потому что иначе куй определим двойной код
-                StoreProductModel product = null;
-                ArrayList<StoreProductModel> productArray;
-                if (fileType == ConstantManager.FILE_TYPE_EGAIS) {
-                    productArray = mDataManager.getDB().searchStoreEgaisArray(mBar);
-                } else {
-                    productArray = mDataManager.getDB().searchStoreArray(mBar);
-                }
-
-                if (productArray == null || productArray.size() == 0){
-                    product = new StoreProductModel(mBar,"Новый");
-                   // Func.addLog(debugOutFile,"New product : "+mBar); // debug
-                } else {
-                    if (productArray.size() == 1 ) {
-                        product = new StoreProductModel(mBar,productArray.get(0).getName(),productArray.get(0).getArticul(),
-                                productArray.get(0).getPrice(),productArray.get(0).getOstatok());
-                       // Func.addLog(debugOutFile,"Product : "+product.getArticul()+" :: "+product.getName()); // debug
-                    } else {
-                        SelectItemsDialog dialog = SelectItemsDialog.newInstance(productArray);
-                        dialog.setOnSelectItemsChangeListener(mOnSelectItemsChangeListener);
-                        dialog.show(getSupportFragmentManager(),"SI");
-                        //Func.addLog(debugOutFile,"Selected multiple product : "); // debug
-                        mBarCode.setText("");
-                        return true;
-                    }
-                }
-
-                int l = mDataModels.indexOf(new ScannedDataModel(mBar,product.getArticul()));
-                if (l == -1) {
-                   // Func.addLog(debugOutFile,"New File pos : "+product.getArticul()+" :: "+product.getName()+" :: "+mBar); // debug
-                    showQuantityQuery(product);
-                } else {
-                    //Func.addLog(debugOutFile,"Exst File pos : "+product.getArticul()+" :: "+product.getName()+" :: "+mBar); // debug
-                    showExistsQQ(product,l);
-                }
-                //Func.addLog(debugOutFile," CLEAR EDIT TEXT MAIN"); // debug
-                mBarCode.setText("");
+                return workingBarcode(textView);
             }
             return false;
         }
@@ -441,9 +355,100 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
 
 
     // обрабатываем полученный штрихкод
-    private void workingBarcode(){
+    private boolean workingBarcode(TextView textView){
+        if (demo && countRecord >=10 ) {
+            new DemoDialog().show(getSupportFragmentManager(),"DEMO");
+            return false;
+        }
 
+        mBar = textView.getText().toString();
+        if (mBar.length() == 0) return true;
+        qq = 1f;
+        posID = -1;
+        scaleFlg = false;
+        editRecord = false;
+        //Func.addLog(debugOutFile,"---------------------------------------"); // debug
+        // Func.addLog(debugOutFile,"RAW Scanned code : "+mBar); // debug
+
+        if (fileType == ConstantManager.FILE_TYPE_EGAIS){
+            if (mBar.startsWith("1") || mBar.length() < 14) {
+                // марка ФСМ
+                //Func.addLog(debugOutFile,"Mark FSM : "+mBar); // debug
+                mBarCode.setText("");
+                return true;
+            }
+            mBar = Func.toEGAISAlcoCode(mBar);
+            //Func.addLog(debugOutFile,"EGAIS code : "+mBar); // debug
+        } else {
+            if (mBar.length()<2) return true;
+            // выкидываем EAN 8 так как его весовым у нас быть не может
+            if (prefixScale.contains(mBar.substring(0,2)) && (mBar.length() == 13 || mBar.length() == sizeScale)){
+                // Log.d("SA","SCALE KODE");
+                scaleFlg = true;
+                if (mBar.length() != sizeScale) {
+                    String lq = mBar.substring(sizeScale, mBar.length() - 1);
+                    lq = lq.substring(0, 2) + "." + lq.substring(2);
+                    qq = Float.parseFloat(lq);
+                } else {
+                    scaleFlg = false;
+                }
+                mBar = mBar.substring(0,sizeScale);
+            } else if (! mBar.startsWith("0") &&  !Func.checkEAN(mBar)) {
+                // покажем онко что куй а не код
+                InfoNoValidDialog dialog = new InfoNoValidDialog();
+                dialog.show(getSupportFragmentManager(),"INFD");
+                mBarCode.setText("");
+                return false;
+            }
+            // получили UPC-A сконвертированный в EAN
+            if (mBar.startsWith("0") && mBar.length() == 13) {
+                if (! mUPCtoEAN) {
+                    mBar = mBar.substring(1, 13);
+                }
+            }
+            //Func.addLog(debugOutFile,"Scanned code : "+mBar); // debug
+        }
+
+        // ищем код и артикул в базе. (в основном артикул потому что иначе куй определим двойной код
+        StoreProductModel product = null;
+        ArrayList<StoreProductModel> productArray;
+        if (fileType == ConstantManager.FILE_TYPE_EGAIS) {
+            productArray = mDataManager.getDB().searchStoreEgaisArray(mBar);
+        } else {
+            productArray = mDataManager.getDB().searchStoreArray(mBar);
+        }
+
+        if (productArray == null || productArray.size() == 0){
+            product = new StoreProductModel(mBar,"Новый");
+            // Func.addLog(debugOutFile,"New product : "+mBar); // debug
+        } else {
+            if (productArray.size() == 1 ) {
+                product = new StoreProductModel(mBar,productArray.get(0).getName(),productArray.get(0).getArticul(),
+                        productArray.get(0).getPrice(),productArray.get(0).getOstatok());
+                // Func.addLog(debugOutFile,"Product : "+product.getArticul()+" :: "+product.getName()); // debug
+            } else {
+                SelectItemsDialog dialog = SelectItemsDialog.newInstance(productArray);
+                dialog.setOnSelectItemsChangeListener(mOnSelectItemsChangeListener);
+                dialog.show(getSupportFragmentManager(),"SI");
+                //Func.addLog(debugOutFile,"Selected multiple product : "); // debug
+                mBarCode.setText("");
+                return true;
+            }
+        }
+
+        int l = mDataModels.indexOf(new ScannedDataModel(mBar,product.getArticul()));
+        if (l == -1) {
+            // Func.addLog(debugOutFile,"New File pos : "+product.getArticul()+" :: "+product.getName()+" :: "+mBar); // debug
+            showQuantityQuery(product);
+        } else {
+            //Func.addLog(debugOutFile,"Exst File pos : "+product.getArticul()+" :: "+product.getName()+" :: "+mBar); // debug
+            showExistsQQ(product,l);
+        }
+        //Func.addLog(debugOutFile," CLEAR EDIT TEXT MAIN"); // debug
+        mBarCode.setText("");
+        return false;
     }
+
 
     private void showExistsQQ(StoreProductModel product, int l) {
         if (!scaleFlg) {
@@ -509,6 +514,10 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
         @Override
         public void cancelButton() {
             mBarCode.requestFocus();
+            // если камера отрыта то запускаем детектор по новой
+            if (frameScanVisible) {
+                setDetector();
+            }
         }
 
         @Override
@@ -521,6 +530,11 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
             updateUI();
             mBarCode.setText("");
             mBarCode.requestFocus();
+
+            // если камера отрыта то запускаем детектор по новой
+            if (frameScanVisible) {
+                setDetector();
+            }
         }
     };
 
@@ -540,14 +554,25 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
                     mAdapter.getFilter().filter(filterString);
                     mAdapter.notifyDataSetChanged();
                 }
-                mBarCode.setText("");
+                mBarCode.setText("");                // если камера отрыта то запускаем детектор по новой
+                if (frameScanVisible) {
+                    setDetector();
+                }
                 mBarCode.requestFocus();
+                // если камера отрыта то запускаем детектор по новой
+                if (frameScanVisible) {
+                    setDetector();
+                }
             }
         }
 
         @Override
         public void cancelButton() {
             mBarCode.requestFocus();
+            // если камера отрыта то запускаем детектор по новой
+            if (frameScanVisible) {
+                setDetector();
+            }
         }
     };
 
@@ -676,6 +701,7 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
                 @Override
                 public void run() {
                     mBarCode.setText(barcode);
+                    workingBarcode(mBarCode);
                 }
             });
             barcodeDetector.release();
@@ -702,7 +728,7 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
 
         @Override
         public void surfaceDestroyed(SurfaceHolder surfaceHolder) {
-            cameraSource.stop();
+            if (cameraSource != null)  cameraSource.stop();
         }
     }
 

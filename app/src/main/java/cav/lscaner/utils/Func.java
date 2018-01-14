@@ -144,8 +144,8 @@ public class Func {
     }
 
     public static boolean checkEAN(String barcode){
-        return true; // debug
-        /*
+        //return true; // debug
+
 
         int easum = 0;
         if (barcode.length() == 8 ){
@@ -163,7 +163,7 @@ public class Func {
         }
         if ((easum % 10) == 0) return true;
         return false;
-        */
+
     }
 
     public static void addLog(String fname,String msg) {
