@@ -1,9 +1,11 @@
 package cav.lscaner.ui.activity;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.support.annotation.NonNull;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -34,6 +36,7 @@ import com.google.android.gms.vision.barcode.BarcodeDetector;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import cav.lscaner.R;
 import cav.lscaner.data.managers.DataManager;
@@ -51,8 +54,12 @@ import cav.lscaner.utils.ConstantManager;
 import cav.lscaner.utils.CustomBarcodeDetector;
 import cav.lscaner.utils.Func;
 import cav.lscaner.utils.SwipeDetector;
+import pub.devrel.easypermissions.AfterPermissionGranted;
+import pub.devrel.easypermissions.EasyPermissions;
 
-public class ScanActivity extends AppCompatActivity implements AdapterView.OnItemLongClickListener,AdapterView.OnItemClickListener{
+public class ScanActivity extends AppCompatActivity implements AdapterView.OnItemLongClickListener,
+        AdapterView.OnItemClickListener,EasyPermissions.PermissionCallbacks{
+    private static final int REQUEST_PERMISSION_CAMERA = 1005;
     private final int MAX_REC = 30;  // количество записей в демо версии
 
     private EditText mBarCode;
@@ -211,6 +218,9 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
         if (!cameraUtils.isCameraExists()) {
             MenuItem item = menu.findItem(R.id.scan_menu_photo);
             item.setEnabled(false);
+        } else {
+            // запрос разрешения на камеру
+           // getPermissionCamera();
         }
         return true;
     }
@@ -264,6 +274,32 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
         mBarCode.requestFocus();
     }
 
+    // запрос разрешения на камеру
+    @AfterPermissionGranted(REQUEST_PERMISSION_CAMERA)
+    private void getPermissionCamera(){
+        if (!EasyPermissions.hasPermissions(this, Manifest.permission.CAMERA)){
+            EasyPermissions.requestPermissions(this,"Это приложение должно получить доступ к вашешей камере",
+                    REQUEST_PERMISSION_CAMERA,Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        EasyPermissions.onRequestPermissionsResult(
+                requestCode, permissions, grantResults, this);
+    }
+
+    @Override
+    public void onPermissionsGranted(int requestCode, List<String> perms) {
+
+    }
+
+    @Override
+    public void onPermissionsDenied(int requestCode, List<String> perms) {
+
+    }
+
     private void iniCamera(){
 
         barcodeDetector = new BarcodeDetector.Builder(this)
@@ -301,6 +337,7 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
     @Override
     protected void onResume() {
         super.onResume();
+        //getPermissionCamera();
         /*
        // Func.addLog(debugOutFile,"FORM RESUME : "); // debug
         barcodeDetector = new BarcodeDetector.Builder(this)
