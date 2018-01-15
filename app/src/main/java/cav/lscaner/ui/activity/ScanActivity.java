@@ -238,8 +238,8 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
             } else {
                 // включаем камеру и открываем окно
                 mFrameLayout.setVisibility(View.VISIBLE);
-                iniCamera();
                 item.setIcon(R.drawable.ic_photo_camera_green_24dp);
+                iniCamera();
             }
             frameScanVisible = !frameScanVisible;
         }
@@ -294,6 +294,7 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
 
     private void closeCamera(){
         if (cameraSource != null) {
+            cameraSource.stop();
             cameraSource.release();
             barcodeDetector.release();
             cameraSource = null;
@@ -310,27 +311,6 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
     @Override
     protected void onResume() {
         super.onResume();
-        /*
-       // Func.addLog(debugOutFile,"FORM RESUME : "); // debug
-        barcodeDetector = new BarcodeDetector.Builder(this)
-                .setBarcodeFormats(Barcode.ALL_FORMATS)
-                .build();
-
-        ViewGroup.LayoutParams lp = cameraView.getLayoutParams();
-        int w = lp.width;
-        int h = lp.height;
-
-        cameraSource = new CameraSource.Builder(this, barcodeDetector)
-                .setRequestedPreviewSize(400,280)
-                .setAutoFocusEnabled(true)
-                .build();
-        cameraView.getHolder().addCallback(new HolderCallback());
-
-        //barcodeDetector.setProcessor(new BarcodeDetectorCallback());
-        CustomBarcodeDetector detector = new CustomBarcodeDetector();
-        detector.setBarcodeDetectorCallback(mBarcodeDetectorCallback);
-        barcodeDetector.setProcessor(detector);
-        */
     }
 
     private String mBar;
@@ -738,6 +718,7 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
 
         @Override
         public void surfaceDestroyed(SurfaceHolder surfaceHolder) {
+            Log.d("SA","STOP CAMERA");
             if (cameraSource != null)  cameraSource.stop();
         }
     }
