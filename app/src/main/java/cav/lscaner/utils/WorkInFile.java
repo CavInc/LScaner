@@ -183,6 +183,12 @@ public class WorkInFile {
                             Log.d("WF","OOPS !!!!");
                             return ConstantManager.RET_NO_FIELD_MANY;
                         }
+                        /*
+                        if (lm[0].equals("4670012690986")) {
+                            Log.d("WK","OKPS");
+                        }
+                        */
+
                         //manager.getDB().addStore(lm[0],lm[2]);
                         // обработать поля здесь или передать их в процедуру дальшн  ?
                         // что делать с товаром без кода но с егаис маркой.
@@ -204,7 +210,7 @@ public class WorkInFile {
                         if (fieldFile.getBasePrice() == -1) {
                             baseprice = 0.0;
                         } else {
-                            baseprice = Double.valueOf(lm[fieldFile.getBasePrice()-1]);
+                            baseprice = Double.valueOf(lm[fieldFile.getBasePrice()-1].replaceAll("\\s+",""));
                         }
                         if (fieldFile.getOstatok() == -1) {
                             ostatok = 0.0f;
