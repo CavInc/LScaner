@@ -413,7 +413,8 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
         } else {
             if (productArray.size() == 1 ) {
                 product = new StoreProductModel(mBar,productArray.get(0).getName(),productArray.get(0).getArticul(),
-                        productArray.get(0).getPrice(),productArray.get(0).getOstatok());
+                        productArray.get(0).getPrice(),productArray.get(0).getOstatok(),
+                        "",productArray.get(0).getBasePrice());
                 // Func.addLog(debugOutFile,"Product : "+product.getArticul()+" :: "+product.getName()); // debug
             } else {
                 SelectItemsDialog dialog = SelectItemsDialog.newInstance(productArray);
