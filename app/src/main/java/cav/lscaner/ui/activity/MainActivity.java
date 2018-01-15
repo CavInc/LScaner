@@ -117,6 +117,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
         super.onResume();
         demo = mDataManager.getPreferensManager().getDemo();
         getPermisionStorage(); // запрос разрешения на SD
+        getPermissionCamera(); // разрешения на камеру
         updateUI();
     }
 
@@ -591,7 +592,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
     private void getPermissionCamera(){
         if (!EasyPermissions.hasPermissions(this, Manifest.permission.CAMERA)){
             EasyPermissions.requestPermissions(this,"Это приложение должно получить доступ к вашешей камере",
-                    REQUEST_PERMISSION_CAMERA,Manifest.permission.WRITE_EXTERNAL_STORAGE);
+                    REQUEST_PERMISSION_CAMERA,Manifest.permission.CAMERA);
         }
     }
 
