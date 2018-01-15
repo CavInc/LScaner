@@ -484,6 +484,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
     static final int REQUEST_PERMISSION_GET_ACCOUNTS = 1003;
 
     static final int REQUEST_PERMISSINO_WRITE_STORAGE = 1004;
+    static final int REQUEST_PERMISSION_CAMERA = 1005;
 
     private static final String PREF_ACCOUNT_NAME = "accountName";
     private static final String[] SCOPES = { DriveScopes.DRIVE_METADATA_READONLY,
@@ -585,6 +586,14 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
         }
     }
 
+    // запрос разрешения на камеру
+    @AfterPermissionGranted(REQUEST_PERMISSION_CAMERA)
+    private void getPermissionCamera(){
+        if (!EasyPermissions.hasPermissions(this, Manifest.permission.CAMERA)){
+            EasyPermissions.requestPermissions(this,"Это приложение должно получить доступ к вашешей камере",
+                    REQUEST_PERMISSION_CAMERA,Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        }
+    }
 
     /**
      * Respond to requests for permissions at runtime for API 23 and above.

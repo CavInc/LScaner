@@ -57,9 +57,8 @@ import cav.lscaner.utils.SwipeDetector;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 
-public class ScanActivity extends AppCompatActivity implements AdapterView.OnItemLongClickListener,
-        AdapterView.OnItemClickListener,EasyPermissions.PermissionCallbacks{
-    private static final int REQUEST_PERMISSION_CAMERA = 1005;
+public class ScanActivity extends AppCompatActivity implements AdapterView.OnItemLongClickListener,AdapterView.OnItemClickListener {
+
     private final int MAX_REC = 30;  // количество записей в демо версии
 
     private EditText mBarCode;
@@ -274,32 +273,6 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
         mBarCode.requestFocus();
     }
 
-    // запрос разрешения на камеру
-    @AfterPermissionGranted(REQUEST_PERMISSION_CAMERA)
-    private void getPermissionCamera(){
-        if (!EasyPermissions.hasPermissions(this, Manifest.permission.CAMERA)){
-            EasyPermissions.requestPermissions(this,"Это приложение должно получить доступ к вашешей камере",
-                    REQUEST_PERMISSION_CAMERA,Manifest.permission.WRITE_EXTERNAL_STORAGE);
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        EasyPermissions.onRequestPermissionsResult(
-                requestCode, permissions, grantResults, this);
-    }
-
-    @Override
-    public void onPermissionsGranted(int requestCode, List<String> perms) {
-
-    }
-
-    @Override
-    public void onPermissionsDenied(int requestCode, List<String> perms) {
-
-    }
-
     private void iniCamera(){
 
         barcodeDetector = new BarcodeDetector.Builder(this)
@@ -337,7 +310,6 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
     @Override
     protected void onResume() {
         super.onResume();
-       // getPermissionCamera();
         /*
        // Func.addLog(debugOutFile,"FORM RESUME : "); // debug
         barcodeDetector = new BarcodeDetector.Builder(this)
