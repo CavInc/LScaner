@@ -17,6 +17,7 @@ import android.widget.TextView;
 import cav.lscaner.R;
 import cav.lscaner.data.models.StoreProductModel;
 import cav.lscaner.utils.ConstantManager;
+import cav.lscaner.utils.Func;
 
 public class PrihodChangePriceDialog extends DialogFragment implements View.OnClickListener{
 
@@ -233,7 +234,7 @@ public class PrihodChangePriceDialog extends DialogFragment implements View.OnCl
                 if (mPrice.getText().length()!= 0) {
                     price = Float.valueOf(mPrice.getText().toString());
                 }
-                qq = qq*price;
+                qq = Func.round(qq*price,2);
                 mSumma.setText(String.valueOf(qq));
                 lock = false;
             }
@@ -261,7 +262,7 @@ public class PrihodChangePriceDialog extends DialogFragment implements View.OnCl
                 if (mQuantity.getText().length() != 0) {
                     qq = Float.valueOf(mQuantity.getText().toString());
                 }
-                qq = qq*price;
+                qq = Func.round(qq*price,2);
                 mSumma.setText(String.valueOf(qq));
                 lock = false;
             }
@@ -288,7 +289,7 @@ public class PrihodChangePriceDialog extends DialogFragment implements View.OnCl
                 if (mQuantity.length() != 0){
                     qq = Float.valueOf(mQuantity.getText().toString());
                 }
-                qq = Float.valueOf(editable.toString())/qq;
+                qq = Func.round(Float.valueOf(editable.toString())/qq,2);
                 mPrice.setText(String.valueOf(qq));
                 lock = false;
             }
