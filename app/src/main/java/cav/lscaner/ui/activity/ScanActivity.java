@@ -273,27 +273,27 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
         mBarCode.requestFocus();
     }
 
+    private HolderCallback mHolderCallback;
+
     private void iniCamera(){
 
         barcodeDetector = new BarcodeDetector.Builder(this)
                 .setBarcodeFormats(Barcode.ALL_FORMATS)
                 .build();
 
-        ViewGroup.LayoutParams lp = cameraView.getLayoutParams();
-        int w = lp.width;
-        int h = lp.height;
-
         cameraSource = new CameraSource.Builder(this, barcodeDetector)
                 .setRequestedPreviewSize(400,280)
                 .setAutoFocusEnabled(true)
                 .build();
-        cameraView.getHolder().addCallback(new HolderCallback());
+        mHolderCallback = new HolderCallback();
+        cameraView.getHolder().addCallback(mHolderCallback);
 
         setDetector();
     }
 
     private void closeCamera(){
         if (cameraSource != null) {
+            cameraView.getHolder().removeCallback(mHolderCallback);
             cameraSource.stop();
             cameraSource.release();
             barcodeDetector.release();
