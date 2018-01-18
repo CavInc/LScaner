@@ -80,17 +80,22 @@ public class ScannedListAdapter extends ArrayAdapter<ScannedDataModel>{
             }
         }
 
-        if (rec.getArticul() == null || rec.getArticul().length() == 0 ){
-            holder.mArticul.setVisibility(View.INVISIBLE);
-        } else {
-            holder.mArticul.setVisibility(View.VISIBLE);
-            holder.mArticul.setText("Код : "+rec.getArticul());
+        if (holder.mArticul !=null) {
+            if (rec.getArticul() == null || rec.getArticul().length() == 0) {
+                holder.mArticul.setVisibility(View.INVISIBLE);
+            } else {
+                holder.mArticul.setVisibility(View.VISIBLE);
+                holder.mArticul.setText("Код : " + rec.getArticul());
+            }
         }
-        if (priceFlg == -1) {
-            holder.mPrice.setVisibility(View.INVISIBLE);
-        }else {
-            holder.mPrice.setVisibility(View.VISIBLE);
-            holder.mPrice.setText("Цена : " + rec.getPrice());
+
+        if (holder.mPrice !=null) {
+            if (priceFlg == -1) {
+                holder.mPrice.setVisibility(View.INVISIBLE);
+            } else {
+                holder.mPrice.setVisibility(View.VISIBLE);
+                holder.mPrice.setText("Цена : " + rec.getPrice());
+            }
         }
 
         if (holder.mSumma !=null) {

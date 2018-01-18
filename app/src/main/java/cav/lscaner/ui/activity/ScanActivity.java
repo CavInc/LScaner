@@ -138,7 +138,7 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
             countRecord = mDataManager.getDB().getCountRecInFile(idFile);
         }
 
-        if (fileType == ConstantManager.FILE_TYPE_EGAIS) {
+        if (fileType == ConstantManager.FILE_TYPE_EGAIS || fileType == ConstantManager.FILE_TYPE_ALCOMARK) {
             mBarCode.setInputType(InputType.TYPE_CLASS_TEXT);
             mBarCode.setFilters(new InputFilter[] {
                     new InputFilter.LengthFilter(68)});
@@ -247,7 +247,6 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
     }
 
 
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -260,6 +259,8 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
             int linkLayout = R.layout.scanned_item;
             if (fileType == ConstantManager.FILE_TYPE_CHANGE_PRICE) {
                 linkLayout = R.layout.change_price_item;
+            } else if (fileType == ConstantManager.FILE_TYPE_ALCOMARK) {
+                linkLayout = R.layout.scanned_alko_item;
             }
             mAdapter = new ScannedListAdapter(this,linkLayout,mDataModels);
             mListView.setAdapter(mAdapter);
@@ -359,15 +360,21 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
         //Func.addLog(debugOutFile,"---------------------------------------"); // debug
         // Func.addLog(debugOutFile,"RAW Scanned code : "+mBar); // debug
 
-        if (fileType == ConstantManager.FILE_TYPE_EGAIS){
+        if (fileType == ConstantManager.FILE_TYPE_EGAIS || fileType == ConstantManager.FILE_TYPE_ALCOMARK){
             if (mBar.startsWith("1") || mBar.length() < 14) {
                 // марка ФСМ
                 //Func.addLog(debugOutFile,"Mark FSM : "+mBar); // debug
                 mBarCode.setText("");
                 return true;
             }
+            if (fileType == ConstantManager.FILE_TYPE_ALCOMARK) {
+                mDataManager.getDB().addScannedPositon(idFile, mBar,0.0f,-1,"");
+                countRecord +=1;
+                mBarCode.setText("");
+                updateUI();
+                return true;
+            }
             mBar = Func.toEGAISAlcoCode(mBar);
-            //Func.addLog(debugOutFile,"EGAIS code : "+mBar); // debug
         } else {
             if (mBar.length()<2) return true;
             // выкидываем EAN 8 так как его весовым у нас быть не может
@@ -604,6 +611,8 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
     };
 
     private void editRec() {
+        if (fileType == ConstantManager.FILE_TYPE_ALCOMARK) return;
+
         editRecord = true;
         posID = selModel.getPosId();
         mBar = selModel.getBarCode();
