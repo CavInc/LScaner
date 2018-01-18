@@ -14,6 +14,7 @@ import java.util.List;
 
 import cav.lscaner.R;
 import cav.lscaner.data.models.ScannedFileModel;
+import cav.lscaner.utils.ConstantManager;
 import cav.lscaner.utils.Func;
 
 public class ScannedFileAdapter extends ArrayAdapter<ScannedFileModel> {
@@ -62,11 +63,16 @@ public class ScannedFileAdapter extends ArrayAdapter<ScannedFileModel> {
             holder.mType.setText("Поступление");
             holder.mType.setTextColor(ContextCompat.getColor(getContext(),R.color.app_gray_bt_dark));
             holder.mIndicator.setBackgroundColor(ContextCompat.getColor(getContext(),R.color.app_gray_bt_dark));
-        } else {
+        } else if (record.getType() == ConstantManager.FILE_TYPE_CHANGE_PRICE) {
             holder.mType.setText("Переоценка");
             holder.mType.setTextColor(ContextCompat.getColor(getContext(),R.color.app_orange_normal));
             holder.mIndicator.setBackgroundColor(ContextCompat.getColor(getContext(),R.color.app_orange_normal));
+        } else {
+            holder.mType.setText("Алкомарки");
+            holder.mType.setTextColor(ContextCompat.getColor(getContext(),R.color.app_yellow));
+            holder.mIndicator.setBackgroundColor(ContextCompat.getColor(getContext(),R.color.app_yellow));
         }
+
 
         if (record.isSelected()) {
           holder.mSelected.setVisibility(View.VISIBLE);

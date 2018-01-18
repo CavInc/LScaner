@@ -18,6 +18,7 @@ public interface ConstantManager{
     int FILE_TYPE_EGAIS = 1;
     int FILE_TYPE_PRIHOD = 2;
     int FILE_TYPE_CHANGE_PRICE = 3;
+    int FILE_TYPE_ALCOMARK = 4;
 
     int RET_OK = 200;
 
@@ -29,5 +30,6 @@ public interface ConstantManager{
     String PREFIX_FILE_EGAIS = "{ЕГАИС}";
     String PREFIX_FILE_CHANGEPRICE = "{Переоценка}";
     String PREFIX_FILE_PRIHOD = "{Поступление}";
+    String PREFIX_FILE_ALCOMARK = "{АКЛОМАРК}";
 
 }
