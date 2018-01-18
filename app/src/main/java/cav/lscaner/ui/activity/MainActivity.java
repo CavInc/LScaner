@@ -675,6 +675,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
             if (filetype == ConstantManager.FILE_TYPE_PRIHOD) {
                 fname = ConstantManager.PREFIX_FILE_PRIHOD+fname;
             }
+            if (filetype == ConstantManager.FILE_TYPE_ALCOMARK) {
+                fname = ConstantManager.PREFIX_FILE_ALCOMARK+fname;
+            }
 
             fileMetadata.setName(fname);
 

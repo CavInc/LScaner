@@ -372,5 +372,19 @@ public class PreferensManager {
         setFileField(field,FFPRIHOD_LEN,FFPRIHOD);
     }
 
+    // насройки полей выходного файла alkomarok
+    public FieldOutFile getFieldOutAlcomarkFile(){
+        FieldOutFile md = new FieldOutFile(
+                mSharedPreferences.getInt(FIELD_OUT_BARCODE,1),
+                mSharedPreferences.getInt(FIELD_OUT_QUANTITY,-1),
+                mSharedPreferences.getInt(FIELD_OUT_PRICE,-1),
+                mSharedPreferences.getInt(FIELD_OUT_ARTICUL,-1),
+                mSharedPreferences.getInt(FIELD_OUT_BASE_PRICE,-1),
+                mSharedPreferences.getInt(FIELD_OUT_EGAIS,-1),
+                mSharedPreferences.getInt(FIELD_OUT_CODETV,-1)
+        );
+        return md;
+    }
+
 
 }

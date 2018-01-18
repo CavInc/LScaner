@@ -73,6 +73,9 @@ public class WorkInFile {
                 case ConstantManager.FILE_TYPE_PRIHOD:
                     fieldFile = manager.getPreferensManager().getFieldOutPrixodFile();
                     break;
+                case ConstantManager.FILE_TYPE_ALCOMARK:
+                    fieldFile = manager.getPreferensManager().getFieldOutAlcomarkFile();
+                    break;
             }
 
             //Log.d("WC",path);
