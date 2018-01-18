@@ -39,6 +39,7 @@ public class AddEditNameFileDialog extends DialogFragment implements View.OnClic
     private RadioButton mEGAIS;
     private RadioButton mPrihod;
     private RadioButton mChangePrice;
+    private RadioButton mActionMark;
 
     private int type;
 
@@ -73,8 +74,10 @@ public class AddEditNameFileDialog extends DialogFragment implements View.OnClic
                     type = 1;
                 } else if (mPrihod.isChecked()) {
                     type = 2;
-                } else {
+                } else if (mChangePrice.isChecked()) {
                     type = 3;
+                } else {
+                    type = 4;
                 }
                 mListener.changeName(mName.getText().toString(),type);
             }
@@ -118,6 +121,7 @@ public class AddEditNameFileDialog extends DialogFragment implements View.OnClic
         mEGAIS = (RadioButton) v.findViewById(R.id.dialog_egais);
         mPrihod = (RadioButton) v.findViewById(R.id.dialog_prixod);
         mChangePrice = (RadioButton) v.findViewById(R.id.dialog_changeprise);
+        mActionMark = (RadioButton) v.findViewById(R.id.dialog_alkomark);
 
         if (type == ConstantManager.FILE_TYPE_PRODUCT) {
             clearCheck();
@@ -128,9 +132,12 @@ public class AddEditNameFileDialog extends DialogFragment implements View.OnClic
         } else if (type == ConstantManager.FILE_TYPE_PRIHOD) {
             clearCheck();
             mPrihod.setChecked(true);
-        } else  {
+        } else if (type == ConstantManager.FILE_TYPE_CHANGE_PRICE)  {
             clearCheck();
             mChangePrice.setChecked(true);
+        } else {
+            clearCheck();
+            mActionMark.setChecked(true);
         }
 
         mCancelBt.setOnClickListener(this);
@@ -140,6 +147,7 @@ public class AddEditNameFileDialog extends DialogFragment implements View.OnClic
         mEGAIS.setOnClickListener(mRbListener);
         mPrihod.setOnClickListener(mRbListener);
         mChangePrice.setOnClickListener(mRbListener);
+        mActionMark.setOnClickListener(mRbListener);
 
         mName.setText(nameFile);
 
@@ -161,6 +169,7 @@ public class AddEditNameFileDialog extends DialogFragment implements View.OnClic
         mEGAIS.setChecked(false);
         mChangePrice.setChecked(false);
         mPrihod.setChecked(false);
+        mActionMark.setChecked(false);
     }
 
     public void setAddEditNameFileListener(AddEditNameFileListener listener){
@@ -174,6 +183,7 @@ public class AddEditNameFileDialog extends DialogFragment implements View.OnClic
             mEGAIS.setChecked(false);
             mChangePrice.setChecked(false);
             mPrihod.setChecked(false);
+            mActionMark.setChecked(false);
             switch (view.getId()){
                 case R.id.dialog_tovar:
                     mTovar.setChecked(true);
@@ -186,6 +196,9 @@ public class AddEditNameFileDialog extends DialogFragment implements View.OnClic
                     break;
                 case R.id.dialog_prixod:
                     mPrihod.setChecked(true);
+                    break;
+                case R.id.dialog_alkomark:
+                    mActionMark.setChecked(true);
                     break;
             }
 
