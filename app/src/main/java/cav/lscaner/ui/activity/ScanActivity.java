@@ -372,6 +372,10 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
                 countRecord +=1;
                 mBarCode.setText("");
                 updateUI();
+                // если камера отрыта то запускаем детектор по новой
+                if (frameScanVisible) {
+                    setDetector();
+                }
                 return true;
             }
             mBar = Func.toEGAISAlcoCode(mBar);
