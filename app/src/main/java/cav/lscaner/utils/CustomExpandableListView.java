@@ -199,6 +199,9 @@ public class CustomExpandableListView extends ExpandableListView {
             */
             CustomExpandListAdapter adapter = (CustomExpandListAdapter) getAdapter();
 
+            Object l = getAdapter().getItem(dragSrcPosition);
+
+
         }
 
     }
