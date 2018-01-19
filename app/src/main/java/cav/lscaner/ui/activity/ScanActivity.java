@@ -63,6 +63,7 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
 
     private EditText mBarCode;
     private ListView mListView;
+    private TextView mSumma;
 
     private BarcodeDetector barcodeDetector;
     private SurfaceView cameraView;
@@ -117,7 +118,7 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
         mFileName = getIntent().getStringExtra(ConstantManager.SELECTED_FILE_NAME);
         fileType = getIntent().getIntExtra(ConstantManager.SELECTED_FILE_TYPE,ConstantManager.FILE_TYPE_PRODUCT);
 
-        // окно для отображения
+         // окно для отображения
         mFrameLayout = (FrameLayout) findViewById(R.id.barcode_frame);
         cameraView = (SurfaceView) findViewById(R.id.barcode_scan_v);
 
@@ -125,6 +126,7 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
 
 
         mBarCode = (EditText) findViewById(R.id.barcode_et);
+        mSumma = (TextView) findViewById(R.id.scan_summ);
 
         mListView = (ListView) findViewById(R.id.san_lv);
 
@@ -142,6 +144,10 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
             mBarCode.setInputType(InputType.TYPE_CLASS_TEXT);
             mBarCode.setFilters(new InputFilter[] {
                     new InputFilter.LengthFilter(68)});
+        }
+
+        if (fileType == ConstantManager.FILE_TYPE_PRIHOD) {
+            mSumma.setVisibility(View.VISIBLE);
         }
 
         // хз
@@ -272,6 +278,10 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
             mListView.setSelection(0);
         }
         mBarCode.requestFocus();
+        if (fileType == ConstantManager.FILE_TYPE_PRIHOD) {
+            Double res = mDataManager.getDB().getSumInFile(idFile);
+            mSumma.setText("Сумма : "+Func.roundUp(res,2));
+        }
     }
 
     private HolderCallback mHolderCallback;

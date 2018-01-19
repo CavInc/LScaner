@@ -303,6 +303,17 @@ public class DBConnect {
         database.execSQL(sql);
     }
 
+    // сумма по файлу
+    public double getSumInFile(int idFile) {
+        open();
+        String sql = "select sum(quantity*baseprice) as summa from "+DBHelper.SCAN_TABLE_SPEC+" where head_id="+idFile;
+        Cursor cursor = database.rawQuery(sql,null);
+        cursor.moveToFirst();
+        double res = cursor.getDouble(0);
+        close();
+        return res;
+    }
+
 
 
 }

@@ -46,8 +46,19 @@
     <ListView
         android:id="@+id/san_lv"
         android:layout_below="@+id/contaner_up"
+        android:layout_above="@+id/scan_summ"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-
     </ListView>
+
+    <TextView
+        android:id="@+id/scan_summ"
+        android:text="Сумма:"
+        android:textStyle="bold"
+        android:textSize="20sp"
+        android:visibility="gone"
+        android:layout_marginTop="8dp"
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
 </RelativeLayout>
