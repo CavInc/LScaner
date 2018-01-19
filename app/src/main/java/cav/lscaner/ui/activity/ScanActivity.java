@@ -373,6 +373,7 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
                 mBarCode.setText("");
                 updateUI();
                 // если камера отрыта то запускаем детектор по новой
+                // по хорошему тут должна быть задержка
                 if (frameScanVisible) {
                     setDetector();
                 }
