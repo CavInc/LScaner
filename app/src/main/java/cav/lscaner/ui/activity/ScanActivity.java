@@ -245,7 +245,12 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
                 // включаем камеру и открываем окно
                 mFrameLayout.setVisibility(View.VISIBLE);
                 item.setIcon(R.drawable.ic_photo_camera_green_24dp);
-                iniCamera();
+
+                try {
+                    iniCamera();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
             frameScanVisible = !frameScanVisible;
         }
@@ -286,7 +291,8 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
 
     private HolderCallback mHolderCallback;
 
-    private void iniCamera(){
+    @SuppressWarnings("MissingPermission")
+    private void iniCamera() throws IOException {
 
         barcodeDetector = new BarcodeDetector.Builder(this)
                 .setBarcodeFormats(Barcode.ALL_FORMATS)
@@ -297,14 +303,18 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
                 .setAutoFocusEnabled(true)
                 .build();
         mHolderCallback = new HolderCallback();
-        cameraView.getHolder().addCallback(mHolderCallback);
+       // cameraView.getHolder().addCallback(mHolderCallback);
+
+
+        cameraSource.start(cameraView.getHolder());
+
 
         setDetector();
     }
 
     private void closeCamera(){
         if (cameraSource != null) {
-            cameraView.getHolder().removeCallback(mHolderCallback);
+           // cameraView.getHolder().removeCallback(mHolderCallback);
             cameraSource.stop();
             cameraSource.release();
             barcodeDetector.release();
