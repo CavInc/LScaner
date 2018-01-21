@@ -303,7 +303,7 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
                 .setAutoFocusEnabled(true)
                 .build();
         mHolderCallback = new HolderCallback();
-       // cameraView.getHolder().addCallback(mHolderCallback);
+        cameraView.getHolder().addCallback(mHolderCallback);
 
 
         cameraSource.start(cameraView.getHolder());
@@ -738,23 +738,25 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
 
         @Override
         public void surfaceCreated(SurfaceHolder surfaceHolder) {
+            /*
             try {
                 //noinspection MissingPermission
                 cameraSource.start(cameraView.getHolder());
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
+            */
         }
 
         @Override
         public void surfaceChanged(SurfaceHolder surfaceHolder, int format, int width, int height) {
-
+            Log.d("SA","SF CHANGE");
         }
 
         @Override
         public void surfaceDestroyed(SurfaceHolder surfaceHolder) {
             Log.d("SA","STOP CAMERA");
-            if (cameraSource != null)  cameraSource.stop();
+          //  if (cameraSource != null)  cameraSource.stop();
         }
     }
 
