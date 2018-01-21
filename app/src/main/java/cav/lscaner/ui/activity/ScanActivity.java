@@ -305,16 +305,16 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
         mHolderCallback = new HolderCallback();
         cameraView.getHolder().addCallback(mHolderCallback);
 
+        Log.d("SA"," SF "+cameraView.isShown());
 
         cameraSource.start(cameraView.getHolder());
-
 
         setDetector();
     }
 
     private void closeCamera(){
         if (cameraSource != null) {
-           // cameraView.getHolder().removeCallback(mHolderCallback);
+            cameraView.getHolder().removeCallback(mHolderCallback);
             cameraSource.stop();
             cameraSource.release();
             barcodeDetector.release();
@@ -738,16 +738,19 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
 
         @Override
         public void surfaceCreated(SurfaceHolder surfaceHolder) {
-            /*
+            Log.d("SA","CreateSurface");
+            cameraSource.stop();
+
             try {
                 //noinspection MissingPermission
                 cameraSource.start(cameraView.getHolder());
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
-            */
+
         }
 
+        @SuppressWarnings("MissingPermission")
         @Override
         public void surfaceChanged(SurfaceHolder surfaceHolder, int format, int width, int height) {
             Log.d("SA","SF CHANGE");
