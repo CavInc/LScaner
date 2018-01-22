@@ -11,13 +11,16 @@ public class CameraUtils {
     public CameraUtils(){
     }
 
-    private void OpenCamera(){
+    public void OpenCamera(){
         mCamera = Camera.open(0);
     }
 
-    private void getCameraParams(){
+    public void getCameraParams(){
         Camera.Parameters parametrs = mCamera.getParameters();
         List<String> focusModes = parametrs.getSupportedFocusModes();
+        for (String l:focusModes){
+            System.out.println("CAM UTILS "+l);
+        }
 
     }
 

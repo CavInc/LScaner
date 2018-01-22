@@ -8,8 +8,10 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -56,6 +58,8 @@ public class ActivateDialog extends DialogFragment implements View.OnClickListen
             mAcivateCode.setText(mDataManager.getPreferensManager().getRegistrationNumber());
         }
 
+        mAcivateCode.setOnEditorActionListener(mEditorActionListener);
+
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("Активация")
@@ -72,29 +76,46 @@ public class ActivateDialog extends DialogFragment implements View.OnClickListen
         if (view.getId() == R.id.activate_dlg_ok) {
             // здесь проверяем код и пишем если все ок
             // проверяем тот ли номер
-            String x = mAcivateCode.getText().toString();
-            boolean flg;
-            if (Func.checkSerialNumber(x,deviceId) ) {
-                // сохраняем серийник и флаг что не недемо
-                mDataManager.getPreferensManager().setRegistrationNumber(x);
-                mDataManager.getPreferensManager().setDemo(false);
-                flg = true;
-            } else {
-                mDataManager.getPreferensManager().setDemo(true);
-                flg = false;
-            }
-
-            if (mDialogListener != null) {
-                mDialogListener.activateState(flg);
-            }
-            
-            dismiss();
+            okClick();
         }
+    }
+
+    private void okClick(){
+        String x = mAcivateCode.getText().toString();
+        boolean flg;
+        if (Func.checkSerialNumber(x,deviceId) ) {
+            // сохраняем серийник и флаг что не недемо
+            mDataManager.getPreferensManager().setRegistrationNumber(x);
+            mDataManager.getPreferensManager().setDemo(false);
+            flg = true;
+        } else {
+            mDataManager.getPreferensManager().setDemo(true);
+            flg = false;
+        }
+
+        if (mDialogListener != null) {
+            mDialogListener.activateState(flg);
+        }
+
+        dismiss();
     }
 
     public void setDialogListener (ActivateDialogListener listener){
         mDialogListener = listener;
     }
+
+    TextView.OnEditorActionListener mEditorActionListener = new TextView.OnEditorActionListener() {
+
+        @Override
+        public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
+            if (actionId == EditorInfo.IME_ACTION_DONE  || (keyEvent.getAction() == KeyEvent.ACTION_DOWN &&
+                    keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER
+                    && keyEvent.getRepeatCount() == 0)){
+                okClick();
+            }
+            return false;
+        };
+    };
 
     public interface ActivateDialogListener {
         public void activateState(boolean state);
