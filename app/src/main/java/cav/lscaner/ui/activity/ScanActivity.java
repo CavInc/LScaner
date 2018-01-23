@@ -387,19 +387,9 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
                 mBarCode.setText("");
                 return true;
             }
-            if (fileType == ConstantManager.FILE_TYPE_ALCOMARK) {
-                mDataManager.getDB().addScannedPositon(idFile, mBar,0.0f,-1,"");
-                countRecord +=1;
-                mBarCode.setText("");
-                updateUI();
-                // если камера отрыта то запускаем детектор по новой
-                // по хорошему тут должна быть задержка
-                if (frameScanVisible) {
-                    setDetector();
-                }
-                return true;
+            if (fileType != ConstantManager.FILE_TYPE_ALCOMARK) {
+                mBar = Func.toEGAISAlcoCode(mBar);
             }
-            mBar = Func.toEGAISAlcoCode(mBar);
         } else {
             if (mBar.length()<2) return true;
             // выкидываем EAN 8 так как его весовым у нас быть не может
@@ -461,17 +451,37 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
         int l = mDataModels.indexOf(new ScannedDataModel(mBar,product.getArticul()));
         if (l == -1) {
             // Func.addLog(debugOutFile,"New File pos : "+product.getArticul()+" :: "+product.getName()+" :: "+mBar); // debug
-            showQuantityQuery(product);
+            if (fileType == ConstantManager.FILE_TYPE_ALCOMARK) {
+                storeAlocomarkPosition(mBar);
+                return true;
+            } else {
+                showQuantityQuery(product);
+            }
         } else {
             //Func.addLog(debugOutFile,"Exst File pos : "+product.getArticul()+" :: "+product.getName()+" :: "+mBar); // debug
-            showExistsQQ(product,l);
+            if (fileType != ConstantManager.FILE_TYPE_ALCOMARK) {
+                showExistsQQ(product, l);
+            }
         }
         //Func.addLog(debugOutFile," CLEAR EDIT TEXT MAIN"); // debug
         mBarCode.setText("");
         return false;
     }
 
+    // сохраняем новую алкомарку
+    private void storeAlocomarkPosition(String alcomark){
+        mDataManager.getDB().addScannedPositon(idFile,alcomark ,0.0f,-1,"");
+        countRecord +=1;
+        mBarCode.setText("");
+        updateUI();
+        // если камера отрыта то запускаем детектор по новой
+        // по хорошему тут должна быть задержка
+        if (frameScanVisible) {
+            setDetector();
+        }
+    }
 
+    // позицаия есть в базе
     private void showExistsQQ(StoreProductModel product, int l) {
         if (!scaleFlg) {
             Float qq = mDataModels.get(l).getQuantity();
