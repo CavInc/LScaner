@@ -33,7 +33,7 @@ public class AboutActivity extends AppCompatActivity implements View.OnClickList
         mActivateTv = (TextView) findViewById(R.id.ab_flg_activate);
 
         if (!mDataManager.getPreferensManager().getDemo()){
-            mActivateTv.setText("(активированна)");
+            mActivateTv.setText("(активирована)");
         }
 
         // TODO добавить информацию о версии
