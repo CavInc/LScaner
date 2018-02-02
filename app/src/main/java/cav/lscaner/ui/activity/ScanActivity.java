@@ -299,7 +299,7 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
                 .build();
 
         cameraSource = new CameraSource.Builder(this, barcodeDetector)
-                .setRequestedPreviewSize(400,280)
+                .setRequestedPreviewSize(1000,1000)
                 .setAutoFocusEnabled(true)
                 .build();
         mHolderCallback = new HolderCallback();
