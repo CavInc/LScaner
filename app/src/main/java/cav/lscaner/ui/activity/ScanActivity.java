@@ -299,7 +299,7 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
                 .build();
 
         cameraSource = new CameraSource.Builder(this, barcodeDetector)
-                .setRequestedPreviewSize(400,280)
+                .setRequestedPreviewSize(1000,1000)
                 .setAutoFocusEnabled(true)
                 .build();
         mHolderCallback = new HolderCallback();
@@ -326,6 +326,7 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
     private void setDetector(){
         CustomBarcodeDetector detector = new CustomBarcodeDetector();
         detector.setBarcodeDetectorCallback(mBarcodeDetectorCallback);
+        Log.d("SA","DETECTOR IS OP :"+barcodeDetector.isOperational());
         barcodeDetector.setProcessor(detector);
     }
 
@@ -366,6 +367,16 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
 
     // обрабатываем полученный штрихкод
     private boolean workingBarcode(TextView textView){
+        /*
+        if (barcodeDetector != null) {
+            Log.d("SA", "DX IS OP " + barcodeDetector.isOperational());
+            if (barcodeDetector.isOperational()) {
+                barcodeDetector.release();
+            }
+        }
+        */
+
+
         if (demo && countRecord >=10 ) {
             new DemoDialog().show(getSupportFragmentManager(),"DEMO");
             return false;
@@ -729,17 +740,20 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
     CustomBarcodeDetector.BarcodeDetectorCallback mBarcodeDetectorCallback = new CustomBarcodeDetector.BarcodeDetectorCallback() {
         @Override
         public void OnBarcode(final String barcode) {
-            Log.d("SA",barcode);
-            //mBarCode.setText(barcode);
-            mBarCode.post(new Runnable() {
-                @Override
-                public void run() {
-                    mBarCode.setText(barcode);
-                    Func.playMessage(ScanActivity.this);
-                    workingBarcode(mBarCode);
-                }
-            });
-            barcodeDetector.release();
+            synchronized (barcodeDetector){
+                Log.d("SA",barcode);
+                //mBarCode.setText(barcode);
+                //barcodeDetector.release();
+                mBarCode.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        mBarCode.setText(barcode);
+                        Func.playMessage(ScanActivity.this);
+                        workingBarcode(mBarCode);
+                    }
+                });
+                barcodeDetector.release();
+            }
         }
     };
 
