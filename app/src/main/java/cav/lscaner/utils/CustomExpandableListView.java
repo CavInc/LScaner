@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.PixelFormat;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
@@ -21,6 +22,7 @@ import cav.lscaner.ui.adapter.CustomExpandListAdapter;
 
 public class CustomExpandableListView extends ExpandableListView {
 
+    private static final String TAG = "CELV";
     private ImageView dragImageView;
 
     private int dragGroupPosition;
@@ -197,6 +199,7 @@ public class CustomExpandableListView extends ExpandableListView {
             adapter.remove(dragItem);
             adapter.insert(dragItem, dragPosition);
             */
+            Log.d(TAG,"DROP");
             CustomExpandListAdapter adapter = (CustomExpandListAdapter) getAdapter();
 
             Object l = getAdapter().getItem(dragSrcPosition);
