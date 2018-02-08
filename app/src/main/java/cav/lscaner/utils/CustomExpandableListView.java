@@ -178,6 +178,7 @@ public class CustomExpandableListView extends ExpandableListView {
      * @param y
      */
     public void onDrop(int y){
+        Log.d(TAG,"START DROP");
         //здесь мы замещаем айтем который на данный момент находится
         // на своей позиции вниз что бы вставить тот что тащили и удаляем тот что был вместо него
         // и ставим его ниже
