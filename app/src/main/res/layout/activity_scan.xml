@@ -28,6 +28,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
                 android:background="@color/app_green"/>
+
+            <Button
+                android:id="@+id/barcode_scanner_bt"
+                android:text="Сканнер"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right|bottom"/>
         </FrameLayout>
         <EditText
             android:id="@+id/barcode_et"

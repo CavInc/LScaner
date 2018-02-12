@@ -1,11 +1,9 @@
 package cav.lscaner.ui.activity;
 
-import android.Manifest;
 import android.app.AlertDialog;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.support.annotation.NonNull;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -14,29 +12,26 @@ import android.support.v7.widget.SearchView;
 import android.text.InputFilter;
 import android.text.InputType;
 import android.util.Log;
-import android.util.SparseArray;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.android.gms.vision.CameraSource;
-import com.google.android.gms.vision.Detector;
 import com.google.android.gms.vision.barcode.Barcode;
 import com.google.android.gms.vision.barcode.BarcodeDetector;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 
 import cav.lscaner.R;
 import cav.lscaner.data.managers.DataManager;
@@ -54,8 +49,6 @@ import cav.lscaner.utils.ConstantManager;
 import cav.lscaner.utils.CustomBarcodeDetector;
 import cav.lscaner.utils.Func;
 import cav.lscaner.utils.SwipeDetector;
-import pub.devrel.easypermissions.AfterPermissionGranted;
-import pub.devrel.easypermissions.EasyPermissions;
 
 public class ScanActivity extends AppCompatActivity implements AdapterView.OnItemLongClickListener,AdapterView.OnItemClickListener {
 
@@ -95,7 +88,10 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
     private SwipeDetector swipeDetector;
 
     private boolean frameScanVisible = false;
+    private boolean preview = false;
 
+
+    private Button mStartScan;
 
 
     private String debugOutFile;
@@ -122,6 +118,20 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
         mFrameLayout = (FrameLayout) findViewById(R.id.barcode_frame);
         cameraView = (SurfaceView) findViewById(R.id.barcode_scan_v);
 
+        mStartScan = (Button) findViewById(R.id.barcode_scanner_bt);
+        mStartScan.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (!preview) {
+                    try {
+                        iniCamera();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+        mStartScan.setVisibility(View.INVISIBLE);
 
 
 
@@ -238,7 +248,7 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
         if (item.getItemId() == R.id.scan_menu_photo) {
             if (frameScanVisible) {
                 // гасим камеру и скрываем окно
-                closeCamera();
+                releaceCamera();
                 mFrameLayout.setVisibility(View.GONE);
                 item.setIcon(R.drawable.ic_local_see_white_24dp);
             } else {
@@ -261,7 +271,7 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        closeCamera();
+        releaceCamera();
     }
 
     private void updateUI(){
@@ -308,11 +318,12 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
         Log.d("SA"," SF "+cameraView.isShown());
 
         cameraSource.start(cameraView.getHolder());
+        preview = true;
 
         setDetector();
     }
 
-    private void closeCamera(){
+    private void releaceCamera(){
         if (cameraSource != null) {
             cameraView.getHolder().removeCallback(mHolderCallback);
             cameraSource.stop();
@@ -320,6 +331,7 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
             barcodeDetector.release();
             cameraSource = null;
             barcodeDetector = null;
+            preview = false;
         }
     }
 
@@ -363,6 +375,15 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
             return false;
         }
     };
+
+    private void startCamera(){
+        try {
+            iniCamera();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        mStartScan.setVisibility(View.INVISIBLE);
+    }
 
 
     // обрабатываем полученный штрихкод
@@ -488,7 +509,8 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
         // если камера отрыта то запускаем детектор по новой
         // по хорошему тут должна быть задержка
         if (frameScanVisible) {
-            setDetector();
+           // setDetector();
+            startCamera();
         }
     }
 
@@ -559,7 +581,8 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
             mBarCode.requestFocus();
             // если камера отрыта то запускаем детектор по новой
             if (frameScanVisible) {
-                setDetector();
+                //setDetector();
+                startCamera();
             }
         }
 
@@ -576,7 +599,8 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
 
             // если камера отрыта то запускаем детектор по новой
             if (frameScanVisible) {
-                setDetector();
+                //setDetector();
+                startCamera();
             }
         }
     };
@@ -599,13 +623,17 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
                 }
                 mBarCode.setText("");                // если камера отрыта то запускаем детектор по новой
                 if (frameScanVisible) {
-                    setDetector();
+                    //setDetector();
+                    startCamera();
                 }
                 mBarCode.requestFocus();
                 // если камера отрыта то запускаем детектор по новой
+                /*
                 if (frameScanVisible) {
-                    setDetector();
+                    //startCamera()
+                   setDetector();
                 }
+                */
             }
         }
 
@@ -614,7 +642,8 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
             mBarCode.requestFocus();
             // если камера отрыта то запускаем детектор по новой
             if (frameScanVisible) {
-                setDetector();
+               // setDetector();
+                startCamera();
             }
         }
     };
@@ -747,7 +776,10 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
                 mBarCode.post(new Runnable() {
                     @Override
                     public void run() {
+                        releaceCamera();
+                        mStartScan.setVisibility(View.VISIBLE);
                         mBarCode.setText(barcode);
+                        //releaceCamera();
                         Func.playMessage(ScanActivity.this);
                         workingBarcode(mBarCode);
                     }
