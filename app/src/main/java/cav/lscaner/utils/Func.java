@@ -80,6 +80,7 @@ public class Func {
 
     // проверка на валидность серийного номера
     public static boolean checkSerialNumber(String serialNumber,String deviceID){
+        /*
         String mx = md5(deviceID);
         StringBuffer mxx = new StringBuffer(mx);
         mxx.reverse();
@@ -87,6 +88,17 @@ public class Func {
         mxx = new StringBuffer(mx);
         mx = md5(mxx.toString());
         mx = mx.substring(mx.length()-8);
+        */
+        String mx = md5(deviceID);
+        StringBuffer mxx = new StringBuffer(mx);
+        mxx.reverse();
+        mx = md5(mx.toString());
+        mxx = new StringBuffer(mx);
+        mxx.append("soli");
+        mxx.reverse();
+        mx = md5(mxx.toString());
+        mx = mx.substring(mx.length()-8);
+
         if (mx.equals(serialNumber)) return true;
        return false;
     }
