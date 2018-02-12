@@ -123,11 +123,7 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
             @Override
             public void onClick(View view) {
                 if (!preview) {
-                    try {
-                        iniCamera();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                    startCamera();
                 }
             }
         });
