@@ -14,6 +14,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import java.math.BigDecimal;
+
 import cav.lscaner.R;
 import cav.lscaner.data.models.StoreProductModel;
 import cav.lscaner.utils.ConstantManager;
@@ -117,9 +119,10 @@ public class PrihodChangePriceDialog extends DialogFragment implements View.OnCl
                 mQuantity.setHint(String.valueOf(mGetQuantity));
                 mSumma.setHint(String.valueOf(mGetQuantity*mGetBasePrice));
             } else {
-                mPrice.setText(String.valueOf(mGetBasePrice));
+                mPrice.setHint(String.valueOf(mGetBasePrice));
                 mQuantity.setHint(String.valueOf(mGetQuantity));
-                mSumma.setHint(String.valueOf(mGetQuantity*mGetBasePrice));
+                BigDecimal x = Func.roundUp(mGetQuantity * mGetBasePrice, 2);
+                mSumma.setHint( String.valueOf(x));
                 if (mGetQuantity!=0) mOldQuantity = mGetQuantity;
             }
 
