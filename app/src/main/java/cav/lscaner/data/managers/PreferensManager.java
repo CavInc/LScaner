@@ -57,6 +57,14 @@ public class PreferensManager {
     private static final String FIELD_OUT_P_EGAIS = "FIELD_OUT_P_EGAIS";
     private static final String FIELD_OUT_P_CODETV = "FIELD_OUT_P_CODETV";
 
+    private static final String FIELD_OUT_ALKO_BARCODE = "FIELD_OUT_ALKO_BARCODE";
+    private static final String FIELD_OUT_ALKO_QUANTITY = "FIELD_OUT_ALKO_QUANTITY";
+    private static final String FIELD_OUT_ALKO_PRICE = "FIELD_OUT_ALKO_PRICE";
+    private static final String FIELD_OUT_ALKO_ARTICUL = "FIELD_OUT_ALKO_ARTICUL";
+    private static final String FIELD_OUT_ALKO_BASE_PRICE = "FIELD_OUT_ALKO_BASE_PRICE";
+    private static final String FIELD_OUT_ALKO_EGAIS = "FIELD_OUT_ALKO_EGAIS";
+    private static final String FIELD_OUT_ALKO_CODETV = "FIELD_OUT_ALKO_CODETV";
+
     private static final String FFIN_LEN = "FFIN_LEN";
     private static final String FFIN = "FFIN_";
     private static final String FFOUT_LEN = "FFOUT_LEN";
@@ -375,13 +383,13 @@ public class PreferensManager {
     // насройки полей выходного файла alkomarok
     public FieldOutFile getFieldOutAlcomarkFile(){
         FieldOutFile md = new FieldOutFile(
-                mSharedPreferences.getInt(FIELD_OUT_BARCODE,1),
-                mSharedPreferences.getInt(FIELD_OUT_QUANTITY,-1),
-                mSharedPreferences.getInt(FIELD_OUT_PRICE,-1),
-                mSharedPreferences.getInt(FIELD_OUT_ARTICUL,-1),
-                mSharedPreferences.getInt(FIELD_OUT_BASE_PRICE,-1),
-                mSharedPreferences.getInt(FIELD_OUT_EGAIS,-1),
-                mSharedPreferences.getInt(FIELD_OUT_CODETV,-1)
+                mSharedPreferences.getInt(FIELD_OUT_ALKO_BARCODE,1),
+                mSharedPreferences.getInt(FIELD_OUT_ALKO_QUANTITY,-1),
+                mSharedPreferences.getInt(FIELD_OUT_ALKO_PRICE,-1),
+                mSharedPreferences.getInt(FIELD_OUT_ALKO_ARTICUL,-1),
+                mSharedPreferences.getInt(FIELD_OUT_ALKO_BASE_PRICE,-1),
+                mSharedPreferences.getInt(FIELD_OUT_ALKO_EGAIS,-1),
+                mSharedPreferences.getInt(FIELD_OUT_ALKO_CODETV,-1)
         );
         return md;
     }
