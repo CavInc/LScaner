@@ -4,6 +4,9 @@ import android.app.AlertDialog;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Matrix;
+import android.graphics.RectF;
+import android.hardware.Camera;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -12,6 +15,7 @@ import android.support.v7.widget.SearchView;
 import android.text.InputFilter;
 import android.text.InputType;
 import android.util.Log;
+import android.view.Display;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -26,9 +30,6 @@ import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.google.android.gms.vision.CameraSource;
-import com.google.android.gms.vision.barcode.Barcode;
-import com.google.android.gms.vision.barcode.BarcodeDetector;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -46,21 +47,20 @@ import cav.lscaner.ui.dialogs.SelectItemsDialog;
 import cav.lscaner.ui.dialogs.SelectScanDialog;
 import cav.lscaner.utils.CameraUtils;
 import cav.lscaner.utils.ConstantManager;
-import cav.lscaner.utils.CustomBarcodeDetector;
 import cav.lscaner.utils.Func;
 import cav.lscaner.utils.SwipeDetector;
 
 public class ScanActivity extends AppCompatActivity implements AdapterView.OnItemLongClickListener,AdapterView.OnItemClickListener {
 
+    private static final int CAMERA_D = 0;
     private final int MAX_REC = 30;  // количество записей в демо версии
 
     private EditText mBarCode;
     private ListView mListView;
     private TextView mSumma;
 
-    private BarcodeDetector barcodeDetector;
     private SurfaceView cameraView;
-    private CameraSource cameraSource;
+    private Camera camera;
 
 
     private DataManager mDataManager;
@@ -299,48 +299,37 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
 
     @SuppressWarnings("MissingPermission")
     private void iniCamera() throws IOException {
-
-        barcodeDetector = new BarcodeDetector.Builder(this)
-                .setBarcodeFormats(Barcode.ALL_FORMATS)
-                .build();
-
-        cameraSource = new CameraSource.Builder(this, barcodeDetector)
-                .setRequestedPreviewSize(1000,1000)
-                .setAutoFocusEnabled(true)
-                .build();
+        int cam_count = Camera.getNumberOfCameras() ;
+        if (cam_count == 0) return;
+        camera = Camera.open(CAMERA_D);
+        setPreviewSize(false);
         mHolderCallback = new HolderCallback();
         cameraView.getHolder().addCallback(mHolderCallback);
-
-        Log.d("SA"," SF "+cameraView.isShown());
-
-        cameraSource.start(cameraView.getHolder());
+        camera.setPreviewDisplay(cameraView.getHolder());
+        camera.startPreview();
         preview = true;
-
-        setDetector();
     }
 
     private void releaceCamera(){
-        if (cameraSource != null) {
-            cameraView.getHolder().removeCallback(mHolderCallback);
-            cameraSource.stop();
-            cameraSource.release();
-            barcodeDetector.release();
-            cameraSource = null;
-            barcodeDetector = null;
+        if (camera != null){
+            camera.release();
+            camera = null;
+
             preview = false;
         }
     }
 
-    private void setDetector(){
-        CustomBarcodeDetector detector = new CustomBarcodeDetector();
-        detector.setBarcodeDetectorCallback(mBarcodeDetectorCallback);
-        Log.d("SA","DETECTOR IS OP :"+barcodeDetector.isOperational());
-        barcodeDetector.setProcessor(detector);
-    }
+
 
     @Override
     protected void onResume() {
         super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        releaceCamera();
     }
 
     private String mBar;
@@ -384,15 +373,6 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
 
     // обрабатываем полученный штрихкод
     private boolean workingBarcode(TextView textView){
-        /*
-        if (barcodeDetector != null) {
-            Log.d("SA", "DX IS OP " + barcodeDetector.isOperational());
-            if (barcodeDetector.isOperational()) {
-                barcodeDetector.release();
-            }
-        }
-        */
-
 
         if (demo && countRecord >=10 ) {
             new DemoDialog().show(getSupportFragmentManager(),"DEMO");
@@ -762,6 +742,7 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
         }
     }
 
+    /*
     CustomBarcodeDetector.BarcodeDetectorCallback mBarcodeDetectorCallback = new CustomBarcodeDetector.BarcodeDetectorCallback() {
         @Override
         public void OnBarcode(final String barcode) {
@@ -784,6 +765,7 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
             }
         }
     };
+    */
 
 
     class HolderCallback implements SurfaceHolder.Callback {
@@ -791,15 +773,8 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
         @Override
         public void surfaceCreated(SurfaceHolder surfaceHolder) {
             Log.d("SA","CreateSurface");
-            cameraSource.stop();
-
-            try {
-                //noinspection MissingPermission
-                cameraSource.start(cameraView.getHolder());
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
-
+            //cameraSource.stop();
+           // camera.startPreview();
         }
 
         @SuppressWarnings("MissingPermission")
@@ -811,31 +786,58 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
         @Override
         public void surfaceDestroyed(SurfaceHolder surfaceHolder) {
             Log.d("SA","STOP CAMERA");
-          //  if (cameraSource != null)  cameraSource.stop();
         }
     }
 
-    /*
-    class BarcodeDetectorCallback implements Detector.Processor {
-
+    private Camera.AutoFocusCallback mAutoFocusCallback = new Camera.AutoFocusCallback() {
         @Override
-        public void release() {
+        public void onAutoFocus(boolean b, Camera camera) {
 
         }
+    };
 
-        @Override
-        public void receiveDetections(Detector.Detections detections) {
-            final SparseArray barcodes = detections.getDetectedItems();
-            if (barcodes.size() != 0) {
-                Log.d("SA",((Barcode) barcodes.valueAt(0)).displayValue);
-                mBarCode.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        mBarCode.setText(((Barcode) barcodes.valueAt(0)).displayValue);
-                    }
-                });
-            }
+    private void setPreviewSize(boolean fullScreen) {
+        // получаем размеры экрана
+        Display display = getWindowManager().getDefaultDisplay();
+        boolean widthIsMax = display.getWidth() > display.getHeight();
+
+        // определяем размеры превью камеры
+        Camera.Size size = camera.getParameters().getPreviewSize();
+
+        RectF rectDisplay = new RectF();
+        RectF rectPreview = new RectF();
+
+        // RectF экрана, соотвествует размерам экрана
+        rectDisplay.set(0, 0, display.getWidth(), display.getHeight());
+
+        // RectF первью
+        if (widthIsMax) {
+            // превью в горизонтальной ориентации
+            rectPreview.set(0, 0, size.width, size.height);
+        } else {
+            // превью в вертикальной ориентации
+            rectPreview.set(0, 0, size.height, size.width);
         }
+
+        Matrix matrix = new Matrix();
+        // подготовка матрицы преобразования
+        if (!fullScreen) {
+            // если превью будет "втиснут" в экран (второй вариант из урока)
+            matrix.setRectToRect(rectPreview, rectDisplay,
+                    Matrix.ScaleToFit.START);
+        } else {
+            // если экран будет "втиснут" в превью (третий вариант из урока)
+            matrix.setRectToRect(rectDisplay, rectPreview,
+                    Matrix.ScaleToFit.START);
+            matrix.invert(matrix);
+        }
+        // преобразование
+        matrix.mapRect(rectPreview);
+
+        // установка размеров surface из получившегося преобразования
+        cameraView.getLayoutParams().height = (int) (rectPreview.bottom);
+        cameraView.getLayoutParams().width = (int) (rectPreview.right);
     }
-    */
+
+
 }
