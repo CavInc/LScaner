@@ -305,16 +305,21 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
         setPreviewSize(false);
         mHolderCallback = new HolderCallback();
         cameraView.getHolder().addCallback(mHolderCallback);
-        camera.setPreviewDisplay(cameraView.getHolder());
-        camera.startPreview();
+        //cameraView.getHolder().setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+        //camera.setPreviewDisplay(cameraView.getHolder());
+       // camera.startPreview();
         preview = true;
     }
 
     private void releaceCamera(){
         if (camera != null){
+            //camera.setPreviewCallback(null);
+           // camera.setPreviewDisplay(null);
+            camera.stopPreview();
+            cameraView.getHolder().removeCallback(mHolderCallback);
+            mHolderCallback = null;
             camera.release();
             camera = null;
-
             preview = false;
         }
     }
@@ -781,6 +786,12 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
         @Override
         public void surfaceChanged(SurfaceHolder surfaceHolder, int format, int width, int height) {
             Log.d("SA","SF CHANGE");
+            try {
+                camera.setPreviewDisplay(cameraView.getHolder());
+                camera.startPreview();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
 
         @Override
@@ -792,7 +803,9 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
     private Camera.AutoFocusCallback mAutoFocusCallback = new Camera.AutoFocusCallback() {
         @Override
         public void onAutoFocus(boolean b, Camera camera) {
-
+            if (b){
+                Log.d("SA","AUTO FOCUS");
+            }
         }
     };
 
