@@ -308,6 +308,7 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
         //cameraView.getHolder().setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
         //camera.setPreviewDisplay(cameraView.getHolder());
        // camera.startPreview();
+        camera.autoFocus(mAutoFocusCallback);
         preview = true;
     }
 
@@ -806,6 +807,14 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
             if (b){
                 Log.d("SA","AUTO FOCUS");
             }
+        }
+    };
+
+    private Camera.PictureCallback mPictureCallback = new Camera.PictureCallback() {
+
+        @Override
+        public void onPictureTaken(byte[] bytes, Camera camera) {
+
         }
     };
 
