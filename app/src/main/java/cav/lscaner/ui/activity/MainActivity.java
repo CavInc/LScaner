@@ -38,8 +38,14 @@ import com.google.api.services.drive.DriveScopes;
 import com.google.api.services.drive.model.File;
 import com.google.api.services.drive.model.FileList;
 
+
+import java.io.DataOutputStream;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -361,7 +367,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
                 storeFileFullName = workInFile.getSavedFile();
                 fileType =  selModel.getType();
 
+                // TODO
+                // показываем окно с выбором... если нет сохраненного локал сервере
+                // то нваерно не показываем..
+
                 SendReciveDialog dialog = new SendReciveDialog();
+                dialog.setSendReciveListener(mSendReciveListener);
                 dialog.show(getSupportFragmentManager(),"SRD");
 
                 return;
@@ -438,6 +449,19 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
                 .create();
         builder.show();
     }
+
+    SendReciveDialog.OnSendReciveListener mSendReciveListener = new SendReciveDialog.OnSendReciveListener() {
+        @Override
+        public void selectedItem(int item) {
+            if (item == ConstantManager.GD) {
+                pushGD();
+            }
+            if (item == ConstantManager.LS) {
+                new NetLocalTask(mDataManager.getPreferensManager().getLocalServer(),
+                        storeFileFullName).execute();
+            }
+        }
+    };
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -920,6 +944,84 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
                 .setMessage(e.getLocalizedMessage())
                 .setNegativeButton(R.string.button_close,null).create();
         builder.show();
+    }
+
+    // отправляем локально
+    class NetLocalTask extends AsyncTask<Void,Void,Void> {
+        private String urlServer;
+        private String fname;
+
+        private boolean result;
+        private String resultMessage;
+
+
+
+        public NetLocalTask(String url,String fname){
+            this.urlServer = url;
+            this.fname = fname;
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            String lineEnd = "\r\n";
+            String twoHyphens = "--";
+            String boundary = "-------------" + System.currentTimeMillis();
+
+            try {
+                URL url = new URL(urlServer+"/upload");
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+
+                conn.setDoInput(true);
+                conn.setDoOutput(true);
+                conn.setUseCaches(false);
+                conn.setRequestMethod("POST");
+
+                /* setRequestProperty */
+                conn.setRequestProperty("Connection", "Keep-Alive");
+                conn.setRequestProperty("Charset", "UTF-8");
+                conn.setRequestProperty("Content-Type", "multipart/form-data;boundary="+ boundary);
+
+                DataOutputStream ds = new DataOutputStream(conn.getOutputStream());
+                ds.writeBytes(twoHyphens + boundary + lineEnd);
+                ds.writeBytes("Content-Disposition: form-data; name=\"uploadedFile\";filename=\"" + fname +"\"" + lineEnd);
+                ds.writeBytes(lineEnd);
+
+                FileInputStream fStream = new FileInputStream(fname);
+
+                int bufferSize = 1024;
+                byte[] buffer = new byte[bufferSize];
+                int length = -1;
+
+                while((length = fStream.read(buffer)) != -1) {
+                    ds.write(buffer, 0, length);
+                }
+                ds.writeBytes(lineEnd);
+                ds.writeBytes(twoHyphens + boundary + twoHyphens + lineEnd);
+                /* close streams */
+                fStream.close();
+                ds.flush();
+                ds.close();
+
+                if(conn.getResponseCode() != HttpURLConnection.HTTP_OK) {
+                    result = true;
+                    resultMessage = conn.getResponseMessage();
+                } else {
+                    result = false;
+                    resultMessage = conn.getResponseMessage();
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            Log.d(TAG,urlServer+"/upload");
+            Log.d(TAG,resultMessage);
+
+        }
     }
 
 }

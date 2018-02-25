@@ -4,8 +4,8 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:layout_marginBottom="@dimen/activity_vertical_margin"
-              android:paddingLeft="4dp"
-              android:paddingRight="4dp">
+              android:paddingLeft="8dp"
+              android:paddingRight="8dp">
     <TextView
         android:id="@+id/ssr_gd"
         android:text="Google Drive"
