@@ -75,7 +75,7 @@ public class PreferensManager {
     private static final String FFCP = "FFCP";
     private static final String FFPRIHOD_LEN = "FFPRIHOD_LEN";
     private static final String FFPRIHOD = "FFPRIHOD";
-
+    private static final String LOCAL_SERVER = "LOCAL_SERVER";
 
 
     private SharedPreferences mSharedPreferences;
@@ -176,6 +176,16 @@ public class PreferensManager {
         editor.putInt(ConstantManager.CODE_FILE,code);
         editor.apply();
 
+    }
+
+    // настроки логальлного сервера
+    public String getLocalServer(){
+        return mSharedPreferences.getString(LOCAL_SERVER,null);
+    }
+    public void setLocalServer(String server){
+        SharedPreferences.Editor editor = mSharedPreferences.edit();
+        editor.putString(LOCAL_SERVER,server);
+        editor.apply();
     }
 
 

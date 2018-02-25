@@ -51,6 +51,7 @@ import cav.lscaner.ui.adapter.ScannedFileAdapter;
 import cav.lscaner.ui.dialogs.AddEditNameFileDialog;
 import cav.lscaner.ui.dialogs.DemoDialog;
 import cav.lscaner.ui.dialogs.SelectMainDialog;
+import cav.lscaner.ui.dialogs.SendReciveDialog;
 import cav.lscaner.ui.dialogs.WarningDialog;
 import cav.lscaner.utils.ConstantManager;
 import cav.lscaner.utils.Func;
@@ -352,18 +353,26 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
                     showNoNetwork();
                     return;
                 }
-
                 directionGD = WRITE_FILE;
                 // сохраняем файл
                 WorkInFile workInFile = new WorkInFile(mDataManager.getPreferensManager().getCodeFile());
                 workInFile.saveFile(selModel.getId(),selModel.getName(),mDataManager,selModel.getType());
                 Log.d(TAG,workInFile.getSavedFile());
                 storeFileFullName = workInFile.getSavedFile();
+                fileType =  selModel.getType();
+
+                SendReciveDialog dialog = new SendReciveDialog();
+                dialog.show(getSupportFragmentManager(),"SRD");
+
+                return;
+/*
+
                 // показываем окно с выбором куда отправлять
                 // Toast.makeText(MainActivity.this,"А тут будет диалог спрашивающий куда отправить",Toast.LENGTH_LONG).show();
                 // вызов отправки
-                fileType =  selModel.getType();
                 pushGD();
+                */
+
             }
         }
     };

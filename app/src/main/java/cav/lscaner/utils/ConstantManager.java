@@ -32,4 +32,6 @@ public interface ConstantManager{
     String PREFIX_FILE_PRIHOD = "{Поступление}";
     String PREFIX_FILE_ALCOMARK = "{АКЛОМАРК}";
 
+    int GD = 0;
+    int LS = 1;
 }
