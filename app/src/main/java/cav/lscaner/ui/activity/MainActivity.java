@@ -1049,7 +1049,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
             if (mLastError != null ){
                 ErrorDialog(mLastError);
             }
-
         }
     }
 
