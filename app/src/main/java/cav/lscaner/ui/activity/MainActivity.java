@@ -954,6 +954,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
         private boolean result;
         private String resultMessage;
 
+        private Exception mLastError = null;
+        private java.io.File filePath = null;
 
 
         public NetLocalTask(String url,String fname){
@@ -966,6 +968,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
             String lineEnd = "\r\n";
             String twoHyphens = "--";
             String boundary = "-------------" + System.currentTimeMillis();
+            filePath = new java.io.File(fname);
+            fname = filePath.getName();
+
+            if (fname.toUpperCase().indexOf(".TXT") == -1){ fname = fname+".txt";}
 
             try {
                 URL url = new URL(urlServer+"/upload");
@@ -986,7 +992,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
                 ds.writeBytes("Content-Disposition: form-data; name=\"uploadedFile\";filename=\"" + fname +"\"" + lineEnd);
                 ds.writeBytes(lineEnd);
 
-                FileInputStream fStream = new FileInputStream(fname);
+                FileInputStream fStream = new FileInputStream(filePath);
 
                 int bufferSize = 1024;
                 byte[] buffer = new byte[bufferSize];
@@ -1012,6 +1018,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
 
             } catch (Exception e) {
                 e.printStackTrace();
+                mLastError = e;
+                cancel(true);
             }
             return null;
         }
@@ -1020,6 +1028,27 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
         protected void onPostExecute(Void aVoid) {
             Log.d(TAG,urlServer+"/upload");
             Log.d(TAG,resultMessage);
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+            builder.setTitle(R.string.app_name)
+                    .setMessage("Выгружен файл ....")
+                    .setCancelable(false)
+                    .setNegativeButton(R.string.button_ok, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            filePath.delete();
+                        }
+                    })
+                    .create();
+            builder.show();
+
+        }
+
+        @Override
+        protected void onCancelled(Void aVoid) {
+            if (mLastError != null ){
+                ErrorDialog(mLastError);
+            }
 
         }
     }
