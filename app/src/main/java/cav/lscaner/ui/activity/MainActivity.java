@@ -43,6 +43,7 @@ import java.io.DataOutputStream;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -155,7 +156,14 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
                 return false;
             }
             directionGD = READ_FILE;
-            requestData();
+            //
+            if (mDataManager.getPreferensManager().getLocalServer() != null) {
+                SendReciveDialog dialog = new SendReciveDialog();
+                dialog.setSendReciveListener(mSendReciveListener);
+                dialog.show(getSupportFragmentManager(),"SRD");
+            } else {
+                requestData();
+            }
         }
         if (item.getItemId() == R.id.menu_about) {
             Intent intent = new Intent(this,AboutActivity.class);
@@ -374,7 +382,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
                 SendReciveDialog dialog = new SendReciveDialog();
                 dialog.setSendReciveListener(mSendReciveListener);
                 dialog.show(getSupportFragmentManager(),"SRD");
-
                 return;
 /*
 
@@ -453,12 +460,23 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
     SendReciveDialog.OnSendReciveListener mSendReciveListener = new SendReciveDialog.OnSendReciveListener() {
         @Override
         public void selectedItem(int item) {
-            if (item == ConstantManager.GD) {
-                pushGD();
+            if (directionGD == WRITE_FILE) {
+                if (item == ConstantManager.GD) {
+                    pushGD();
+                }
+                if (item == ConstantManager.LS) {
+                    new NetLocalTask(mDataManager.getPreferensManager().getLocalServer(),
+                            storeFileFullName).execute();
+                }
             }
-            if (item == ConstantManager.LS) {
-                new NetLocalTask(mDataManager.getPreferensManager().getLocalServer(),
-                        storeFileFullName).execute();
+            if (directionGD == READ_FILE ){
+                if (item == ConstantManager.GD) {
+                    requestData();
+                }
+                if (item == ConstantManager.LS) {
+                    new GetLocalTask(mDataManager.getPreferensManager().getLocalServer(),
+                            mDataManager.getPreferensManager().getStoreFileName()).execute();
+                }
             }
         }
     };
@@ -1046,6 +1064,113 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
 
         @Override
         protected void onCancelled(Void aVoid) {
+            if (mLastError != null ){
+                ErrorDialog(mLastError);
+            }
+        }
+    }
+
+    // получаем локально
+    class GetLocalTask extends AsyncTask<Void,Void,Void>  {
+        private String urlServer;
+        private String fname;
+        private java.io.File filePath;
+        private Exception mLastError;
+
+        private static final int BUFFER_SIZE = 4096;
+        private boolean resultSearchFlag;
+
+        public GetLocalTask(String url,String fname){
+            this.urlServer = url;
+            this.fname = fname;
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            String path = mDataManager.getStorageAppPath();
+            filePath = new java.io.File(path,fname);
+
+            try {
+                URL url = new URL(urlServer + "/download/" + fname);
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setRequestMethod("GET");
+                conn.setDoOutput(true);
+                conn.connect();
+
+                int responseCode = conn.getResponseCode();
+
+                if (responseCode == HttpURLConnection.HTTP_OK) {
+
+                    InputStream inputStream = conn.getInputStream();
+
+                    FileOutputStream fos = new FileOutputStream(filePath);
+
+                    int bytesRead = -1;
+                    byte[] buffer = new byte[BUFFER_SIZE];
+                    while ((bytesRead = inputStream.read(buffer)) != -1) {
+                        fos.write(buffer, 0, bytesRead);
+                    }
+
+                    fos.close();
+                    inputStream.close();
+
+
+                    resultSearchFlag = true;
+                    WorkInFile workInFile = new WorkInFile(mDataManager.getPreferensManager().getCodeFile());
+                    int ret_flg =  workInFile.loadProductFile(fname,mDataManager);
+
+                    if (ret_flg == ConstantManager.RET_NO_FIELD_MANY) {
+                        WarningDialog dialog = WarningDialog.newInstance("Количество полей в файле меньше чем указано в настройках");
+                        dialog.show(getFragmentManager(),"WD");
+                    }
+                    if (ret_flg == ConstantManager.RET_ERROR) {
+                        WarningDialog dialog = WarningDialog.newInstance("Ошибка при загрузке файла данных\n"+mDataManager.getLastError());
+                        dialog.show(getFragmentManager(),"WD");
+                    }
+
+                }
+                conn.disconnect();
+            }catch(IOException e){
+                e.printStackTrace();
+                mLastError = e;
+                cancel(true);
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            showProgress();
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            hideProgress();
+            // System.out.println(new Date());
+
+            String msg;
+            if (resultSearchFlag) {
+                msg = "Скачан файл с товаром:"+fname;
+            } else {
+                msg = "Файл "+fname+" отсутствует на локальном сервере";
+            }
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+            builder.setTitle(R.string.app_name)
+                    .setMessage(msg)
+                    .setCancelable(false)
+                    .setNegativeButton(R.string.button_ok, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+
+                        }
+                    })
+                    .create();
+            builder.show();
+        }
+
+        @Override
+        protected void onCancelled() {
             if (mLastError != null ){
                 ErrorDialog(mLastError);
             }
