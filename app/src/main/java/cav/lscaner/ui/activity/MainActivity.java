@@ -1096,6 +1096,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
                 conn.setRequestMethod("GET");
                 conn.setDoOutput(true);
                 conn.connect();
+                Log.d(TAG,"METHOD :"+conn.getRequestMethod());
 
                 int responseCode = conn.getResponseCode();
 
