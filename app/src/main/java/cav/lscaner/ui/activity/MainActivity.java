@@ -1001,6 +1001,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
                 conn.setRequestMethod("POST");
 
                 /* setRequestProperty */
+                conn.setRequestProperty("Accept-Charset", "UTF-8");
                 conn.setRequestProperty("Connection", "Keep-Alive");
                 conn.setRequestProperty("Charset", "UTF-8");
                 conn.setRequestProperty("Content-Type", "multipart/form-data;boundary="+ boundary);
@@ -1087,18 +1088,21 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
 
         @Override
         protected Void doInBackground(Void... voids) {
+            String charset = "UTF-8";
             String path = mDataManager.getStorageAppPath();
             filePath = new java.io.File(path,fname);
 
             try {
                 URL url = new URL(urlServer + "/download/" + fname);
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setRequestProperty("Accept-Charset", charset);
                 conn.setRequestMethod("GET");
-                conn.setDoOutput(true);
+                //conn.setDoOutput(true);
                 conn.connect();
                 Log.d(TAG,"METHOD :"+conn.getRequestMethod());
 
                 int responseCode = conn.getResponseCode();
+                Log.d(TAG,"GET Response Code :: " + responseCode);
 
                 if (responseCode == HttpURLConnection.HTTP_OK) {
 
