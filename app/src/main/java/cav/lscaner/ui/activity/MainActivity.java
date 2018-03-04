@@ -38,8 +38,15 @@ import com.google.api.services.drive.DriveScopes;
 import com.google.api.services.drive.model.File;
 import com.google.api.services.drive.model.FileList;
 
+
+import java.io.DataOutputStream;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -51,6 +58,7 @@ import cav.lscaner.ui.adapter.ScannedFileAdapter;
 import cav.lscaner.ui.dialogs.AddEditNameFileDialog;
 import cav.lscaner.ui.dialogs.DemoDialog;
 import cav.lscaner.ui.dialogs.SelectMainDialog;
+import cav.lscaner.ui.dialogs.SendReciveDialog;
 import cav.lscaner.ui.dialogs.WarningDialog;
 import cav.lscaner.utils.ConstantManager;
 import cav.lscaner.utils.Func;
@@ -148,7 +156,14 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
                 return false;
             }
             directionGD = READ_FILE;
-            requestData();
+            //
+            if (mDataManager.getPreferensManager().getLocalServer() != null) {
+                SendReciveDialog dialog = new SendReciveDialog();
+                dialog.setSendReciveListener(mSendReciveListener);
+                dialog.show(getSupportFragmentManager(),"SRD");
+            } else {
+                requestData();
+            }
         }
         if (item.getItemId() == R.id.menu_about) {
             Intent intent = new Intent(this,AboutActivity.class);
@@ -352,18 +367,30 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
                     showNoNetwork();
                     return;
                 }
-
                 directionGD = WRITE_FILE;
                 // сохраняем файл
                 WorkInFile workInFile = new WorkInFile(mDataManager.getPreferensManager().getCodeFile());
                 workInFile.saveFile(selModel.getId(),selModel.getName(),mDataManager,selModel.getType());
                 Log.d(TAG,workInFile.getSavedFile());
                 storeFileFullName = workInFile.getSavedFile();
+                fileType =  selModel.getType();
+
+                // TODO
+                // показываем окно с выбором... если нет сохраненного локал сервере
+                // то нваерно не показываем..
+
+                SendReciveDialog dialog = new SendReciveDialog();
+                dialog.setSendReciveListener(mSendReciveListener);
+                dialog.show(getSupportFragmentManager(),"SRD");
+                return;
+/*
+
                 // показываем окно с выбором куда отправлять
                 // Toast.makeText(MainActivity.this,"А тут будет диалог спрашивающий куда отправить",Toast.LENGTH_LONG).show();
                 // вызов отправки
-                fileType =  selModel.getType();
                 pushGD();
+                */
+
             }
         }
     };
@@ -429,6 +456,30 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
                 .create();
         builder.show();
     }
+
+    SendReciveDialog.OnSendReciveListener mSendReciveListener = new SendReciveDialog.OnSendReciveListener() {
+        @Override
+        public void selectedItem(int item) {
+            if (directionGD == WRITE_FILE) {
+                if (item == ConstantManager.GD) {
+                    pushGD();
+                }
+                if (item == ConstantManager.LS) {
+                    new NetLocalTask(mDataManager.getPreferensManager().getLocalServer(),
+                            storeFileFullName).execute();
+                }
+            }
+            if (directionGD == READ_FILE ){
+                if (item == ConstantManager.GD) {
+                    requestData();
+                }
+                if (item == ConstantManager.LS) {
+                    new GetLocalTask(mDataManager.getPreferensManager().getLocalServer(),
+                            mDataManager.getPreferensManager().getStoreFileName()).execute();
+                }
+            }
+        }
+    };
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -911,6 +962,224 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
                 .setMessage(e.getLocalizedMessage())
                 .setNegativeButton(R.string.button_close,null).create();
         builder.show();
+    }
+
+    // отправляем локально
+    class NetLocalTask extends AsyncTask<Void,Void,Void> {
+        private String urlServer;
+        private String fname;
+
+        private boolean result;
+        private String resultMessage;
+
+        private Exception mLastError = null;
+        private java.io.File filePath = null;
+
+
+        public NetLocalTask(String url,String fname){
+            this.urlServer = url;
+            this.fname = fname;
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            String lineEnd = "\r\n";
+            String twoHyphens = "--";
+            String boundary = "-------------" + System.currentTimeMillis();
+            filePath = new java.io.File(fname);
+            fname = filePath.getName();
+
+            if (fname.toUpperCase().indexOf(".TXT") == -1){ fname = fname+".txt";}
+
+            try {
+                URL url = new URL(urlServer+"/upload");
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+
+                conn.setDoInput(true);
+                conn.setDoOutput(true);
+                conn.setUseCaches(false);
+                conn.setRequestMethod("POST");
+
+                /* setRequestProperty */
+                conn.setRequestProperty("Accept-Charset", "UTF-8");
+                conn.setRequestProperty("Connection", "Keep-Alive");
+                conn.setRequestProperty("Charset", "UTF-8");
+                conn.setRequestProperty("Content-Type", "multipart/form-data;boundary="+ boundary);
+
+                DataOutputStream ds = new DataOutputStream(conn.getOutputStream());
+                ds.writeBytes(twoHyphens + boundary + lineEnd);
+                ds.writeBytes("Content-Disposition: form-data; name=\"uploadedFile\";filename=\"" + fname +"\"" + lineEnd);
+                ds.writeBytes(lineEnd);
+
+                FileInputStream fStream = new FileInputStream(filePath);
+
+                int bufferSize = 1024;
+                byte[] buffer = new byte[bufferSize];
+                int length = -1;
+
+                while((length = fStream.read(buffer)) != -1) {
+                    ds.write(buffer, 0, length);
+                }
+                ds.writeBytes(lineEnd);
+                ds.writeBytes(twoHyphens + boundary + twoHyphens + lineEnd);
+                /* close streams */
+                fStream.close();
+                ds.flush();
+                ds.close();
+
+                if(conn.getResponseCode() != HttpURLConnection.HTTP_OK) {
+                    result = true;
+                    resultMessage = conn.getResponseMessage();
+                } else {
+                    result = false;
+                    resultMessage = conn.getResponseMessage();
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                mLastError = e;
+                cancel(true);
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            Log.d(TAG,urlServer+"/upload");
+            Log.d(TAG,resultMessage);
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+            builder.setTitle(R.string.app_name)
+                    .setMessage("Выгружен файл ....")
+                    .setCancelable(false)
+                    .setNegativeButton(R.string.button_ok, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            filePath.delete();
+                        }
+                    })
+                    .create();
+            builder.show();
+
+        }
+
+        @Override
+        protected void onCancelled(Void aVoid) {
+            if (mLastError != null ){
+                ErrorDialog(mLastError);
+            }
+        }
+    }
+
+    // получаем локально
+    class GetLocalTask extends AsyncTask<Void,Void,Void>  {
+        private String urlServer;
+        private String fname;
+        private java.io.File filePath;
+        private Exception mLastError;
+
+        private static final int BUFFER_SIZE = 4096;
+        private boolean resultSearchFlag;
+
+        public GetLocalTask(String url,String fname){
+            this.urlServer = url;
+            this.fname = fname;
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            String charset = "UTF-8";
+            String path = mDataManager.getStorageAppPath();
+            filePath = new java.io.File(path,fname);
+
+            try {
+                URL url = new URL(urlServer + "/download/" + fname);
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setRequestProperty("Accept-Charset", charset);
+                conn.setRequestMethod("GET");
+                //conn.setDoOutput(true);
+                conn.connect();
+                Log.d(TAG,"METHOD :"+conn.getRequestMethod());
+
+                int responseCode = conn.getResponseCode();
+                Log.d(TAG,"GET Response Code :: " + responseCode);
+
+                if (responseCode == HttpURLConnection.HTTP_OK) {
+
+                    InputStream inputStream = conn.getInputStream();
+
+                    FileOutputStream fos = new FileOutputStream(filePath);
+
+                    int bytesRead = -1;
+                    byte[] buffer = new byte[BUFFER_SIZE];
+                    while ((bytesRead = inputStream.read(buffer)) != -1) {
+                        fos.write(buffer, 0, bytesRead);
+                    }
+
+                    fos.close();
+                    inputStream.close();
+
+
+                    resultSearchFlag = true;
+                    WorkInFile workInFile = new WorkInFile(mDataManager.getPreferensManager().getCodeFile());
+                    int ret_flg =  workInFile.loadProductFile(fname,mDataManager);
+
+                    if (ret_flg == ConstantManager.RET_NO_FIELD_MANY) {
+                        WarningDialog dialog = WarningDialog.newInstance("Количество полей в файле меньше чем указано в настройках");
+                        dialog.show(getFragmentManager(),"WD");
+                    }
+                    if (ret_flg == ConstantManager.RET_ERROR) {
+                        WarningDialog dialog = WarningDialog.newInstance("Ошибка при загрузке файла данных\n"+mDataManager.getLastError());
+                        dialog.show(getFragmentManager(),"WD");
+                    }
+
+                }
+                conn.disconnect();
+            }catch(IOException e){
+                e.printStackTrace();
+                mLastError = e;
+                cancel(true);
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            showProgress();
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            hideProgress();
+            // System.out.println(new Date());
+
+            String msg;
+            if (resultSearchFlag) {
+                msg = "Скачан файл с товаром:"+fname;
+            } else {
+                msg = "Файл "+fname+" отсутствует на локальном сервере";
+            }
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+            builder.setTitle(R.string.app_name)
+                    .setMessage(msg)
+                    .setCancelable(false)
+                    .setNegativeButton(R.string.button_ok, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+
+                        }
+                    })
+                    .create();
+            builder.show();
+        }
+
+        @Override
+        protected void onCancelled() {
+            if (mLastError != null ){
+                ErrorDialog(mLastError);
+            }
+        }
     }
 
 }

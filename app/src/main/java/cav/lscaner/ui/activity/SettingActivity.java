@@ -25,6 +25,7 @@ public class SettingActivity extends PreferenceActivity {
 
     private EditTextPreference mFileDelimeter;
     private EditTextPreference mScalePrefix;
+    private EditTextPreference mLocalServer;
 
     private ListPreference mCodeFile;
 
@@ -50,6 +51,12 @@ public class SettingActivity extends PreferenceActivity {
         mCodeFile = (ListPreference) findPreference("file_code");
         mCodeFile.setOnPreferenceChangeListener(mChangeListener);
 
+        mLocalServer = (EditTextPreference) findPreference("localserver");
+        mLocalServer.setOnPreferenceChangeListener(mChangeListener);
+
+
+
+
         int code = mDataManager.getPreferensManager().getCodeFile();
         String[] hL = getResources().getStringArray(R.array.code_entries);
         mCodeFile.setSummary(hL[code-1]);
@@ -60,6 +67,8 @@ public class SettingActivity extends PreferenceActivity {
 
         mScalePrefix.setSummary(mDataManager.getPreferensManager().getScalePrefixStr());
         mScalePrefix.setDefaultValue(mDataManager.getPreferensManager().getScalePrefixStr());
+
+        mLocalServer.setSummary(mDataManager.getPreferensManager().getLocalServer());
     }
 
     @Override
@@ -106,6 +115,11 @@ public class SettingActivity extends PreferenceActivity {
                 mDataManager.getPreferensManager().setCodeFile(Integer.valueOf(l));
                 String[] hL = getResources().getStringArray(R.array.code_entries);
                 mCodeFile.setSummary(hL[Integer.valueOf(l)-1]);
+            }
+            if (preference.getKey().equals("localserver")){
+                String l = (String) o;
+                mDataManager.getPreferensManager().setLocalServer(l);
+                mLocalServer.setSummary(l);
             }
             return true;
         }
