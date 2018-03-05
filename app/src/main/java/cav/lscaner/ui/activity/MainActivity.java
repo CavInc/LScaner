@@ -1031,6 +1031,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
                 conn.setRequestProperty("Charset", "UTF-8");
                 conn.setRequestProperty("Content-Type", "multipart/form-data;boundary="+ boundary);
 
+                /*
+                fileName = request.getHeader ( "user-agent" ).contains ( "MSIE" ) ? URLEncoder.encode ( fileName, "utf-8") : MimeUtility.encodeWord ( fileName );
+                response.setHeader ( "Content-disposition", "attachment; filename=\"" + fileName + "\"");
+                */
+
                 DataOutputStream ds = new DataOutputStream(conn.getOutputStream());
                 ds.writeBytes(twoHyphens + boundary + lineEnd);
                 ds.writeBytes("Content-Disposition: form-data; name=\"uploadedFile\";filename=\"" +
