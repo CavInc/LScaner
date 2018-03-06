@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -1035,11 +1036,16 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
                 fileName = request.getHeader ( "user-agent" ).contains ( "MSIE" ) ? URLEncoder.encode ( fileName, "utf-8") : MimeUtility.encodeWord ( fileName );
                 response.setHeader ( "Content-disposition", "attachment; filename=\"" + fileName + "\"");
                 */
+                String fileName = URLEncoder.encode(fname, "UTF-8");
+               // Log.d(TAG," Encoder :"+fileName);
+
+                //Log.d(TAG,"URU : "+Uri.encode(fname));
+                //Log.d(TAG," URU DECODE : "+Uri.decode(fileName));
 
                 DataOutputStream ds = new DataOutputStream(conn.getOutputStream());
                 ds.writeBytes(twoHyphens + boundary + lineEnd);
-                ds.writeBytes("Content-Disposition: form-data; name=\"uploadedFile\";filename=\"" +
-                        URLEncoder.encode(fname, "UTF-8") +"\"" + lineEnd);
+                ds.writeBytes("Content-Disposition: form-data; name=\"uploadedFile\";filename*=\"" +
+                        fileName +"\"" + lineEnd);
                 ds.writeBytes(lineEnd);
 
                 FileInputStream fStream = new FileInputStream(filePath);
