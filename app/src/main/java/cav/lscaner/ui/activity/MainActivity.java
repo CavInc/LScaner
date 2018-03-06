@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -18,6 +19,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.webkit.URLUtil;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
@@ -47,6 +49,7 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -466,7 +469,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
                 }
                 if (item == ConstantManager.LS) {
                     new NetLocalTask(mDataManager.getPreferensManager().getLocalServer(),
-                            storeFileFullName).execute();
+                            storeFileFullName,fileType).execute();
                 }
             }
             if (directionGD == READ_FILE ){
@@ -975,10 +978,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
         private Exception mLastError = null;
         private java.io.File filePath = null;
 
+        private int filetype;
 
-        public NetLocalTask(String url,String fname){
+
+        public NetLocalTask(String url,String fname,int filetype){
             this.urlServer = url;
             this.fname = fname;
+            this.filetype = filetype;
         }
 
         @Override
@@ -990,6 +996,26 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
             fname = filePath.getName();
 
             if (fname.toUpperCase().indexOf(".TXT") == -1){ fname = fname+".txt";}
+
+            fname="_"+fname;
+
+            /*
+            if (filetype == ConstantManager.FILE_TYPE_PRODUCT) {
+                fname = ConstantManager.PREFIX_FILE_TOVAR+fname;
+            }
+            if (filetype == ConstantManager.FILE_TYPE_EGAIS) {
+                fname = ConstantManager.PREFIX_FILE_EGAIS+fname;
+            }
+            if (filetype == ConstantManager.FILE_TYPE_CHANGE_PRICE) {
+                fname = ConstantManager.PREFIX_FILE_CHANGEPRICE+fname;
+            }
+            if (filetype == ConstantManager.FILE_TYPE_PRIHOD) {
+                fname = ConstantManager.PREFIX_FILE_PRIHOD+fname;
+            }
+            if (filetype == ConstantManager.FILE_TYPE_ALCOMARK) {
+                fname = ConstantManager.PREFIX_FILE_ALCOMARK+fname;
+            }
+            */
 
             try {
                 URL url = new URL(urlServer+"/upload");
@@ -1006,9 +1032,20 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
                 conn.setRequestProperty("Charset", "UTF-8");
                 conn.setRequestProperty("Content-Type", "multipart/form-data;boundary="+ boundary);
 
+                /*
+                fileName = request.getHeader ( "user-agent" ).contains ( "MSIE" ) ? URLEncoder.encode ( fileName, "utf-8") : MimeUtility.encodeWord ( fileName );
+                response.setHeader ( "Content-disposition", "attachment; filename=\"" + fileName + "\"");
+                */
+                String fileName = URLEncoder.encode(fname, "UTF-8");
+               // Log.d(TAG," Encoder :"+fileName);
+
+                //Log.d(TAG,"URU : "+Uri.encode(fname));
+                //Log.d(TAG," URU DECODE : "+Uri.decode(fileName));
+
                 DataOutputStream ds = new DataOutputStream(conn.getOutputStream());
                 ds.writeBytes(twoHyphens + boundary + lineEnd);
-                ds.writeBytes("Content-Disposition: form-data; name=\"uploadedFile\";filename=\"" + fname +"\"" + lineEnd);
+                ds.writeBytes("Content-Disposition: form-data; name=\"uploadedFile\";filename*=\"" +
+                        fileName +"\"" + lineEnd);
                 ds.writeBytes(lineEnd);
 
                 FileInputStream fStream = new FileInputStream(filePath);
