@@ -19,11 +19,11 @@
             android:layout_width="match_parent"
             android:layout_height="250dp"
             android:visibility="gone">
-            <FrameLayout
+            <com.journeyapps.barcodescanner.CompoundBarcodeView
                 android:id="@+id/barcode_scan_v"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
-            </FrameLayout>
+            </com.journeyapps.barcodescanner.CompoundBarcodeView>
             <View
                 android:layout_marginTop="124dp"
                 android:layout_width="match_parent"
