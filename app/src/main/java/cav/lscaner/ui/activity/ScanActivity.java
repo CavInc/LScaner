@@ -750,8 +750,8 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
         @Override
         public void barcodeResult(BarcodeResult result) {
             if (result.getText() != null) {
-                Log.d("M2A",result.getText());
-                Log.d("M2A",result.getBarcodeFormat().toString());
+                //Log.d("M2A",result.getText());
+                //Log.d("M2A",result.getBarcodeFormat().toString());
                 mBarCode.setText(result.getText());
                 mStartScan.setVisibility(View.VISIBLE);
                 Func.playMessage(ScanActivity.this);
