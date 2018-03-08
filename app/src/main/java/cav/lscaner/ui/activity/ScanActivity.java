@@ -4,9 +4,12 @@ import android.app.AlertDialog;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.graphics.RectF;
 import android.hardware.Camera;
+import android.os.Handler;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -20,7 +23,6 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SurfaceHolder;
-import android.view.SurfaceView;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
@@ -30,6 +32,14 @@ import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+
+import com.google.zxing.BinaryBitmap;
+import com.google.zxing.LuminanceSource;
+import com.google.zxing.MultiFormatReader;
+import com.google.zxing.NotFoundException;
+import com.google.zxing.RGBLuminanceSource;
+import com.google.zxing.Result;
+import com.google.zxing.common.HybridBinarizer;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -45,6 +55,7 @@ import cav.lscaner.ui.dialogs.PrihodChangePriceDialog;
 import cav.lscaner.ui.dialogs.QueryQuantityDialog;
 import cav.lscaner.ui.dialogs.SelectItemsDialog;
 import cav.lscaner.ui.dialogs.SelectScanDialog;
+import cav.lscaner.utils.CustomCameraPreview;
 import cav.lscaner.utils.CameraUtils;
 import cav.lscaner.utils.ConstantManager;
 import cav.lscaner.utils.Func;
@@ -59,8 +70,10 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
     private ListView mListView;
     private TextView mSumma;
 
-    private SurfaceView cameraView;
+    private FrameLayout previewFrame;
+    private CustomCameraPreview cameraView;
     private Camera camera;
+    private Handler autoFocusHandler;
 
 
     private DataManager mDataManager;
@@ -116,7 +129,7 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
 
          // окно для отображения
         mFrameLayout = (FrameLayout) findViewById(R.id.barcode_frame);
-        cameraView = (SurfaceView) findViewById(R.id.barcode_scan_v);
+        previewFrame = (FrameLayout) findViewById(R.id.barcode_scan_v);
 
         mStartScan = (Button) findViewById(R.id.barcode_scanner_bt);
         mStartScan.setOnClickListener(new View.OnClickListener() {
@@ -302,13 +315,16 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
         int cam_count = Camera.getNumberOfCameras() ;
         if (cam_count == 0) return;
         camera = Camera.open(CAMERA_D);
-        setPreviewSize(false);
+        cameraView = new CustomCameraPreview(this,camera,mPreviewCallback,mAutoFocusCallback);
+        previewFrame.removeAllViews();
+        previewFrame.addView(cameraView);
+       // setPreviewSize(false);
         mHolderCallback = new HolderCallback();
         cameraView.getHolder().addCallback(mHolderCallback);
         //cameraView.getHolder().setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
         //camera.setPreviewDisplay(cameraView.getHolder());
        // camera.startPreview();
-        camera.autoFocus(mAutoFocusCallback);
+        //camera.autoFocus(mAutoFocusCallback);
         preview = true;
     }
 
@@ -317,6 +333,7 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
             //camera.setPreviewCallback(null);
            // camera.setPreviewDisplay(null);
             camera.stopPreview();
+            camera.cancelAutoFocus();
             cameraView.getHolder().removeCallback(mHolderCallback);
             mHolderCallback = null;
             camera.release();
@@ -815,6 +832,37 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
         @Override
         public void onPictureTaken(byte[] bytes, Camera camera) {
 
+        }
+    };
+
+    private Camera.PreviewCallback mPreviewCallback = new Camera.PreviewCallback() {
+        @Override
+        public void onPreviewFrame(byte[] bytes, Camera camera) {
+            //int w = camera.getParameters().getPictureSize().width;
+            //int h = camera.getParameters().getPictureSize().height;
+
+            int w = camera.getParameters().getPreviewSize().width;
+            int h = camera.getParameters().getPictureSize().height;
+
+            LuminanceSource source = null;
+
+            Bitmap myBitmap = BitmapFactory.decodeByteArray(bytes,w,h);
+
+            int x = myBitmap.getWidth();
+            int y = myBitmap.getHeight();
+
+            int[] intArray = new int[x * y];
+            myBitmap.getPixels(intArray, 0, x, 0, 0, x, y);
+
+            source = new RGBLuminanceSource(w,h,intArray);
+            BinaryBitmap bBitmap = new BinaryBitmap(new HybridBinarizer(source));
+            MultiFormatReader reader = new MultiFormatReader();
+            try {
+                Result res = reader.decode(bBitmap);
+                Log.d("SA",res.getText());
+            } catch (NotFoundException e) {
+                e.printStackTrace();
+            }
         }
     };
 
