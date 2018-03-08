@@ -76,10 +76,6 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
     private ListView mListView;
     private TextView mSumma;
 
-    private FrameLayout previewFrame;
-    private CustomCameraPreview cameraView;
-    private Camera camera;
-    private Handler autoFocusHandler;
 
     private CompoundBarcodeView mBarcodeView;
 
@@ -137,7 +133,7 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
 
          // окно для отображения
         mFrameLayout = (FrameLayout) findViewById(R.id.barcode_frame);
-        //previewFrame = (FrameLayout) findViewById(R.id.barcode_scan_v);
+
         mBarcodeView = (CompoundBarcodeView) findViewById(R.id.barcode_scan_v);
         mBarcodeView.setStatusText("");
 
