@@ -999,7 +999,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
 
             fname="_"+fname;
 
-            /*
+
             if (filetype == ConstantManager.FILE_TYPE_PRODUCT) {
                 fname = ConstantManager.PREFIX_FILE_TOVAR+fname;
             }
@@ -1015,7 +1015,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
             if (filetype == ConstantManager.FILE_TYPE_ALCOMARK) {
                 fname = ConstantManager.PREFIX_FILE_ALCOMARK+fname;
             }
-            */
+
 
             try {
                 URL url = new URL(urlServer+"/upload");
@@ -1102,6 +1102,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
 
         @Override
         protected void onCancelled(Void aVoid) {
+
             if (mLastError != null ){
                 ErrorDialog(mLastError);
             }
@@ -1214,6 +1215,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
         @Override
         protected void onCancelled() {
             if (mLastError != null ){
+                hideProgress();
                 ErrorDialog(mLastError);
             }
         }
