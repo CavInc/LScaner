@@ -64,6 +64,7 @@
                   android:windowSoftInputMode="adjustPan|stateHidden"
                   android:screenOrientation="portrait">
         </activity>
+
     </application>
 
 </manifest>
