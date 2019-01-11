@@ -168,7 +168,7 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
         if (fileType == ConstantManager.FILE_TYPE_EGAIS || fileType == ConstantManager.FILE_TYPE_ALCOMARK) {
             mBarCode.setInputType(InputType.TYPE_CLASS_TEXT);
             mBarCode.setFilters(new InputFilter[] {
-                    new InputFilter.LengthFilter(68)});
+                    new InputFilter.LengthFilter(155)});
         }
 
         if (fileType == ConstantManager.FILE_TYPE_PRIHOD) {
@@ -746,7 +746,7 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
         @Override
         public void barcodeResult(BarcodeResult result) {
             if (result.getText() != null) {
-                //Log.d("M2A",result.getText());
+                Log.d("M2A",result.getText());
                 //Log.d("M2A",result.getBarcodeFormat().toString());
                 mBarCode.setText(result.getText());
                 mStartScan.setVisibility(View.VISIBLE);
