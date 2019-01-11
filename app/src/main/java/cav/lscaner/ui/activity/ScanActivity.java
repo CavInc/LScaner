@@ -397,7 +397,7 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
         // Func.addLog(debugOutFile,"RAW Scanned code : "+mBar); // debug
 
         if (fileType == ConstantManager.FILE_TYPE_EGAIS || fileType == ConstantManager.FILE_TYPE_ALCOMARK){
-            if (mBar.startsWith("1") || mBar.length() < 14) {
+            if (/*mBar.startsWith("1") || */ mBar.length() < 14) {
                 // марка ФСМ
                 //Func.addLog(debugOutFile,"Mark FSM : "+mBar); // debug
                 mBarCode.setText("");
