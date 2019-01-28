@@ -78,6 +78,10 @@ public class ScannedListAdapter extends ArrayAdapter<ScannedDataModel>{
                 holder.mPosId.setVisibility(View.VISIBLE);
                 holder.mPosId.setText("№: "+rec.getPosId());
             }
+            if (rec.getFileType() == ConstantManager.FILE_TYPE_ALCOMARK) {
+                holder.mPosId.setVisibility(View.VISIBLE);
+                holder.mPosId.setText("№: "+rec.getPosId());
+            }
         }
 
         if (holder.mArticul !=null) {
