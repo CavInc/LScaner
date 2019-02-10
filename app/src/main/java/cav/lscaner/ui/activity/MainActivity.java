@@ -40,6 +40,7 @@ import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.DriveScopes;
 import com.google.api.services.drive.model.File;
 import com.google.api.services.drive.model.FileList;
+import com.google.firebase.crash.FirebaseCrash;
 
 
 import java.io.DataOutputStream;
@@ -746,7 +747,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
                         .execute();
             } catch (IOException e) {
                 e.printStackTrace();
-
+                FirebaseCrash.report(e);
                 mLastError = e;
                 cancel(true);
                 return null;
@@ -885,6 +886,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
+                    FirebaseCrash.report(e);
                     mLastError = e;
                     cancel(true);
                     return null;
@@ -1075,6 +1077,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
 
             } catch (Exception e) {
                 e.printStackTrace();
+                FirebaseCrash.report(e);
                 mLastError = e;
                 cancel(true);
             }
@@ -1176,6 +1179,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
                 conn.disconnect();
             }catch(IOException e){
                 e.printStackTrace();
+                FirebaseCrash.report(e);
                 mLastError = e;
                 cancel(true);
             }
