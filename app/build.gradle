@@ -9,13 +9,13 @@ android {
         minSdkVersion 14
         targetSdkVersion 27
         versionCode 35
-        versionName "3.3.3"
+        versionName "3.3.4"
         project.ext.set("archivesBaseName", "LScanerV-" + defaultConfig.versionName);
         resConfigs "en", "ru"
     }
     buildTypes {
         debug {
-            //applicationIdSuffix ".debug"
+            applicationIdSuffix ".debug"
             versionNameSuffix "-debug"
         }
         release {
@@ -39,6 +39,7 @@ dependencies {
     compile 'com.android.support:appcompat-v7:27.1.0'
     compile 'com.android.support:design:27.1.0'
     compile 'com.google.android.gms:play-services-auth:16.0.0'
+    compile 'com.google.firebase:firebase-core:16.0.0'
     compile 'com.google.firebase:firebase-crash:16.0.0'  // после отладки убрать
     compile('pub.devrel:easypermissions:0.3.1',{
         exclude group: 'com.android.support',module: 'appcompat-v7'
