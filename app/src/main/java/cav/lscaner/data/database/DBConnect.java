@@ -69,6 +69,10 @@ public class DBConnect {
             sql = "select sts.head_id,sts.barcode,sts.pos_id,sts.quantity,sp.name,sp.articul,sts.baseprice,sts.price,sp.ostatok,sp.price as oldprice from " +
                     DBHelper.SCAN_TABLE_SPEC + " sts \n" +
                     " left join " + DBHelper.STORE_PRODUCT + " sp on sts.barcode = sp.barcode and sts.articul=sp.articul where sts.head_id=" + idFile + " order by sts.pos_id desc";
+        } else if (mode == ConstantManager.FILE_TYPE_EGAIS) {
+            sql = "select distinct sts.head_id,sts.barcode,sts.pos_id,sts.quantity,sp.name,sp.articul,sp.baseprice,sp.price,sp.ostatok,sp.price as oldprice from " +
+                    DBHelper.SCAN_TABLE_SPEC + " sts \n" +
+                    " left join " + DBHelper.STORE_PRODUCT + " sp on sts.barcode = sp.egais where sts.head_id=" + idFile + " order by sts.pos_id desc";
         } else {
             sql = "select sts.head_id,sts.barcode,sts.pos_id,sts.quantity,sp.name,sp.articul,sp.baseprice,sp.price,sp.ostatok,sp.price as oldprice from " +
                     DBHelper.SCAN_TABLE_SPEC + " sts \n" +
