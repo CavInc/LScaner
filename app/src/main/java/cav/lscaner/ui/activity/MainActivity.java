@@ -28,6 +28,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
+import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAuthIOException;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GooglePlayServicesAvailabilityIOException;
 import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
 import com.google.api.client.http.FileContent;
@@ -786,7 +787,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
 
                 } else {
                     Log.d(TAG,"Error "+mLastError);
-                    ErrorDialog(mLastError);
+                    ErrorDialog(mLastError,null);
                 }
             } else {
                 Log.d(TAG,"Request cancelled.");
@@ -940,9 +941,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
                             ((UserRecoverableAuthIOException) mLastError).getIntent(),
                             MainActivity.REQUEST_AUTHORIZATION);
 
+                } else if (mLastError instanceof GoogleAuthIOException) {
+                    ErrorDialog(mLastError,"Ошибка аудентификации приложения");
                 } else {
                     Log.d(TAG,"Error "+mLastError);
-                    ErrorDialog(mLastError);
+                    ErrorDialog(mLastError,null);
                 }
             } else {
                 Log.d(TAG,"Request cancelled.");
@@ -962,10 +965,14 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
 
     }
 
-    public void ErrorDialog(Exception e){
+    public void ErrorDialog(Exception e,String msg){
+        String er = e.getLocalizedMessage();
+        if (msg != null ){
+            er = msg;
+        }
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Ошибка")
-                .setMessage(e.getLocalizedMessage())
+                .setMessage(er)
                 .setNegativeButton(R.string.button_close,null).create();
         builder.show();
     }
@@ -1108,7 +1115,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
         protected void onCancelled(Void aVoid) {
 
             if (mLastError != null ){
-                ErrorDialog(mLastError);
+                ErrorDialog(mLastError,null);
             }
         }
     }
@@ -1221,7 +1228,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
         protected void onCancelled() {
             if (mLastError != null ){
                 hideProgress();
-                ErrorDialog(mLastError);
+                ErrorDialog(mLastError,null);
             }
         }
     }

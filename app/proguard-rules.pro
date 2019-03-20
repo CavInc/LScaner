@@ -55,3 +55,28 @@
 -keepnames class * implements android.os.Parcelable {
     public static final ** CREATOR;
 }
+
+-keep class * extends com.google.api.client.json.GenericJson {
+    *;
+}
+-keep class com.google.api.services.drive.** {
+    *;
+}
+
+#
+
+-keepattributes Signature,RuntimeVisibleAnnotations,AnnotationDefault
+
+-keepclassmembers class * {
+  @com.google.api.client.util.Key <fields>;
+}
+
+-keep class com.google.** { *;}
+-keep interface com.google.** { *;}
+-dontwarn com.google.**
+
+# Needed by google-http-client-android when linking against an older platform version
+-dontwarn com.google.api.client.extensions.android.**
+
+# Needed by google-api-client-android when linking against an older platform version
+-dontwarn com.google.api.client.googleapis.extensions.android.**

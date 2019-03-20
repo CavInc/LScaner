@@ -8,8 +8,8 @@ android {
         applicationId "cav.lscaner.v3"
         minSdkVersion 14
         targetSdkVersion 27
-        versionCode 37
-        versionName "3.3.6"
+        versionCode 38
+        versionName "3.3.7"
         project.ext.set("archivesBaseName", "LScanerV-" + defaultConfig.versionName);
         resConfigs "en", "ru"
     }
@@ -19,7 +19,7 @@ android {
             versionNameSuffix "-debug"
         }
         release {
-            minifyEnabled false
+            minifyEnabled true
             shrinkResources true
             zipAlignEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'

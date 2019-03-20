@@ -56,6 +56,7 @@ public class FileFieldModel implements Parcelable {
         mBasePrice = basePrice;
         mOstatok = ostatok;
         mCodeTV = codeTV;
+        setMaxIndex();
     }
 
     public FileFieldModel(Parcel parcel) {
