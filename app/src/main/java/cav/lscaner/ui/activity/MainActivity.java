@@ -1113,9 +1113,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
 
         @Override
         protected void onCancelled(Void aVoid) {
-
             if (mLastError != null ){
-                ErrorDialog(mLastError,null);
+                if (mLastError.getMessage().indexOf("Connection refused") !=-1){
+                    String msg = "В соединении отказано\n не доступен сервер";
+                    ErrorDialog(mLastError, msg);
+                } else {
+                    ErrorDialog(mLastError, null);
+                }
             }
         }
     }
@@ -1228,7 +1232,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
         protected void onCancelled() {
             if (mLastError != null ){
                 hideProgress();
-                ErrorDialog(mLastError,null);
+                Log.d(TAG,mLastError.getMessage());
+                if (mLastError.getMessage().indexOf("Connection refused") !=-1){
+                    String msg = "В соединении отказано\n не доступен сервер";
+                    ErrorDialog(mLastError, msg);
+                } else {
+                    ErrorDialog(mLastError, null);
+                }
             }
         }
     }

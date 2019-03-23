@@ -242,7 +242,12 @@ public class WorkInFile {
             manager.refreshDataInFiles();
         } catch (Exception e) {
             e.printStackTrace();
-            manager.setLastError(e.getLocalizedMessage());
+            //java.lang.NumberFormatException: Invalid double: "ПЕПСИКОЛА0.33ЛЖ/Б"
+            if (e instanceof  NumberFormatException) {
+                manager.setLastError("Ошибка формата, в поле должно быть число");
+            } else {
+                manager.setLastError(e.getLocalizedMessage());
+            }
             return ConstantManager.RET_ERROR;
         }
         return ConstantManager.RET_OK;
