@@ -63,6 +63,7 @@ import cav.lscaner.ui.adapter.ScannedFileAdapter;
 import cav.lscaner.ui.dialogs.AddEditNameFileDialog;
 import cav.lscaner.ui.dialogs.DemoDialog;
 import cav.lscaner.ui.dialogs.SelectMainDialog;
+import cav.lscaner.ui.dialogs.SendFileDialog;
 import cav.lscaner.ui.dialogs.SendReciveDialog;
 import cav.lscaner.ui.dialogs.WarningDialog;
 import cav.lscaner.utils.ConstantManager;
@@ -266,6 +267,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
         ArrayList<ScannedFileModel> model = mDataManager.getScannedFile();
         if (mFileAdapter == null){
             mFileAdapter = new ScannedFileAdapter(this,R.layout.scanned_file_item,model);
+            mFileAdapter.setScannedSendListener(mSendListener);
             mListView.setAdapter(mFileAdapter);
         }else {
             mFileAdapter.setDate(model);
@@ -290,6 +292,33 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
         }
 
     }
+
+    // позиция на которй нажали кнопку поделится
+    private int selectPosition;
+
+    ScannedFileAdapter.ScannedSendListener mSendListener = new ScannedFileAdapter.ScannedSendListener() {
+        @Override
+        public void onSend(int position) {
+            selectPosition = position;
+            SendFileDialog dialog = new SendFileDialog();
+            dialog.setListener(mSendFileDialogListener);
+            dialog.show(getFragmentManager(),"SL");
+        }
+    };
+
+    private SendFileDialog.SendFileDialogListener mSendFileDialogListener = new SendFileDialog.SendFileDialogListener() {
+        @Override
+        public void onSelectItem(int item) {
+            switch (item){
+                case R.id.dialog_cloud_item:
+                    new NetLocalTask(mDataManager.getPreferensManager().getLocalServer(),
+                            storeFileFullName,fileType).execute();
+                    break;
+                case R.id.dialog_send_item:
+                    break;
+            }
+        }
+    };
 
     private AddEditNameFileDialog.AddEditNameFileListener mAddEditNameFileListener = new AddEditNameFileDialog.AddEditNameFileListener() {
         @Override

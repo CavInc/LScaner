@@ -2,6 +2,7 @@ package cav.lscaner.ui.adapter;
 
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,8 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.xml.transform.sax.SAXSource;
+
 import cav.lscaner.R;
 import cav.lscaner.data.models.ScannedFileModel;
 import cav.lscaner.utils.ConstantManager;
@@ -19,8 +22,11 @@ import cav.lscaner.utils.Func;
 
 public class ScannedFileAdapter extends ArrayAdapter<ScannedFileModel> {
 
+    private static final String TAG = "SFA";
     private LayoutInflater mInflater;
     private int resLayout;
+
+    private ScannedSendListener mScannedSendListener;
 
     public ScannedFileAdapter(Context context, int resource, List<ScannedFileModel> objects) {
         super(context, resource, objects);
@@ -29,7 +35,7 @@ public class ScannedFileAdapter extends ArrayAdapter<ScannedFileModel> {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         ViewHolder holder;
         View row = convertView;
         if (row == null) {
@@ -41,6 +47,7 @@ public class ScannedFileAdapter extends ArrayAdapter<ScannedFileModel> {
             holder.mType = (TextView) row.findViewById(R.id.sd_file_type);
             holder.mIndicator = row.findViewById(R.id.sd_file_indicator);
             holder.mSelected = (ImageView) row.findViewById(R.id.sd_file_check);
+            holder.mSend = row.findViewById(R.id.sd_file_send);
             row.setTag(holder);
         }else{
             holder = (ViewHolder)row.getTag();
@@ -80,12 +87,30 @@ public class ScannedFileAdapter extends ArrayAdapter<ScannedFileModel> {
           holder.mSelected.setVisibility(View.GONE);
         }
 
+        holder.mSend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG,"OPPS");
+                if (mScannedSendListener != null) {
+                    mScannedSendListener.onSend(position);
+                }
+            }
+        });
+
         return row;
     }
 
     public void setDate(ArrayList<ScannedFileModel> data){
         this.clear();
         this.addAll(data);
+    }
+
+    public void setScannedSendListener(ScannedSendListener listener){
+        mScannedSendListener = listener;
+    }
+
+    public interface ScannedSendListener {
+        void onSend(int position);
     }
 
     private class ViewHolder {
@@ -95,5 +120,6 @@ public class ScannedFileAdapter extends ArrayAdapter<ScannedFileModel> {
         public TextView mType;
         public View mIndicator;
         public ImageView mSelected;
+        public ImageView mSend;
     }
 }

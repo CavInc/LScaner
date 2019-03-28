@@ -13,7 +13,7 @@
         android:title="Удалить"/>
     <item
         android:id="@+id/menu_send_select"
-        android:icon="@drawable/ic_cloud_upload_black_24dp"
+        android:icon="@drawable/ic_cloud_upload_white_24dp"
         app:showAsAction="always"
         android:title="Отправить в облако"/>
 </menu>
