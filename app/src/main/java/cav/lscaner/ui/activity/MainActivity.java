@@ -309,12 +309,28 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
     private SendFileDialog.SendFileDialogListener mSendFileDialogListener = new SendFileDialog.SendFileDialogListener() {
         @Override
         public void onSelectItem(int item) {
+            // отправляем наружу
+            if (!mDataManager.isOnline()){
+                // показываем что нет сети
+                showNoNetwork();
+                return;
+            }
+
             switch (item){
                 case R.id.dialog_cloud_item:
+                    selModel = mFileAdapter.getItem(selectPosition);
+
+                    WorkInFile workInFile = new WorkInFile(mDataManager.getPreferensManager().getCodeFile());
+                    workInFile.saveFile(selModel.getId(),selModel.getName(),mDataManager,selModel.getType());
+                    Log.d(TAG,workInFile.getSavedFile());
+                    storeFileFullName = workInFile.getSavedFile();
+                    fileType =  selModel.getType();
+
                     new NetLocalTask(mDataManager.getPreferensManager().getLocalServer(),
                             storeFileFullName,fileType).execute();
                     break;
                 case R.id.dialog_send_item:
+                    sendFileShare();
                     break;
             }
         }
@@ -561,6 +577,25 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
                 }
                 break;
         }
+    }
+
+    // оправить данные через поделится
+    private void sendFileShare(){
+        selModel = mFileAdapter.getItem(selectPosition);
+
+        WorkInFile workInFile = new WorkInFile(mDataManager.getPreferensManager().getCodeFile());
+        workInFile.saveFile(selModel.getId(),selModel.getName(),mDataManager,selModel.getType());
+        Log.d(TAG,workInFile.getSavedFile());
+        storeFileFullName = workInFile.getSavedFile();
+        fileType =  selModel.getType();
+
+        Intent sendIntend = new Intent(Intent.ACTION_SEND);
+        sendIntend.putExtra(Intent.EXTRA_TEXT, "Отправить файл");
+        sendIntend.setType("*/*");
+        sendIntend.putExtra(Intent.EXTRA_STREAM, Uri.parse("file://"+storeFileFullName));
+
+        startActivity(Intent.createChooser(sendIntend, "Share File"));
+
     }
 
     // все что связано с гуглодрайвом
