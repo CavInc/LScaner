@@ -71,7 +71,7 @@ public class DataManager{
     public String getStorageAppPath(){
         if (!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED))
             return null;
-        File path = new File (Environment.getExternalStorageDirectory(), "LScannerV3");
+        File path = new File (Environment.getExternalStorageDirectory(), "LScannerV4");
         if (! path.exists()) {
             if (!path.mkdirs()){
                 return null;

@@ -34,4 +34,5 @@ public interface ConstantManager{
 
     int GD = 0;
     int LS = 1;
+    int FL = 2;
 }

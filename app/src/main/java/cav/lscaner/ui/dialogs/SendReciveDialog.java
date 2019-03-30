@@ -24,8 +24,8 @@ public class SendReciveDialog extends DialogFragment implements View.OnClickList
     public void onClick(View view) {
         int id = 0;
         switch (view.getId()){
-            case R.id.ssr_gd:
-               id = ConstantManager.GD;
+            case R.id.ssr_fl:
+               id = ConstantManager.FL;
                 break;
             case R.id.ssr_ls:
                 id = ConstantManager.LS;
@@ -42,11 +42,11 @@ public class SendReciveDialog extends DialogFragment implements View.OnClickList
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         View v = LayoutInflater.from(getActivity()).inflate(R.layout.select_sendrecive_dialog, null);
 
-        v.findViewById(R.id.ssr_gd).setOnClickListener(this);
+        v.findViewById(R.id.ssr_fl).setOnClickListener(this);
         v.findViewById(R.id.ssr_ls).setOnClickListener(this);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle("Выбор провайдера").setView(v);
+        builder.setTitle("Обновить данные").setView(v);
         return builder.create();
     }
 
