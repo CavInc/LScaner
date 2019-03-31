@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.os.Bundle;
@@ -541,9 +542,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
         Intent sendIntend = new Intent(Intent.ACTION_SEND);
         sendIntend.putExtra(Intent.EXTRA_TEXT, "Отправить файл");
         sendIntend.setType("text/plain");
-        sendIntend.putExtra(Intent.EXTRA_STREAM, Uri.parse("file://"+storeFileFullName));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            sendIntend.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
 
-        sendIntend.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        } else {
+            sendIntend.putExtra(Intent.EXTRA_STREAM, Uri.parse("file://" + storeFileFullName));
+        }
 
         if (sendIntend.resolveActivity(getPackageManager()) != null) {
             startActivity(Intent.createChooser(sendIntend, "Share File"));

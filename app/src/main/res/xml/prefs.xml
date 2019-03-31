@@ -43,8 +43,9 @@
             android:summary=""/>
         <EditTextPreference
             android:key="localserver"
-            android:hint="server[:port]"
+            android:hint="http://server[:port]"
             android:title="Локальный сервер"
+            android:summary="http://сервер[:порт]"
             android:inputType="textUri"/>
     </PreferenceCategory>
 

@@ -52,6 +52,9 @@ public class StoreProductActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.scan_menu, menu);
+        MenuItem item = menu.findItem(R.id.scan_menu_photo);
+        item.setVisible(false);
+
         searchItem = menu.findItem(R.id.scan_menu_search);
         SearchView searchView = (SearchView) searchItem.getActionView();
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
