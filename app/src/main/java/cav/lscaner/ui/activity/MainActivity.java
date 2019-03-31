@@ -550,7 +550,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
         sendIntend.setType("text/plain");
         sendIntend.putExtra(Intent.EXTRA_STREAM, Uri.parse("file://"+storeFileFullName));
 
-        startActivity(Intent.createChooser(sendIntend, "Share File"));
+        sendIntend.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+
+        if (sendIntend.resolveActivity(getPackageManager()) != null) {
+            startActivity(Intent.createChooser(sendIntend, "Share File"));
+        }
 
     }
 
