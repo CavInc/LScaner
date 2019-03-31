@@ -4,8 +4,6 @@ import android.content.Context;
 import android.os.Vibrator;
 import android.util.Log;
 
-import com.google.api.client.util.DateTime;
-
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -50,13 +48,6 @@ public class Func {
         return format.format(date);
     }
 
-    public static String getDateTimeToStr(DateTime date,String mask){
-        long ml = date.getValue();
-        Date xm = new Date(ml);
-
-        SimpleDateFormat format = new SimpleDateFormat(mask);
-        return format.format(xm);
-    }
 
     public static Date getStrToDate(String date,String mask){
         SimpleDateFormat format = new SimpleDateFormat(mask);

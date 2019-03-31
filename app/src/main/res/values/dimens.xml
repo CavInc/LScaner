@@ -5,4 +5,5 @@
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="height_about_logo">317px</dimen>
     <dimen name="size_4dp">4dp</dimen>
+    <dimen name="padding_delim">20dp</dimen>
 </resources>
