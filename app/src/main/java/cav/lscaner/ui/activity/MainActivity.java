@@ -223,6 +223,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
         }
 
         directionGD = WRITE_FILE;
+
+        SendFileDialog dialog = new SendFileDialog();
+        dialog.setListener(mSendMultiFileDialogListener);
+        dialog.show(getFragmentManager(),"SL");
+
+        /*
         // сохраняем файл
         WorkInFile workInFile = new WorkInFile(mDataManager.getPreferensManager().getCodeFile());
 
@@ -240,6 +246,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
         }
         multiSelectChange();
         updateUI();
+        */
     }
 
     private void updateUI(){
@@ -248,6 +255,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
             mFileAdapter = new ScannedFileAdapter(this,R.layout.scanned_file_item,model);
             mFileAdapter.setScannedSendListener(mSendListener);
             mListView.setAdapter(mFileAdapter);
+            mListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
         }else {
             mFileAdapter.setDate(model);
             mFileAdapter.notifyDataSetChanged();
@@ -271,6 +279,50 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
         }
 
     }
+
+    SendFileDialog.SendFileDialogListener mSendMultiFileDialogListener = new SendFileDialog.SendFileDialogListener() {
+        @Override
+        public void onSelectItem(int item) {
+            ArrayList <Uri> fileUris = new ArrayList<>();
+
+            // сохраняем файл
+            WorkInFile workInFile = new WorkInFile(mDataManager.getPreferensManager().getCodeFile());
+
+            for (int i = 0;i < mFileAdapter.getCount();i++){
+                if (mFileAdapter.getItem(i).isSelected()) {
+                    selModel = mFileAdapter.getItem(i);
+                    String fname = Func.createFileName(selModel.getName(),selModel.getType());
+                    workInFile.saveFile(selModel.getId(),fname,mDataManager,selModel.getType());
+                    Log.d(TAG,workInFile.getSavedFile());
+
+                    storeFileFullName = workInFile.getSavedFile();
+                    fileType =  selModel.getType();
+                    // передача файла
+                    if (item == R.id.dialog_cloud_item) {
+                        new NetLocalTask(mDataManager.getPreferensManager().getLocalServer(),
+                                storeFileFullName,fileType).execute();
+                    } else {
+                        fileUris.add(Uri.parse(Func.createFileName(fname,selModel.getType())));
+                    }
+                }
+            }
+            if (item == R.id.dialog_send_item) {
+                Intent sendMulti = new Intent(Intent.ACTION_SEND_MULTIPLE);
+                sendMulti.putParcelableArrayListExtra(Intent.EXTRA_STREAM, fileUris);
+
+                sendMulti.putExtra(Intent.EXTRA_TEXT, "Отправить файлы");
+                sendMulti.setType("text/plain");
+                sendMulti.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+
+                if (sendMulti.resolveActivity(getPackageManager()) != null) {
+                    startActivity(Intent.createChooser(sendMulti, "Share File"));
+                }
+
+            }
+            multiSelectChange();
+            updateUI();
+        }
+    };
 
     // позиция на которй нажали кнопку поделится
     private int selectPosition;
@@ -363,6 +415,17 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
         mFileAdapter.notifyDataSetChanged();
     }
 
+    // количество выделенных элементов
+    private int getSelectCount(){
+        int count = 0;
+        for (int i = 0 ;i < mFileAdapter.getCount(); i++) {
+            if (mFileAdapter.getItem(i).isSelected()) {
+                count += 1;
+            }
+        }
+        return count;
+    }
+
     private ScannedFileModel selModel = null;
     private int fileType;
 
@@ -373,6 +436,18 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
         mFileAdapter.getItem(position).setSelected(!mFileAdapter.getItem(position).isSelected());
         mFileAdapter.notifyDataSetChanged();
 
+        if (getSelectCount() != 0) {
+           // multiSelectFlg = true;
+          //  multiSelectChange();
+            Log.d(TAG, String.valueOf(getSelectCount()));
+            multiSelectFlg = true;
+            menu.clear();
+            MenuInflater inflater = getMenuInflater();
+            inflater.inflate(R.menu.main_menu2, menu);
+        } else {
+            multiSelectChange();
+        }
+
         /*
         SelectMainDialog dialog = new SelectMainDialog();
         dialog.setSelectMainDialogListener(mSelectMainDialogListener);
@@ -381,53 +456,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
         return true;
     }
 
-
-    SelectMainDialog.SelectMainDialogListener mSelectMainDialogListener = new SelectMainDialog.SelectMainDialogListener() {
-        @Override
-        public void selectedItem(int index) {
-            if (index == R.id.dialog_del_item) {
-                // удаляем
-                deleteRecord(selModel.getId());
-            }
-            if (index == R.id.dialog_edit_item) {
-                // редактируем заголовок
-                //Toast.makeText(MainActivity.this,"А тут будет диалог редактирования заголовка файла",Toast.LENGTH_LONG).show();
-                editRecord();
-            }
-            if (index == R.id.dialog_send_item) {
-                // отправляем наружу
-                if (!mDataManager.isOnline()){
-                    // показываем что нет сети
-                    showNoNetwork();
-                    return;
-                }
-                directionGD = WRITE_FILE;
-                // сохраняем файл
-                WorkInFile workInFile = new WorkInFile(mDataManager.getPreferensManager().getCodeFile());
-                workInFile.saveFile(selModel.getId(),selModel.getName(),mDataManager,selModel.getType());
-                Log.d(TAG,workInFile.getSavedFile());
-                storeFileFullName = workInFile.getSavedFile();
-                fileType =  selModel.getType();
-
-                // TODO
-                // показываем окно с выбором... если нет сохраненного локал сервере
-                // то нваерно не показываем..
-
-                SendReciveDialog dialog = new SendReciveDialog();
-                dialog.setSendReciveListener(mSendReciveListener);
-                dialog.show(getSupportFragmentManager(),"SRD");
-                return;
-/*
-
-                // показываем окно с выбором куда отправлять
-                // Toast.makeText(MainActivity.this,"А тут будет диалог спрашивающий куда отправить",Toast.LENGTH_LONG).show();
-                // вызов отправки
-                pushGD();
-                */
-
-            }
-        }
-    };
 
     // редактируем запись (заголовок)
     private void editRecord(){
@@ -502,24 +530,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
     private void sendFileShare(){
         selModel = mFileAdapter.getItem(selectPosition);
 
-        String fname = "_"+selModel.getName()+".txt";
-        int filetype = selModel.getType();
-
-        if (filetype == ConstantManager.FILE_TYPE_PRODUCT) {
-            fname = ConstantManager.PREFIX_FILE_TOVAR+fname;
-        }
-        if (filetype == ConstantManager.FILE_TYPE_EGAIS) {
-            fname = ConstantManager.PREFIX_FILE_EGAIS+fname;
-        }
-        if (filetype == ConstantManager.FILE_TYPE_CHANGE_PRICE) {
-            fname = ConstantManager.PREFIX_FILE_CHANGEPRICE+fname;
-        }
-        if (filetype == ConstantManager.FILE_TYPE_PRIHOD) {
-            fname = ConstantManager.PREFIX_FILE_PRIHOD+fname;
-        }
-        if (filetype == ConstantManager.FILE_TYPE_ALCOMARK) {
-            fname = ConstantManager.PREFIX_FILE_ALCOMARK+fname;
-        }
+        String  fname = Func.createFileName(selModel.getName(),selModel.getType());
 
         WorkInFile workInFile = new WorkInFile(mDataManager.getPreferensManager().getCodeFile());
         workInFile.saveFile(selModel.getId(),fname,mDataManager,selModel.getType());
@@ -634,6 +645,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
             filePath = new java.io.File(fname);
             fname = filePath.getName();
 
+            /*
             if (fname.toUpperCase().indexOf(".TXT") == -1){ fname = fname+".txt";}
 
             fname="_"+fname;
@@ -654,6 +666,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
             if (filetype == ConstantManager.FILE_TYPE_ALCOMARK) {
                 fname = ConstantManager.PREFIX_FILE_ALCOMARK+fname;
             }
+            */
+
+            fname = Func.createFileName(fname,fileType);
 
 
             try {

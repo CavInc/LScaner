@@ -3,7 +3,9 @@ package cav.lscaner.ui.dialogs;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 
@@ -11,6 +13,7 @@ import cav.lscaner.R;
 
 public class SendFileDialog extends DialogFragment implements View.OnClickListener{
 
+    private static final String TAG = "SFD";
     private SendFileDialogListener mListener;
 
     @Override
@@ -30,6 +33,12 @@ public class SendFileDialog extends DialogFragment implements View.OnClickListen
             mListener.onSelectItem(id);
         }
         dismiss();
+    }
+
+    @Override
+    public void onDismiss(DialogInterface dialog) {
+        super.onDismiss(dialog);
+        Log.d(TAG,"DISMIS");
     }
 
     public void setListener(SendFileDialogListener listener) {
