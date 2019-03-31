@@ -5,6 +5,7 @@ import android.accounts.AccountManager;
 import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -12,9 +13,11 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.os.Bundle;
+import android.support.v4.content.FileProvider;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -25,6 +28,7 @@ import android.widget.ListView;
 
 
 import java.io.DataOutputStream;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -544,6 +548,17 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
         sendIntend.setType("text/plain");
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             sendIntend.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+            Uri fileUri = FileProvider.getUriForFile(this,
+                    this.getApplicationContext().getPackageName()+".provider",new File(storeFileFullName));
+            sendIntend.putExtra(Intent.EXTRA_STREAM, fileUri);
+            /*
+                        ContentValues values = new ContentValues();
+            values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpg");
+            Uri fileUri = FileProvider.getUriForFile(this,
+                    this.getApplicationContext().getPackageName() + ".provider", mPhotoFile);
+
+             */
+
 
         } else {
             sendIntend.putExtra(Intent.EXTRA_STREAM, Uri.parse("file://" + storeFileFullName));
