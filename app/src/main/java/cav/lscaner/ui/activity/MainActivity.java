@@ -15,6 +15,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.FloatingActionButton;
 import android.os.Bundle;
 import android.support.v4.content.FileProvider;
@@ -63,6 +64,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
     private static final String TAG = "MAIN";
     private static final int WRITE_FILE = 1012;
     private static final int READ_FILE = 1010;
+    private static final int REQUEST_OPEN_DOCUMENT = 431;
 
     private final int MAX_DEMO_REC = 4;
 
@@ -520,7 +522,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
             }
             if (directionGD == READ_FILE ){
                 if (item == ConstantManager.FL) {
-                    // TODO Добавить работу с файлами
+                    openLocalFile();
                 }
                 if (item == ConstantManager.LS) {
                     new GetLocalTask(mDataManager.getPreferensManager().getLocalServer(),
@@ -530,6 +532,44 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
         }
     };
 
+    // открываем даные с локального хранилища
+    private void openLocalFile() {
+        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.setType("text/plain");
+        //startActivityForResult(intent,REQUEST_OPEN_DOCUMENT);
+
+        startActivityForResult(Intent.createChooser(intent,"chooser"),REQUEST_OPEN_DOCUMENT);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_OPEN_DOCUMENT && resultCode == RESULT_OK){
+            if (data != null) {
+                System.out.println(data);
+            }
+        }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    private boolean takePermission(Context context, Uri treeUri) {
+        /*
+            Было бы полезно добавить проверку на то, что пришедший URI это URI карты.
+            Оставлю эту задачу как упражнение читателям
+        */
+        try {
+            if (treeUri == null) {
+                return false;
+            }
+            context.getContentResolver().takePersistableUriPermission(treeUri,
+                    Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            //sharedPreferences.putString(SD_CARD_URI,treeUri.toString());
+            return true;
+        } catch (Exception e2) {
+            e2.printStackTrace();
+            return false;
+        }
+    }
 
     // оправить данные через поделится
     private void sendFileShare(){
