@@ -19,6 +19,7 @@ import android.support.annotation.RequiresApi;
 import android.support.design.widget.FloatingActionButton;
 import android.os.Bundle;
 import android.support.v4.content.FileProvider;
+import android.support.v4.provider.DocumentFile;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -31,12 +32,14 @@ import android.widget.ListView;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -547,7 +550,65 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
         if (requestCode == REQUEST_OPEN_DOCUMENT && resultCode == RESULT_OK){
             if (data != null) {
                 System.out.println(data);
-            }
+                Uri uri = data.getData();
+                System.out.println(uri);
+                final File fname = copyUriToLocal(uri);
+
+                WorkInFile workInFile = new WorkInFile(mDataManager.getPreferensManager().getCodeFile());
+                int ret_flg =  workInFile.loadProductFile(fname.getName(),mDataManager);
+
+                if (ret_flg == ConstantManager.RET_NO_FIELD_MANY) {
+                    WarningDialog dialog = WarningDialog.newInstance("Количество полей в файле меньше чем указано в настройках");
+                    dialog.show(getFragmentManager(),"WD");
+                    return;
+                }
+                if (ret_flg == ConstantManager.RET_ERROR) {
+                    WarningDialog dialog = WarningDialog.newInstance("Ошибка при загрузке файла данных\n"+mDataManager.getLastError());
+                    dialog.show(getFragmentManager(),"WD");
+                    return;
+                }
+                // сказать что все ок
+                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                builder.setTitle(R.string.app_name)
+                        .setMessage("Обработан файл \n"+fname.getName())
+                        .setCancelable(false)
+                        .setNegativeButton(R.string.button_ok, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                fname.delete();
+                            }
+                        })
+                        .create();
+                builder.show();
+           }
+        }
+    }
+
+    private File copyUriToLocal(Uri uri){
+        DocumentFile file = DocumentFile.fromSingleUri(this,uri);
+        Log.d(TAG,file.getName());
+        try {
+            File fOut = new File(mDataManager.getStorageAppPath(),file.getName());
+
+            FileInputStream input = (FileInputStream) getContentResolver().openInputStream(file.getUri());
+            FileOutputStream output = new FileOutputStream(fOut);
+
+            FileChannel fileChannelIn = input.getChannel();
+            FileChannel fileChannelOut = output.getChannel();
+            fileChannelIn.transferTo(0, fileChannelIn.size(), fileChannelOut);
+
+            output.flush();
+            output.close();
+            input.close();
+
+            return fOut;
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            return null;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
         }
     }
 
