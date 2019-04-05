@@ -226,6 +226,29 @@ public class Func {
     }
 
 
+    // формируем имя файла
+    public static String createFileName(String fileName,int fileType){
+        String fname = "_"+fileName+".txt";
+        int filetype = fileType;
+
+        if (filetype == ConstantManager.FILE_TYPE_PRODUCT) {
+            fname = ConstantManager.PREFIX_FILE_TOVAR+fname;
+        }
+        if (filetype == ConstantManager.FILE_TYPE_EGAIS) {
+            fname = ConstantManager.PREFIX_FILE_EGAIS+fname;
+        }
+        if (filetype == ConstantManager.FILE_TYPE_CHANGE_PRICE) {
+            fname = ConstantManager.PREFIX_FILE_CHANGEPRICE+fname;
+        }
+        if (filetype == ConstantManager.FILE_TYPE_PRIHOD) {
+            fname = ConstantManager.PREFIX_FILE_PRIHOD+fname;
+        }
+        if (filetype == ConstantManager.FILE_TYPE_ALCOMARK) {
+            fname = ConstantManager.PREFIX_FILE_ALCOMARK+fname;
+        }
+        return fname;
+    }
+
 
 
 }

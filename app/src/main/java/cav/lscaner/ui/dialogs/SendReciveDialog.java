@@ -30,6 +30,9 @@ public class SendReciveDialog extends DialogFragment implements View.OnClickList
             case R.id.ssr_ls:
                 id = ConstantManager.LS;
                 break;
+            case R.id.ssr_ldev:
+                id = ConstantManager.LDEV;
+                break;
         }
         if (mSendReciveListener != null){
             mSendReciveListener.selectedItem(id);
@@ -44,6 +47,7 @@ public class SendReciveDialog extends DialogFragment implements View.OnClickList
 
         v.findViewById(R.id.ssr_gd).setOnClickListener(this);
         v.findViewById(R.id.ssr_ls).setOnClickListener(this);
+        v.findViewById(R.id.ssr_ldev).setOnClickListener(this);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("Выбор провайдера").setView(v);

@@ -14,13 +14,12 @@ import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.os.Bundle;
+import android.support.v4.provider.DocumentFile;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
-import android.webkit.URLUtil;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
@@ -46,13 +45,14 @@ import com.google.firebase.crash.FirebaseCrash;
 
 import java.io.DataOutputStream;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -79,6 +79,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
     private static final String TAG = "MAIN";
     private static final int WRITE_FILE = 1012;
     private static final int READ_FILE = 1010;
+    private static final int REQUEST_OPEN_DOCUMENT = 875;
+    private static final int REQUEST_STORE_FILE = 876;
 
     private final int MAX_DEMO_REC = 4;
 
@@ -474,6 +476,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
                     new NetLocalTask(mDataManager.getPreferensManager().getLocalServer(),
                             storeFileFullName,fileType).execute();
                 }
+                if (item == ConstantManager.LDEV) {
+                    storeLocalFile(storeFileFullName);
+                }
             }
             if (directionGD == READ_FILE ){
                 if (item == ConstantManager.GD) {
@@ -483,9 +488,27 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
                     new GetLocalTask(mDataManager.getPreferensManager().getLocalServer(),
                             mDataManager.getPreferensManager().getStoreFileName()).execute();
                 }
+                if (item == ConstantManager.LDEV) {
+                    openLocalFile();
+                }
             }
         }
     };
+
+    // запись на локальное устройство с выбором места
+    private void storeLocalFile(String storeFileFullName) {
+        Intent storeData = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
+        startActivityForResult(Intent.createChooser(storeData,
+                getString(R.string.store_intent)), REQUEST_STORE_FILE);
+    }
+
+    // читаем файл с локального устройства
+    private void openLocalFile() {
+        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.setType("text/plain");
+        startActivityForResult(Intent.createChooser(intent,"chooser"),REQUEST_OPEN_DOCUMENT);
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -532,8 +555,115 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
                     getResultsFromApi();
                 }
                 break;
+            case REQUEST_OPEN_DOCUMENT:
+                if (resultCode == RESULT_OK && data != null) {
+                    Uri uri = data.getData();
+                    loadLocalFile(uri);
+                }
+                break;
+            case REQUEST_STORE_FILE:
+                if (resultCode == RESULT_OK &&
+                        mDataManager.takePermission(getApplicationContext(), data.getData())) {
+                    Uri uri = data.getData();
+                    localStoreFile(uri);
+                }
+                break;
         }
     }
+
+    private void loadLocalFile(Uri uri) {
+        final java.io.File fname = copyUriToLocal(uri);
+
+        WorkInFile workInFile = new WorkInFile(mDataManager.getPreferensManager().getCodeFile());
+        int ret_flg =  workInFile.loadProductFile(fname.getName(),mDataManager);
+
+        if (ret_flg == ConstantManager.RET_NO_FIELD_MANY) {
+            WarningDialog dialog = WarningDialog.newInstance("Количество полей в файле меньше чем указано в настройках");
+            dialog.show(getFragmentManager(),"WD");
+            return;
+        }
+        if (ret_flg == ConstantManager.RET_ERROR) {
+            WarningDialog dialog = WarningDialog.newInstance("Ошибка при загрузке файла данных\n"+mDataManager.getLastError());
+            dialog.show(getFragmentManager(),"WD");
+            return;
+        }
+        // сказать что все ок
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+        builder.setTitle(R.string.app_name)
+                .setMessage("Обработан файл \n"+fname.getName())
+                .setCancelable(false)
+                .setNegativeButton(R.string.button_ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        fname.delete();
+                    }
+                })
+                .create();
+        builder.show();
+    }
+
+    private void localStoreFile(Uri treeUri) {
+        if (treeUri.toString().length() == 0) return;
+        DocumentFile fout = DocumentFile.fromTreeUri(this,treeUri);
+        //File fout = new File(storeFileFullName);
+
+        java.io.File fSrc = new java.io.File(storeFileFullName);
+        String f = Func.createFileName(fSrc.getName(),fileType);
+
+
+        DocumentFile infile = fout.createFile("text/plain", f);
+        try {
+            FileOutputStream output = (FileOutputStream) getContentResolver().openOutputStream(infile.getUri());
+            FileInputStream input = new FileInputStream(fSrc);
+
+            FileChannel fileChannelIn = input.getChannel();
+            FileChannel fileChannelOut = output.getChannel();
+            fileChannelIn.transferTo(0, fileChannelIn.size(), fileChannelOut);
+
+            output.flush();
+            output.close();
+            input.close();
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            return;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return;
+        }
+        // удаляем скопрированный файл
+        fSrc.delete();
+
+    }
+
+    private java.io.File copyUriToLocal(Uri uri){
+        DocumentFile file = DocumentFile.fromSingleUri(this,uri);
+
+        try {
+            java.io.File fOut = new java.io.File(mDataManager.getStorageAppPath(),file.getName());
+
+            FileInputStream input = (FileInputStream) getContentResolver().openInputStream(file.getUri());
+            FileOutputStream output = new FileOutputStream(fOut);
+
+            FileChannel fileChannelIn = input.getChannel();
+            FileChannel fileChannelOut = output.getChannel();
+            fileChannelIn.transferTo(0, fileChannelIn.size(), fileChannelOut);
+
+            output.flush();
+            output.close();
+            input.close();
+
+            return fOut;
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            return null;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
 
     // все что связано с гуглодрайвом
     GoogleAccountCredential mCredential;

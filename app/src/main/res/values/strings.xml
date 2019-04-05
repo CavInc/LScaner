@@ -6,6 +6,7 @@
     <string name="button_close">Закрыть</string>
     <string name="no_network">Нет подключения к сети</string>
     <string name="activate_msg">на info@chupkov.net \n или позвоните по телефону \n +7 (965) 482-72-72</string>
+    <string name="store_intent">Сохранение файла</string>
 
 
     <string-array name="code_entries">

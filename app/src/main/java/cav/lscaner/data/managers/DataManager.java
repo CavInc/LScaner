@@ -2,12 +2,16 @@ package cav.lscaner.data.managers;
 
 import android.content.Context;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
 import android.provider.Settings;
+import android.support.annotation.RequiresApi;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -95,6 +99,30 @@ public class DataManager{
 
     public void setLastError(String mlastError) {
         this.mLastError = mlastError;
+    }
+
+    // определить и получить разрешения на URL для SD карты
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    public boolean takePermission(Context context, Uri treeUri) {
+        /*
+            Было бы полезно добавить проверку на то, что пришедший URI это URI карты.
+            Оставлю эту задачу как упражнение читателям
+        */
+        try {
+            if (treeUri == null) {
+                return false;
+            }
+            context.getContentResolver().takePersistableUriPermission(treeUri,
+                    Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            // сохраняем url в настройках
+            //sharedPreferences.putString(SD_CARD_URI,treeUri.toString());
+            //mPreManager.setCasherID(treeUri.toString());
+
+            return true;
+        } catch (Exception e2) {
+            e2.printStackTrace();
+            return false;
+        }
     }
 
     // =============================== запросы к базе данных =======================================
