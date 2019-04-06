@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import cav.lscaner.R;
@@ -47,6 +48,11 @@ public class StoreProductAdapter extends ArrayAdapter<StoreProductModel> {
         holder.mPrice.setText("Цена: " + Func.roundUp(rec.getPrice(),2));
         holder.mOstatok.setText("Остаток: " + Func.roundUp(rec.getOstatok(),3));
         return row;
+    }
+
+    public void setData(ArrayList<StoreProductModel> data){
+        this.clear();
+        this.addAll(data);
     }
 
     private class ViewHolder {

@@ -2,8 +2,10 @@ package cav.lscaner.ui.activity;
 
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.SearchView;
@@ -35,10 +37,6 @@ public class StoreProductActivity extends AppCompatActivity {
 
         mListView = (ListView) findViewById(R.id.store_p_lv);
 
-        ArrayList<StoreProductModel> models = mDataManager.getStoreProdect();
-        adapter = new StoreProductAdapter(this,R.layout.store_product_item,models);
-        mListView.setAdapter(adapter);
-
         setupToolBar();
     }
 
@@ -54,6 +52,8 @@ public class StoreProductActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.scan_menu, menu);
         MenuItem item = menu.findItem(R.id.scan_menu_photo);
         item.setVisible(false);
+        MenuItem delItem = menu.findItem(R.id.scan_menu_clear);
+        delItem.setVisible(true);
 
         searchItem = menu.findItem(R.id.scan_menu_search);
         SearchView searchView = (SearchView) searchItem.getActionView();
@@ -97,9 +97,40 @@ public class StoreProductActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        updateUI();
+    }
+
+    private void updateUI(){
+        ArrayList<StoreProductModel> models = mDataManager.getStoreProdect();
+        if (adapter == null) {
+            adapter = new StoreProductAdapter(this, R.layout.store_product_item, models);
+            mListView.setAdapter(adapter);
+        } else {
+            adapter.setData(models);
+            adapter.notifyDataSetChanged();
+        }
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             onBackPressed();
+        }
+        if (item.getItemId() == R.id.scan_menu_clear) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Удаление")
+                    .setMessage("Удаляем данные ?")
+                    .setNegativeButton(R.string.button_cancel,null)
+                    .setPositiveButton(R.string.button_ok, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            mDataManager.getDB().deleteStore(); // удаляем данные в списке товаров
+                            updateUI();
+                        }
+                    })
+                    .show();
         }
         return true;
     }

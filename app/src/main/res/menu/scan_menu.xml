@@ -12,4 +12,10 @@
         android:icon="@drawable/ic_local_see_white_24dp"
         android:title="Использовать камеру"
         app:showAsAction="always|collapseActionView"/>
+    <item
+        android:id="@+id/scan_menu_clear"
+        android:visible="false"
+        android:icon="@drawable/ic_delete_wite_24dp"
+        android:title="Очистить данные"
+        app:showAsAction="always"/>
 </menu>
