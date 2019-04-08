@@ -155,16 +155,20 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
         }
         if (item.getItemId() == R.id.menu_refresh){
             /*
-            Toast.makeText(MainActivity.this,
-                    "А тут будет диалог спрашивающий откуда взять файл (имя файла в настройка)",
-                    Toast.LENGTH_LONG).show();*/
             if (!mDataManager.isOnline()){
                 // показываем что нет сети
                 showNoNetwork();
                 return false;
             }
+            */
             directionGD = READ_FILE;
+
+            SendReciveDialog dialog = new SendReciveDialog();
+            dialog.setSendReciveListener(mSendReciveListener);
+            dialog.show(getSupportFragmentManager(),"SRD");
+
             //
+            /*
             if (mDataManager.getPreferensManager().getLocalServer() != null) {
                 SendReciveDialog dialog = new SendReciveDialog();
                 dialog.setSendReciveListener(mSendReciveListener);
@@ -172,6 +176,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
             } else {
                 requestData();
             }
+            */
         }
         if (item.getItemId() == R.id.menu_about) {
             Intent intent = new Intent(this,AboutActivity.class);
@@ -370,11 +375,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
             }
             if (index == R.id.dialog_send_item) {
                 // отправляем наружу
+                /*
                 if (!mDataManager.isOnline()){
                     // показываем что нет сети
                     showNoNetwork();
                     return;
                 }
+                */
                 directionGD = WRITE_FILE;
                 // сохраняем файл
                 WorkInFile workInFile = new WorkInFile(mDataManager.getPreferensManager().getCodeFile());
@@ -383,7 +390,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
                 storeFileFullName = workInFile.getSavedFile();
                 fileType =  selModel.getType();
 
-                // TODO
                 // показываем окно с выбором... если нет сохраненного локал сервере
                 // то нваерно не показываем..
 
@@ -391,13 +397,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
                 dialog.setSendReciveListener(mSendReciveListener);
                 dialog.show(getSupportFragmentManager(),"SRD");
                 return;
-/*
 
-                // показываем окно с выбором куда отправлять
-                // Toast.makeText(MainActivity.this,"А тут будет диалог спрашивающий куда отправить",Toast.LENGTH_LONG).show();
-                // вызов отправки
-                pushGD();
-                */
 
             }
         }
@@ -470,23 +470,62 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
         public void selectedItem(int item) {
             if (directionGD == WRITE_FILE) {
                 if (item == ConstantManager.GD) {
+                    if (!mDataManager.isOnline()){
+                        // показываем что нет сети
+                        showNoNetwork();
+                        return;
+                    }
                     pushGD();
                 }
                 if (item == ConstantManager.LS) {
-                    new NetLocalTask(mDataManager.getPreferensManager().getLocalServer(),
-                            storeFileFullName,fileType).execute();
+                    if (!mDataManager.isOnline()){
+                        // показываем что нет сети
+                        showNoNetwork();
+                        return;
+                    }
+                    if (mDataManager.getPreferensManager().getLocalServer() != null) {
+                        new NetLocalTask(mDataManager.getPreferensManager().getLocalServer(),
+                                storeFileFullName, fileType).execute();
+                    } else {
+                        //Показываем что ой нету у нас настроенного сервера
+                        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                        builder.setTitle("Внимание! ")
+                                .setMessage("Не настроено подключение к локальному серверу")
+                                .setNegativeButton(R.string.button_cancel,null)
+                                .show();
+                    }
                 }
                 if (item == ConstantManager.LDEV) {
                     storeLocalFile(storeFileFullName);
                 }
             }
             if (directionGD == READ_FILE ){
+
                 if (item == ConstantManager.GD) {
+                    if (!mDataManager.isOnline()){
+                        // показываем что нет сети
+                        showNoNetwork();
+                        return;
+                    }
                     requestData();
                 }
                 if (item == ConstantManager.LS) {
-                    new GetLocalTask(mDataManager.getPreferensManager().getLocalServer(),
-                            mDataManager.getPreferensManager().getStoreFileName()).execute();
+                    if (!mDataManager.isOnline()){
+                        // показываем что нет сети
+                        showNoNetwork();
+                        return ;
+                    }
+                    if (mDataManager.getPreferensManager().getLocalServer() != null) {
+                        new GetLocalTask(mDataManager.getPreferensManager().getLocalServer(),
+                                mDataManager.getPreferensManager().getStoreFileName()).execute();
+                    } else {
+                        //Показываем что ой нету у нас настроенного сервера
+                        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                        builder.setTitle("Внимание! ")
+                                .setMessage("Не настроено подключение к локальному серверу")
+                                .setNegativeButton(R.string.button_cancel,null)
+                                .show();
+                    }
                 }
                 if (item == ConstantManager.LDEV) {
                     openLocalFile();
