@@ -141,25 +141,20 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
             startActivity(intent);
         }
         if (item.getItemId() == R.id.menu_refresh){
-            /*
-            Toast.makeText(MainActivity.this,
-                    "А тут будет диалог спрашивающий откуда взять файл (имя файла в настройка)",
-                    Toast.LENGTH_LONG).show();*/
+            /* для новой схемы работы это здесь не нужно
             if (!mDataManager.isOnline()){
                 // показываем что нет сети
                 showNoNetwork();
                 return false;
             }
+            */
             directionGD = READ_FILE;
-            //
-            if (mDataManager.getPreferensManager().getLocalServer() != null) {
-                SendReciveDialog dialog = new SendReciveDialog();
-                dialog.setSendReciveListener(mSendReciveListener);
-                dialog.show(getSupportFragmentManager(),"SRD");
-            } else {
-                //requestData();
-            }
+
+            SendReciveDialog dialog = new SendReciveDialog();
+            dialog.setSendReciveListener(mSendReciveListener);
+            dialog.show(getSupportFragmentManager(),"SRD");
         }
+
         if (item.getItemId() == R.id.menu_about) {
             Intent intent = new Intent(this,AboutActivity.class);
             startActivity(intent);
@@ -519,8 +514,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
                     //TODO Добавить работу с файлами
                 }
                 if (item == ConstantManager.LS) {
-                    new NetLocalTask(mDataManager.getPreferensManager().getLocalServer(),
-                            storeFileFullName,fileType).execute();
+                    //
+                    if (mDataManager.getPreferensManager().getLocalServer() != null) {
+                        new NetLocalTask(mDataManager.getPreferensManager().getLocalServer(),
+                                storeFileFullName,fileType).execute();
+                    } else {
+                        //TODO Показываем что ой нету у нас настроенного сервера
+                    }
                 }
             }
             if (directionGD == READ_FILE ){
@@ -528,8 +528,17 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
                     openLocalFile();
                 }
                 if (item == ConstantManager.LS) {
-                    new GetLocalTask(mDataManager.getPreferensManager().getLocalServer(),
-                            mDataManager.getPreferensManager().getStoreFileName()).execute();
+                    if (mDataManager.getPreferensManager().getLocalServer() != null) {
+                        new GetLocalTask(mDataManager.getPreferensManager().getLocalServer(),
+                                mDataManager.getPreferensManager().getStoreFileName()).execute();
+                    } else {
+                        //TODO Показываем что ой нету у нас настроенного сервера
+                        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                        builder.setTitle("Внимание! ")
+                                .setMessage("Не настроено подключение к локальному серверу")
+                                .setNegativeButton(R.string.button_cancel,null)
+                                .show();
+                    }
                 }
             }
         }
