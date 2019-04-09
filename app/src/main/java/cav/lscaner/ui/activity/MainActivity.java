@@ -735,6 +735,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
 
     }
 
+    //https://github.com/BoardiesITSolutions/FileDirectoryPicker  - попробовать
+    // https://android-arsenal.com/details/1/5837
+
     private void localStoreFileOld(String fdir) {
         java.io.File fSrc = new java.io.File(storeFileFullName);
         String f = Func.createFileName(fSrc.getName(),fileType);
