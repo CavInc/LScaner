@@ -11,6 +11,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
+import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.os.Bundle;
@@ -22,6 +24,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -70,6 +73,7 @@ import cav.lscaner.utils.ConstantManager;
 import cav.lscaner.utils.Func;
 import cav.lscaner.utils.SwipeDetector;
 import cav.lscaner.utils.WorkInFile;
+import lib.folderpicker.FolderPicker;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 
@@ -81,6 +85,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
     private static final int READ_FILE = 1010;
     private static final int REQUEST_OPEN_DOCUMENT = 875;
     private static final int REQUEST_STORE_FILE = 876;
+    private static final int FOLDERPICKER_CODE = 877;
 
     private final int MAX_DEMO_REC = 4;
 
@@ -536,9 +541,47 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
 
     // запись на локальное устройство с выбором места
     private void storeLocalFile(String storeFileFullName) {
-        Intent storeData = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
-        startActivityForResult(Intent.createChooser(storeData,
-                getString(R.string.store_intent)), REQUEST_STORE_FILE);
+        Intent storeData = null;
+        if (Build.VERSION.SDK_INT >= 21 ) {
+            storeData = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
+            startActivityForResult(Intent.createChooser(storeData,
+                    getString(R.string.store_intent)), REQUEST_STORE_FILE);
+        } else {
+            //storeData = new Intent(Intent.ACTION_GET_CONTENT);
+            //storeData.addCategory(Intent.CATEGORY_OPENABLE);
+            //startActivityForResult(storeData,REQUEST_STORE_FILE);
+
+
+            //Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+            //Uri uri = Uri.parse(Environment.getExternalStorageDirectory().getPath()
+            //        +   java.io.File.separator + "/" + java.io.File.separator);
+            //intent.setDataAndType(uri, "*/*");
+            //intent.addCategory(Intent.CATEGORY_OPENABLE);
+            //intent.addCategory(Intent.CATEGORY_DEFAULT);
+            //startActivityForResult(Intent.createChooser(intent,
+           //         getString(R.string.store_intent)), REQUEST_STORE_FILE);
+
+
+            /*
+            Uri selectedUri = Uri.parse(Environment.getExternalStorageDirectory() + "/myFolder/");
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setDataAndType(selectedUri, "resource/folder");
+
+            if (intent.resolveActivityInfo(getPackageManager(), 0) != null) {
+                startActivity(intent);
+            } else {
+                // if you reach this place, it means there is no any file
+                // explorer app installed on your device
+                Toast.makeText(this,"NO Explorer",Toast.LENGTH_SHORT).show();
+
+            }
+            */
+
+            Intent intent = new Intent(this, FolderPicker.class);
+            startActivityForResult(intent, FOLDERPICKER_CODE);
+
+        }
+
     }
 
     // читаем файл с локального устройства
@@ -605,6 +648,22 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
                         mDataManager.takePermission(getApplicationContext(), data.getData())) {
                     Uri uri = data.getData();
                     localStoreFile(uri);
+                }
+                break;
+            case FOLDERPICKER_CODE:
+                if (resultCode == RESULT_OK && data.hasExtra("data")) {
+                    String folderLocation = data.getExtras().getString("data");
+                    Log.i("folderLocation", folderLocation);
+                    //content://com.android.externalstorage.documents/tree/primary%3ADownload
+                    //Uri uri = Uri.parse("file://"+folderLocation);
+                    Uri uri = Uri.parse("content://com.android.externalstorage.documents/tree/primary");
+                    localStoreFile(uri);
+                    /*
+                    if (mDataManager.takePermission(getApplicationContext(), uri)) {
+                        localStoreFile(uri);
+                    }
+                   */
+
                 }
                 break;
         }

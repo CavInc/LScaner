@@ -46,5 +46,6 @@ dependencies {
     })
     compile 'com.journeyapps:zxing-android-embedded:3.2.0@aar'
     compile 'com.google.zxing:core:3.2.1'
+    compile 'lib.kashif:folderpicker:2.4'
 }
 apply plugin: 'com.google.gms.google-services'
