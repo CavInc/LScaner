@@ -656,8 +656,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
                     Log.i("folderLocation", folderLocation);
                     //content://com.android.externalstorage.documents/tree/primary%3ADownload
                     //Uri uri = Uri.parse("file://"+folderLocation);
-                    Uri uri = Uri.parse("content://com.android.externalstorage.documents/tree/primary");
-                    localStoreFile(uri);
+                    //Uri uri = Uri.parse("content://com.android.externalstorage.documents/tree/primary");
+                   // localStoreFile(uri);
+                    localStoreFileOld(folderLocation);
                     /*
                     if (mDataManager.takePermission(getApplicationContext(), uri)) {
                         localStoreFile(uri);
@@ -732,6 +733,30 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
         // удаляем скопрированный файл
         fSrc.delete();
 
+    }
+
+    private void localStoreFileOld(String fdir) {
+        java.io.File fSrc = new java.io.File(storeFileFullName);
+        String f = Func.createFileName(fSrc.getName(),fileType);
+
+        java.io.File fDesc = new java.io.File(fdir,f);
+
+
+        try {
+            FileOutputStream output = new FileOutputStream(fDesc);
+            FileInputStream input = new FileInputStream(fSrc);
+
+            FileChannel fileChannelIn = input.getChannel();
+            FileChannel fileChannelOut = output.getChannel();
+            fileChannelIn.transferTo(0, fileChannelIn.size(), fileChannelOut);
+
+            output.flush();
+            output.close();
+            input.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(this,e.getLocalizedMessage(),Toast.LENGTH_LONG).show();
+        }
     }
 
     private java.io.File copyUriToLocal(Uri uri){
