@@ -551,7 +551,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
         intent.setType("text/plain");
         //startActivityForResult(intent,REQUEST_OPEN_DOCUMENT);
 
-        startActivityForResult(Intent.createChooser(intent,"chooser"),REQUEST_OPEN_DOCUMENT);
+        startActivityForResult(Intent.createChooser(intent,"Выбор каталога"),REQUEST_OPEN_DOCUMENT);
     }
 
     @Override
