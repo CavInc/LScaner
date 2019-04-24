@@ -23,6 +23,7 @@ public class WorkInFile {
 //http://startandroid.ru/ru/uroki/vse-uroki-spiskom/138-urok-75-hranenie-dannyh-rabota-s-fajlami.html
 
     private String codeStr;
+    private FileFieldModel fieldFile;
 
     public WorkInFile(Integer codeFile){
         switch (codeFile){
@@ -152,7 +153,7 @@ public class WorkInFile {
         // удаляем старые данные
         manager.getDB().deleteStore();
         // получили список номеров полей
-        FileFieldModel fieldFile = manager.getPreferensManager().getFieldFileModel();
+        fieldFile = manager.getPreferensManager().getFieldFileModel();
 
         try {
             InputStreamReader inputStreamReader = new InputStreamReader(
@@ -166,6 +167,8 @@ public class WorkInFile {
             Double price = 0.0;
             Double baseprice = 0.0;
             Float ostatok = 0.0f;
+
+            boolean firstLine = true;
             // читаем содержимое
             manager.getDB().open();
             SQLiteDatabase db = manager.getDB().getDatabase();
@@ -177,6 +180,13 @@ public class WorkInFile {
                     if (str.length() != 0) {
                         str = str.replaceAll(delim+delim,delim+" "+delim);
                         str = str.replaceAll(delim+delim,delim+" "+delim);
+                        // проверяем строку и если срока первая и с названием полей то заполняем FileFieldModel
+                        if (firstLine) {
+                            checkFirstLine(str,delim);
+                            firstLine = false;
+                            continue;
+                        }
+
                         char lastS =  str.toCharArray()[str.length() - 1];
                         if (lastS == '#') {
                             str = str + " ";
@@ -186,11 +196,6 @@ public class WorkInFile {
                             Log.d("WF","OOPS !!!!");
                             return ConstantManager.RET_NO_FIELD_MANY;
                         }
-                        /*
-                        if (lm[0].equals("4670012690986")) {
-                            Log.d("WK","OKPS");
-                        }
-                        */
 
                         //manager.getDB().addStore(lm[0],lm[2]);
                         // обработать поля здесь или передать их в процедуру дальшн  ?
@@ -252,5 +257,54 @@ public class WorkInFile {
         }
         return ConstantManager.RET_OK;
 
+    }
+
+    private boolean checkFirstLine(String str,String delim) {
+        // bcode#name#id#price#egais#rem#pprice
+        if ((str.indexOf("bcode")!=-1) | (str.indexOf("name")!=-1) | (str.indexOf("id")!=-1)
+                | (str.indexOf("price")!=-1) | (str.indexOf("egais")!=-1) | (str.indexOf("rem")!=-1)
+                | (str.indexOf("pprice") !=-1) | (str.indexOf("vend") !=-1)) {
+            String[] field = str.split(delim);
+            int barcode = -1;
+            int name = -1;
+            int articul = -1;
+            int price = -1;
+            int egais = -1;
+            int base_price = -1;
+            int ostatok = -1;
+            int codetv = -1;
+
+            int idx = 1;
+            for (String l:field){
+                if (l.equals("bcode")){
+                    barcode = idx;
+                }
+                if (l.equals("name")) {
+                    name = idx;
+                }
+                if (l.equals("id")) {
+                    articul = idx;
+                }
+                if (l.equals("price")) {
+                    price = idx;
+                }
+                if (l.equals("egais")) {
+                    egais = idx;
+                }
+                if (l.equals("rem")) {
+                    ostatok = idx;
+                }
+                if (l.equals("pprice")) {
+                    base_price = idx;
+                }
+                if (l.equals("vend")) {
+                    codetv = idx;
+                }
+                idx +=1;
+            }
+            fieldFile = new FileFieldModel(barcode,name,articul,price,egais,base_price,ostatok,codetv);
+            return true;
+        }
+        return false;
     }
 }
