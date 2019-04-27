@@ -3,7 +3,7 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
-    <dimen name="height_about_logo">317px</dimen>
+    <dimen name="height_about_logo">160px</dimen>
     <dimen name="size_4dp">4dp</dimen>
     <dimen name="padding_delim">30dp</dimen>
 </resources>
