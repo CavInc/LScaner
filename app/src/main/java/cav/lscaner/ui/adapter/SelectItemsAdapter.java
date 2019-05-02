@@ -34,6 +34,7 @@ public class SelectItemsAdapter extends ArrayAdapter<StoreProductModel> {
             holder.mArticul = (TextView) row.findViewById(R.id.ssii_articul);
             holder.mName = (TextView) row.findViewById(R.id.ssii_name);
             holder.mPrice = (TextView) row.findViewById(R.id.ssii_price);
+            holder.mOstatok = row.findViewById(R.id.ssii_ostatok);
             row.setTag(holder);
         }else{
             holder = (ViewHolder)row.getTag();
@@ -43,6 +44,7 @@ public class SelectItemsAdapter extends ArrayAdapter<StoreProductModel> {
         holder.mArticul.setText(rec.getArticul());
         holder.mName.setText(rec.getName());
         holder.mPrice.setText("Цена: "+rec.getPrice());
+        holder.mOstatok.setText("Остаток : "+rec.getOstatok());
 
         return row;
     }
@@ -51,5 +53,6 @@ public class SelectItemsAdapter extends ArrayAdapter<StoreProductModel> {
         public TextView mName;
         public TextView mArticul;
         public TextView mPrice;
+        public TextView mOstatok;
     }
 }

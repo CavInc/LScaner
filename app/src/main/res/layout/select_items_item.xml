@@ -5,7 +5,8 @@
     android:paddingLeft="16dp"
     android:paddingRight="16dp"
     android:paddingBottom="16dp"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
     <TextView
         android:id="@+id/ssii_name"
         android:textColor="@android:color/black"
@@ -31,4 +32,10 @@
             android:gravity="right"
             android:layout_weight="1"/>
     </LinearLayout>
+    <TextView
+        android:id="@+id/ssii_ostatok"
+        tools:text="Остаток"
+        android:textColor="@color/app_blue"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
 </LinearLayout>
