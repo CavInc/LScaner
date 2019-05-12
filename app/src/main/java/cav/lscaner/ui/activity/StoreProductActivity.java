@@ -73,8 +73,10 @@ public class StoreProductActivity extends AppCompatActivity {
             @Override
             public boolean onQueryTextChange(String newText) {
                 int pos = adapter.getPosition(new StoreProductModel("",newText));
-                //Log.d("SP","POS : "+pos);
-                mListView.setSelection(pos);
+                if (pos != 0 & newText.length() != 0) {
+                    //Log.d("SP","POS : "+pos);
+                    mListView.setSelection(pos);
+                }
                 return  true;
             }
         });
