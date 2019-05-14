@@ -47,6 +47,10 @@ public class ScannedDataModel {
         mArticul = articul;
     }
 
+    public ScannedDataModel(String name) {
+        mName = name;
+    }
+
     public ScannedDataModel(int idFile, int posId, String barCode, String name, Float quantity, String articul, Double price, Double ostatok) {
         mIdFile = idFile;
         mPosId = posId;
@@ -190,6 +194,10 @@ public class ScannedDataModel {
                 }
             } else if (tmp.getBarCode().equals(this.mBarCode)){
                 //Log.d("ABE","True "+this.mSpId+" "+tmp.mSpId);
+                return true;
+            } else if (tmp.getName().toUpperCase().equals(this.mName.toUpperCase())) {
+                return true;
+            } else if (tmp.getName().toUpperCase().indexOf(this.mName.toUpperCase()) != -1) {
                 return true;
             }
         }
