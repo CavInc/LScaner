@@ -195,9 +195,9 @@ public class ScannedDataModel {
             } else if (tmp.getBarCode().equals(this.mBarCode)){
                 //Log.d("ABE","True "+this.mSpId+" "+tmp.mSpId);
                 return true;
-            } else if (tmp.getName().toUpperCase().equals(this.mName.toUpperCase())) {
+            } else if ((tmp.getName() != null) && (tmp.getName().toUpperCase().equals(this.mName.toUpperCase()))) {
                 return true;
-            } else if (tmp.getName().toUpperCase().indexOf(this.mName.toUpperCase()) != -1) {
+            } else if ((tmp.getName() != null) && tmp.getName().toUpperCase().indexOf(this.mName.toUpperCase()) != -1) {
                 return true;
             }
         }
