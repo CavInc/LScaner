@@ -70,6 +70,7 @@ import cav.lscaner.utils.SwipeDetector;
 public class ScanActivity extends AppCompatActivity implements AdapterView.OnItemLongClickListener,AdapterView.OnItemClickListener {
 
     private static final int CAMERA_D = 0;
+    private static final String TAG = "SA";
     private final int MAX_REC = 30;  // количество записей в демо версии
 
     private EditText mBarCode;
@@ -213,12 +214,13 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener(){
             @Override
             public boolean onQueryTextSubmit(String query) {
+                Log.d(TAG,query);
                 return  false;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                /*
+
                 if (newText.length() == 0){
                     mAdapter = null;
                     filterLock = false;
@@ -228,12 +230,13 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
                     filterLock = true;
                     mAdapter.getFilter().filter(newText);
                 }
-                */
 
+                /*
                 int pos = mAdapter.getPosition(new ScannedDataModel(newText));
                 if (pos != 0 & newText.length() != 0) {
                     mListView.setSelection(pos);
                 }
+                */
 
                 return true;
             }
