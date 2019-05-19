@@ -180,4 +180,16 @@ public class StoreProductModel implements Parcelable {
         }
         return false;
     }
+
+    @Override
+    public int hashCode() {
+        int result = 1;
+        result = 31 * result + mBarcode.hashCode()+mName.hashCode();
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return mName;
+    }
 }
