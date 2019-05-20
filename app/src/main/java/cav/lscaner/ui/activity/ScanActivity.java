@@ -701,12 +701,14 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
 
     private void deleteRec() {
         deleteRecord(idFile,selModel.getPosId());
+        /*
         if (filterLock) {
             //android.widget.Filter fl = mAdapter.getFilter();
             mAdapter.remove(selModel);
             mAdapter.getFilter().filter(filterString);
             mAdapter.notifyDataSetChanged();
         }
+        */
     }
 
     private void deleteRecord(final int selIdFile, final int position) {
@@ -716,6 +718,13 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
                 .setPositiveButton(R.string.button_ok,new DialogInterface.OnClickListener(){
                     @Override
                     public void onClick(DialogInterface dialogInterface, int witch) {
+                        if (filterLock) {
+                            //android.widget.Filter fl = mAdapter.getFilter();
+                            mAdapter.remove(selModel);
+                            mAdapter.getFilter().filter(filterString);
+                            mAdapter.notifyDataSetChanged();
+                        }
+
                         mDataManager.getDB().delScannedPosition(selIdFile,position);
                         countRecord -=1;
                         updateUI();
