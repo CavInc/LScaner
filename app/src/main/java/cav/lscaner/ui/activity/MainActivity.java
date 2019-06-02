@@ -1,19 +1,16 @@
 package cav.lscaner.ui.activity;
 
 import android.Manifest;
-import android.accounts.AccountManager;
 import android.app.ActionBar;
 import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.FloatingActionButton;
@@ -21,6 +18,7 @@ import android.os.Bundle;
 import android.support.v4.content.FileProvider;
 import android.support.v4.provider.DocumentFile;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -28,6 +26,11 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+
+import com.baoyz.swipemenulistview.SwipeMenu;
+import com.baoyz.swipemenulistview.SwipeMenuCreator;
+import com.baoyz.swipemenulistview.SwipeMenuItem;
+import com.baoyz.swipemenulistview.SwipeMenuListView;
 
 import java.io.DataOutputStream;
 import java.io.File;
@@ -41,16 +44,15 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.channels.FileChannel;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import cav.lscaner.R;
 import cav.lscaner.data.managers.DataManager;
 import cav.lscaner.data.models.ScannedFileModel;
 import cav.lscaner.ui.adapter.ScannedFileAdapter;
+import cav.lscaner.ui.adapter.ScannedSwipeFileAdapter;
 import cav.lscaner.ui.dialogs.AddEditNameFileDialog;
 import cav.lscaner.ui.dialogs.DemoDialog;
-import cav.lscaner.ui.dialogs.SelectMainDialog;
 import cav.lscaner.ui.dialogs.SendFileDialog;
 import cav.lscaner.ui.dialogs.SendReciveDialog;
 import cav.lscaner.ui.dialogs.WarningDialog;
@@ -72,11 +74,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
     private final int MAX_DEMO_REC = 4;
 
     private FloatingActionButton mFAB;
-    private ListView mListView;
+    //private ListView mListView;
+    private SwipeMenuListView mListView;
 
     private DataManager mDataManager;
 
-    private ScannedFileAdapter mFileAdapter;
+    //private ScannedFileAdapter mFileAdapter;
+    private ScannedSwipeFileAdapter mFileAdapter;
 
     private boolean newRecord = true;
 
@@ -99,7 +103,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
 
         mDataManager = DataManager.getInstance();
 
-        mListView = (ListView) findViewById(R.id.main_lv);
+        mListView = findViewById(R.id.main_lv);
 
         mFAB = (FloatingActionButton) findViewById(R.id.main_fab);
 
@@ -110,9 +114,56 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
 
         swipeDetector = new SwipeDetector();
 
-        mListView.setOnTouchListener(swipeDetector);
+        //mListView.setOnTouchListener(swipeDetector);
 
         mActionBar = getActionBar();
+
+        SwipeMenuCreator creator = new SwipeMenuCreator() {
+            @Override
+            public void create(SwipeMenu menu) {
+
+                SwipeMenuItem openItem = new SwipeMenuItem(getApplicationContext());
+                // set item background
+                //openItem.setBackground(new ColorDrawable(Color.rgb(0xC9, 0xC9, 0xCE)));
+                openItem.setBackground(R.drawable.swipe_button_bg_edit);
+                // set item width
+                openItem.setWidth(dp2px(90));
+                // set item title
+                //openItem.setTitle("Open");
+                openItem.setIcon(R.drawable.ic_mode_edit_blue_24dp);
+                // set item title fontsize
+                openItem.setTitleSize(18);
+                // set item title font color
+                openItem.setTitleColor(Color.WHITE);
+                // add to menu
+                menu.addMenuItem(openItem);
+
+                SwipeMenuItem sendItem = new SwipeMenuItem(getApplicationContext());
+                //sendItem.setBackground(new ColorDrawable(Color.rgb(0xC9, 0xC9, 0xCE)));
+                sendItem.setBackground(R.drawable.swipe_button_bg_edit);
+                sendItem.setWidth(dp2px(90));
+                sendItem.setIcon(R.drawable.ic_send_blue_24dp);
+                menu.addMenuItem(sendItem);
+
+                // create "delete" item
+                SwipeMenuItem deleteItem = new SwipeMenuItem(getApplicationContext());
+                // set item background
+                //deleteItem.setBackground(new ColorDrawable(Color.rgb(0xF9, 0x3F, 0x25)));
+                //deleteItem.setBackground(R.drawable.button_orange_border);
+                // set item width
+                deleteItem.setWidth(dp2px(90));
+                // set a icon
+                deleteItem.setIcon(R.drawable.ic_delete_red_24dp);
+                // add to menu
+                menu.addMenuItem(deleteItem);
+            }
+        };
+        mListView.setMenuCreator(creator);
+        mListView.setOnMenuItemClickListener(mMenuSwipeListener);
+    }
+
+    private int dp2px(int dp) {
+        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, getResources().getDisplayMetrics());
     }
 
     @Override
@@ -200,6 +251,26 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
         return true;
     }
 
+    SwipeMenuListView.OnMenuItemClickListener mMenuSwipeListener = new SwipeMenuListView.OnMenuItemClickListener(){
+
+        @Override
+        public boolean onMenuItemClick(int position, SwipeMenu menu, int index) {
+            selModel = mFileAdapter.getItem(position);
+            switch (index){
+                case 0:
+                    editRecord();
+                    break;
+                case 1:
+                    sendStartDialog(position);
+                    break;
+                case 2:
+                    deleteRecord(mFileAdapter.getItem(position).getId());
+                    break;
+            }
+            return false;
+        }
+    };
+
     private void multiSelectChange(){
         if (!multiSelectFlg) {
             multiSelectFlg = true;
@@ -257,8 +328,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
     private void updateUI(){
         ArrayList<ScannedFileModel> model = mDataManager.getScannedFile();
         if (mFileAdapter == null){
-            mFileAdapter = new ScannedFileAdapter(this,R.layout.scanned_file_item,model);
-            mFileAdapter.setScannedSendListener(mSendListener);
+            //mFileAdapter = new ScannedFileAdapter(this,R.layout.scanned_file_item,model);
+            mFileAdapter = new ScannedSwipeFileAdapter(this,R.layout.scanned_file_item,model);
+            //mFileAdapter.setScannedSendListener(mSendListener);
+            mFileAdapter.setScannedSendListener(mSendSwipeListener);
             mListView.setAdapter(mFileAdapter);
             mListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
         }else {
@@ -341,6 +414,21 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
             dialog.show(getFragmentManager(),"SL");
         }
     };
+
+    ScannedSwipeFileAdapter.ScannedSendListener mSendSwipeListener = new ScannedSwipeFileAdapter.ScannedSendListener(){
+
+        @Override
+        public void onSend(int position) {
+            sendStartDialog(position);
+        }
+    };
+
+    private void sendStartDialog(int position){
+        selectPosition = position;
+        SendFileDialog dialog = new SendFileDialog();
+        dialog.setListener(mSendFileDialogListener);
+        dialog.show(getFragmentManager(),"SL");
+    }
 
     private SendFileDialog.SendFileDialogListener mSendFileDialogListener = new SendFileDialog.SendFileDialogListener() {
         @Override

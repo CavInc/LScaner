@@ -51,6 +51,7 @@
             <requestFocus/>
             </EditText>
     </LinearLayout>
+    <!--
     <ListView
         android:id="@+id/san_lv"
         android:layout_below="@+id/contaner_up"
@@ -58,6 +59,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
     </ListView>
+    -->
+    <com.baoyz.swipemenulistview.SwipeMenuListView
+        android:id="@+id/san_lv"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_below="@+id/contaner_up"
+        android:layout_above="@+id/scan_summ">
+    </com.baoyz.swipemenulistview.SwipeMenuListView>
 
     <TextView
         android:id="@+id/scan_summ"

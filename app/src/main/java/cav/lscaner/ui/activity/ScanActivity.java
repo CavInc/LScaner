@@ -6,8 +6,10 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.RectF;
+import android.graphics.drawable.ColorDrawable;
 import android.hardware.Camera;
 import android.os.Handler;
 import android.os.Vibrator;
@@ -19,6 +21,7 @@ import android.support.v7.widget.SearchView;
 import android.text.InputFilter;
 import android.text.InputType;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Display;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -34,6 +37,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 
+import com.baoyz.swipemenulistview.SwipeMenu;
+import com.baoyz.swipemenulistview.SwipeMenuCreator;
+import com.baoyz.swipemenulistview.SwipeMenuItem;
+import com.baoyz.swipemenulistview.SwipeMenuListView;
 import com.google.zxing.BinaryBitmap;
 import com.google.zxing.LuminanceSource;
 import com.google.zxing.MultiFormatReader;
@@ -55,6 +62,7 @@ import cav.lscaner.data.managers.DataManager;
 import cav.lscaner.data.models.ScannedDataModel;
 import cav.lscaner.data.models.StoreProductModel;
 import cav.lscaner.ui.adapter.ScannedListAdapter;
+import cav.lscaner.ui.adapter.ScannedSwipeListAdapter;
 import cav.lscaner.ui.dialogs.DemoDialog;
 import cav.lscaner.ui.dialogs.InfoNoValidDialog;
 import cav.lscaner.ui.dialogs.PrihodChangePriceDialog;
@@ -74,7 +82,7 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
     private final int MAX_REC = 30;  // количество записей в демо версии
 
     private EditText mBarCode;
-    private ListView mListView;
+    private SwipeMenuListView mListView;
     private TextView mSumma;
 
 
@@ -85,7 +93,9 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
 
     private int idFile = -1;
 
-    private ScannedListAdapter mAdapter;
+    //private ScannedListAdapter mAdapter;
+    private ScannedSwipeListAdapter mAdapter;
+
     private ArrayList<ScannedDataModel> mDataModels;
     private FrameLayout mFrameLayout;
 
@@ -154,7 +164,7 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
         mBarCode = (EditText) findViewById(R.id.barcode_et);
         mSumma = (TextView) findViewById(R.id.scan_summ);
 
-        mListView = (ListView) findViewById(R.id.san_lv);
+        mListView = findViewById(R.id.san_lv);
 
         mBarCode.setOnEditorActionListener(mEditorActionListener);
 
@@ -181,11 +191,54 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
 
 
         swipeDetector = new SwipeDetector();
-        mListView.setOnTouchListener(swipeDetector);
+        //mListView.setOnTouchListener(swipeDetector); // свайп
+
+
+        SwipeMenuCreator creator = new SwipeMenuCreator() {
+
+            @Override
+            public void create(SwipeMenu menu) {
+                SwipeMenuItem openItem = new SwipeMenuItem(getApplicationContext());
+                // set item background
+                openItem.setBackground(new ColorDrawable(Color.rgb(0xC9, 0xC9, 0xCE)));
+                openItem.setBackground(R.drawable.swipe_button_bg_edit);
+                // set item width
+                openItem.setWidth(dp2px(90));
+                // set item title
+                //openItem.setTitle("Open");
+                openItem.setIcon(R.drawable.ic_mode_edit_blue_24dp);
+                // set item title fontsize
+                openItem.setTitleSize(18);
+                // set item title font color
+                openItem.setTitleColor(Color.WHITE);
+                // add to menu
+                menu.addMenuItem(openItem);
+
+                // create "delete" item
+                SwipeMenuItem deleteItem = new SwipeMenuItem(getApplicationContext());
+                // set item background
+                deleteItem.setBackground(new ColorDrawable(Color.rgb(0xF9, 0x3F, 0x25)));
+                //deleteItem.setBackground(R.drawable.button_orange_border);
+                // set item width
+                deleteItem.setWidth(dp2px(90));
+                // set a icon
+                deleteItem.setIcon(R.drawable.ic_delete_wite_24dp);
+                // add to menu
+                menu.addMenuItem(deleteItem);
+            }
+        };
+
+        mListView.setMenuCreator(creator);
+        mListView.setOnMenuItemClickListener(mMenuItemClickListener);
+
 
         setupToolBar();
         updateUI();
 
+    }
+
+    private int dp2px(int dp) {
+        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, getResources().getDisplayMetrics());
     }
 
     public void setupToolBar(){
@@ -230,14 +283,6 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
                     filterLock = true;
                     mAdapter.getFilter().filter(newText);
                 }
-
-                /*
-                int pos = mAdapter.getPosition(new ScannedDataModel(newText));
-                if (pos != 0 & newText.length() != 0) {
-                    mListView.setSelection(pos);
-                }
-                */
-
                 return true;
             }
         });
@@ -309,7 +354,8 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
             } else if (fileType == ConstantManager.FILE_TYPE_ALCOMARK) {
                 linkLayout = R.layout.scanned_alko_item;
             }
-            mAdapter = new ScannedListAdapter(this,linkLayout,mDataModels);
+            //mAdapter = new ScannedListAdapter(this,linkLayout,mDataModels);
+            mAdapter = new ScannedSwipeListAdapter(this,linkLayout,mDataModels);
             mListView.setAdapter(mAdapter);
         }else {
             mAdapter.setData(mDataModels);
@@ -375,6 +421,24 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
                 Log.d("SA "," KEY DES "+lxDev.getDescriptor()+" "+lxDev.getName());
                 */
                 return workingBarcode(textView);
+            }
+            return false;
+        }
+    };
+
+    SwipeMenuListView.OnMenuItemClickListener mMenuItemClickListener = new SwipeMenuListView.OnMenuItemClickListener(){
+
+        @Override
+        public boolean onMenuItemClick(int position, SwipeMenu menu, int index) {
+            selModel = (ScannedDataModel) mAdapter.getItem(position);
+            switch (index){
+                case 0:
+                    editRec();
+                    break;
+                case 1:
+                    deleteRec();
+                    break;
+
             }
             return false;
         }
