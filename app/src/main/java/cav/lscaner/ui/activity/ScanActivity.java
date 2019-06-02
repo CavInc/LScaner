@@ -217,12 +217,13 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
                 // create "delete" item
                 SwipeMenuItem deleteItem = new SwipeMenuItem(getApplicationContext());
                 // set item background
-                deleteItem.setBackground(new ColorDrawable(Color.rgb(0xF9, 0x3F, 0x25)));
+                //deleteItem.setBackground(new ColorDrawable(Color.rgb(0xF9, 0x3F, 0x25)));
                 //deleteItem.setBackground(R.drawable.button_orange_border);
+                deleteItem.setBackground(R.drawable.swipe_button_bg_edit);
                 // set item width
                 deleteItem.setWidth(dp2px(90));
                 // set a icon
-                deleteItem.setIcon(R.drawable.ic_delete_wite_24dp);
+                deleteItem.setIcon(R.drawable.ic_delete_red_24dp);
                 // add to menu
                 menu.addMenuItem(deleteItem);
             }
@@ -777,9 +778,9 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
 
     private void deleteRecord(final int selIdFile, final int position) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Удаление")
-                .setMessage("Удаляем ? Вы уверены ?")
-                .setPositiveButton(R.string.button_ok,new DialogInterface.OnClickListener(){
+        builder.setTitle("Удаляем?")
+                .setMessage("Вы уверены?")
+                .setPositiveButton(R.string.button_yes,new DialogInterface.OnClickListener(){
                     @Override
                     public void onClick(DialogInterface dialogInterface, int witch) {
                         if (filterLock) {
