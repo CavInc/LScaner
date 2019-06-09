@@ -17,6 +17,9 @@
         app:showAsAction="ifRoom"
         />
     <item
+        android:id="@+id/menu_help_load_file"
+        android:title="Описание формата файла загрузки"/>
+    <item
         android:id="@+id/menu_about"
         android:title="О программе"/>
 
