@@ -18,4 +18,16 @@
         <item>2</item>
     </string-array>
 
+    <string name="help_msg">При указании в первой строке файла, строки с описанием
+    полей, настройки самой программы игнорируются.  </string>
+
+    <string name="help_file">id — КОД Товара\n
+        name — Наименование\n
+        bcode - штрих-код\n
+        rem - Остаток\n
+        price - цена\n
+        pprice - цена закупочная\n
+        egais - код егаис\n
+        vend - артикул\n</string>
+
 </resources>

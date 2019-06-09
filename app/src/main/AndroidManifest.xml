@@ -58,6 +58,9 @@
                   android:windowSoftInputMode="adjustPan|stateHidden"
                   android:screenOrientation="portrait">
         </activity>
+        <activity android:name=".ui.activity.HelpActivity"
+            android:label="Описание файла загрузки">
+        </activity>
 
         <provider
             android:authorities="${applicationId}.provider"

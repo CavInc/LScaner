@@ -3,6 +3,7 @@ package cav.lscaner.ui.activity;
 import android.Manifest;
 import android.app.ActionBar;
 import android.app.AlertDialog;
+import android.content.ClipData;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -219,11 +220,15 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
             Intent intent = new Intent(this,StoreProductActivity.class);
             startActivity(intent);
         }
+        // описание файла
+        if (item.getItemId() == R.id.menu_help_load_file) {
+            Intent intent = new Intent(this,HelpActivity.class);
+            startActivity(intent);
+        }
         // множествееный выбор
         if (item.getItemId() == R.id.menu_multi_select) {
             multiSelectChange();
         }
-
         // групповое удаление
         if (item.getItemId() == R.id.menu_delete_select) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
