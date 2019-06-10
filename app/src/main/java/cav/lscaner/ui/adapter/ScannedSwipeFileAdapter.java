@@ -86,7 +86,6 @@ public class ScannedSwipeFileAdapter extends BaseSwipeListAdapter {
                 }
             }
         });
-
         return new ContentViewWrapper(convertView, reUsable);
     }
 
@@ -106,8 +105,8 @@ public class ScannedSwipeFileAdapter extends BaseSwipeListAdapter {
     }
 
     public void setDate(ArrayList<ScannedFileModel> data){
-        data.clear();
-        data.addAll(data);
+        this.data.clear();
+        this.data.addAll(data);
     }
 
     public void setScannedSendListener(ScannedSendListener listener){

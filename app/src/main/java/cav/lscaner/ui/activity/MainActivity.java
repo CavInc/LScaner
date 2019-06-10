@@ -337,7 +337,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
             //mFileAdapter = new ScannedFileAdapter(this,R.layout.scanned_file_item,model);
             mFileAdapter = new ScannedSwipeFileAdapter(this,R.layout.scanned_file_item,model);
             //mFileAdapter.setScannedSendListener(mSendListener);
-            mFileAdapter.setScannedSendListener(mSendSwipeListener);
+            //mFileAdapter.setScannedSendListener(mSendSwipeListener);
             mListView.setAdapter(mFileAdapter);
             mListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
         }else {
@@ -564,7 +564,14 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
         dialog.show(getSupportFragmentManager(),"UpdateFile");
     }
 
-
+    @Override
+    public void onBackPressed() {
+        if (multiSelectFlg) {
+            multiSelectChange();
+            return;
+        }
+        super.onBackPressed();
+    }
 
     // показываем что нет сети.
     private void showNoNetwork() {
