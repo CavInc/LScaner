@@ -308,7 +308,7 @@ public class CustomExpandListAdapter  extends BaseExpandableListAdapter {
                     //((HashMap) mChildData.get(groupPosition).get(childPosition)).put("itemValue",String.valueOf(i));
                     mChildData.get(groupPosition).remove(x);
                     pos +=1;
-                    if (pos < 0) pos = mChildData.get(groupPosition).size();
+                    if (pos > mChildData.get(groupPosition).size()) pos = 0;
 
                     mChildData.get(groupPosition).add(pos,x);
                     for (int i=0;i<mChildData.get(groupPosition).size();i++){
