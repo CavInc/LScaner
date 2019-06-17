@@ -249,7 +249,7 @@ public class CustomExpandListAdapter  extends BaseExpandableListAdapter {
 
             String vl = (String) l.get(mChildFrom[1]);
             ((TextView) v.findViewById(R.id.expant_list_item_id)).setText(vl+".");
-
+            /*
             ImageView im = (ImageView) v.findViewById(R.id.expant_list_item_bt);
             im.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -263,6 +263,51 @@ public class CustomExpandListAdapter  extends BaseExpandableListAdapter {
                     //((HashMap) mChildData.get(groupPosition).get(childPosition)).put("itemValue",String.valueOf(i));
                     mChildData.get(groupPosition).remove(x);
                     pos -=1;
+                    if (pos < 0) pos = mChildData.get(groupPosition).size();
+
+                    mChildData.get(groupPosition).add(pos,x);
+                    for (int i=0;i<mChildData.get(groupPosition).size();i++){
+                        ((HashMap) mChildData.get(groupPosition).get(i)).put("itemValue",String.valueOf(i+1));
+                    }
+                    notifyDataSetChanged();
+                }
+            });
+            */
+            ImageView imUp = (ImageView) v.findViewById(R.id.expant_list_item_up);
+            ImageView imDwn = (ImageView) v.findViewById(R.id.expand_list_item_down);
+            imUp.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.d("CE","GP "+groupPosition+" "+" CHL "+childPosition);
+                    Object x = mChildData.get(groupPosition).get(childPosition);
+                    int pos = mChildData.get(groupPosition).indexOf(x);
+                    Log.d("CE","POS "+pos);
+                    //int i = Integer.valueOf((String) ((HashMap)mChildData.get(groupPosition).get(childPosition)).get("itemValue"));
+                    //i -= 1;
+                    //((HashMap) mChildData.get(groupPosition).get(childPosition)).put("itemValue",String.valueOf(i));
+                    mChildData.get(groupPosition).remove(x);
+                    pos -=1;
+                    if (pos < 0) pos = mChildData.get(groupPosition).size();
+
+                    mChildData.get(groupPosition).add(pos,x);
+                    for (int i=0;i<mChildData.get(groupPosition).size();i++){
+                        ((HashMap) mChildData.get(groupPosition).get(i)).put("itemValue",String.valueOf(i+1));
+                    }
+                    notifyDataSetChanged();
+                }
+            });
+            imDwn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.d("CE","GP "+groupPosition+" "+" CHL "+childPosition);
+                    Object x = mChildData.get(groupPosition).get(childPosition);
+                    int pos = mChildData.get(groupPosition).indexOf(x);
+                    Log.d("CE","POS "+pos);
+                    //int i = Integer.valueOf((String) ((HashMap)mChildData.get(groupPosition).get(childPosition)).get("itemValue"));
+                    //i -= 1;
+                    //((HashMap) mChildData.get(groupPosition).get(childPosition)).put("itemValue",String.valueOf(i));
+                    mChildData.get(groupPosition).remove(x);
+                    pos +=1;
                     if (pos < 0) pos = mChildData.get(groupPosition).size();
 
                     mChildData.get(groupPosition).add(pos,x);
