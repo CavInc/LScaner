@@ -11,6 +11,7 @@ import cav.lscaner.BuildConfig;
 import cav.lscaner.R;
 import cav.lscaner.data.managers.DataManager;
 import cav.lscaner.ui.dialogs.ActivateDialog;
+import cav.lscaner.ui.dialogs.ActivateNetDialog;
 
 public class AboutActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -62,8 +63,12 @@ public class AboutActivity extends AppCompatActivity implements View.OnClickList
     @Override
     public void onClick(View view) {
         // показываем диалог активации
+        /*
         ActivateDialog dialog = new ActivateDialog();
         dialog.setDialogListener(mDialogListener);
+        dialog.show(getSupportFragmentManager(),"AD");
+        */
+        ActivateNetDialog dialog = new ActivateNetDialog();
         dialog.show(getSupportFragmentManager(),"AD");
     }
 
