@@ -427,10 +427,13 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
         }
     };
 
+    private int selectPosition;
+
     SwipeMenuListView.OnMenuItemClickListener mMenuItemClickListener = new SwipeMenuListView.OnMenuItemClickListener(){
 
         @Override
         public boolean onMenuItemClick(int position, SwipeMenu menu, int index) {
+            selectPosition = position;
             selModel = (ScannedDataModel) mAdapter.getItem(position);
             switch (index){
                 case 0:
@@ -676,11 +679,17 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
 
                 mDataManager.getDB().addScannedPositon(idFile,productModel.getBarcode(),quantity,posID,productModel.getArticul());
                 if (!editRecord) countRecord += 1;
-                updateUI(); // TODO передалать заполнение через добавление в адаптер
+
                 if (filterLock) {
+                    Log.d(TAG,"SELECT POS :"+selectPosition);
+                    ScannedDataModel ll = (ScannedDataModel) mAdapter.getItem(selectPosition);
+                    ll.setQuantity(quantity);
+                    mAdapter.setOneItem(selectPosition,ll);
                     mAdapter.getFilter().filter(filterString);
                     mAdapter.notifyDataSetChanged();
                 }
+                updateUI();
+
                 mBarCode.setText("");                // если камера отрыта то запускаем детектор по новой
                 if (frameScanVisible) {
                     startCamera();
@@ -744,7 +753,8 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
         mBar = selModel.getBarCode();
         mArticul = selModel.getArticul();
         if (fileType == ConstantManager.FILE_TYPE_EGAIS || fileType == ConstantManager.FILE_TYPE_PRODUCT) {
-            QueryQuantityDialog dialog = QueryQuantityDialog.newInstans(new StoreProductModel(selModel.getBarCode(), selModel.getName(), selModel.getArticul()),
+            QueryQuantityDialog dialog = QueryQuantityDialog.newInstans(new StoreProductModel(selModel.getBarCode(),
+                            selModel.getName(), selModel.getArticul()),
                     selModel.getQuantity(), selModel.getQuantity(), editRecord);
             dialog.setQuantityChangeListener(mQuantityChangeListener);
             dialog.show(getSupportFragmentManager(), "EDITSD");

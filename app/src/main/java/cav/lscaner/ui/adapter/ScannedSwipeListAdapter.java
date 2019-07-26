@@ -17,6 +17,7 @@ import cav.lscaner.R;
 import cav.lscaner.data.managers.DataManager;
 import cav.lscaner.data.models.FileFieldModel;
 import cav.lscaner.data.models.ScannedDataModel;
+import cav.lscaner.data.models.StoreProductModel;
 import cav.lscaner.utils.ConstantManager;
 import cav.lscaner.utils.Func;
 
@@ -145,6 +146,11 @@ public class ScannedSwipeListAdapter extends BaseSwipeListAdapter implements Fil
             mFilter = new ArrayFilter();
         }
         return mFilter;
+    }
+
+    public void setOneItem(int selectPosition, ScannedDataModel productModel) {
+        //this.setItem(selectPosition,productModel);
+        this.data.set(selectPosition,productModel);
     }
 
     private class ArrayFilter extends Filter {
