@@ -210,4 +210,8 @@ public class ScannedDataModel {
         result = 31 * result + mBarCode.hashCode();
         return result;
     }
+
+    public void setQuantity(Float quantity) {
+        mQuantity = quantity;
+    }
 }

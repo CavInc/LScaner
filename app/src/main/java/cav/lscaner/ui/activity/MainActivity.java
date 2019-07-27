@@ -386,17 +386,34 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
                         new NetLocalTask(mDataManager.getPreferensManager().getLocalServer(),
                                 storeFileFullName,fileType).execute();
                     } else {
-                        fileUris.add(Uri.parse(Func.createFileName(fname,selModel.getType())));
+                        fileUris.add(Uri.parse(storeFileFullName));
+                        //fileUris.add(Uri.parse(Func.createFileName(fname,selModel.getType())));
                     }
                 }
             }
             if (item == R.id.dialog_send_item) {
                 Intent sendMulti = new Intent(Intent.ACTION_SEND_MULTIPLE);
-                sendMulti.putParcelableArrayListExtra(Intent.EXTRA_STREAM, fileUris);
 
                 sendMulti.putExtra(Intent.EXTRA_TEXT, "Отправить файлы");
                 sendMulti.setType("text/plain");
-                sendMulti.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    sendMulti.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                    for (int i = 0 ;i < fileUris.size(); i++) {
+                        Uri fileUri = FileProvider.getUriForFile(MainActivity.this,
+                                MainActivity.this.getPackageName()+".provider",
+                                new File(fileUris.get(i).toString()));
+                        fileUris.set(i,fileUri);
+                    }
+                    sendMulti.putParcelableArrayListExtra(Intent.EXTRA_STREAM, fileUris);
+
+                } else  {
+                    for (int i = 0 ; i<fileUris.size(); i++){
+                        fileUris.set(i,Uri.parse("file://" + fileUris.get(i).toString()));
+                    }
+                    sendMulti.putParcelableArrayListExtra(Intent.EXTRA_STREAM, fileUris);
+                }
+
+                //sendMulti.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
 
                 if (sendMulti.resolveActivity(getPackageManager()) != null) {
                     startActivity(Intent.createChooser(sendMulti, "Share File"));
