@@ -517,7 +517,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
             intent.putExtra(ConstantManager.SELECTED_FILE_TYPE, mFileAdapter.getItem(position).getType());
             startActivity(intent);
         } else {
-            //TODO а здесь выделяем или снимаем выделение
+            // здесь выделяем или снимаем выделение
             mFileAdapter.getItem(position).setSelected(!mFileAdapter.getItem(position).isSelected());
             mFileAdapter.notifyDataSetChanged();
         }
@@ -563,12 +563,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
         } else {
             multiSelectChange();
         }
-
-        /*
-        SelectMainDialog dialog = new SelectMainDialog();
-        dialog.setSelectMainDialogListener(mSelectMainDialogListener);
-        dialog.show(getFragmentManager(),"SELECT_DIALOG");
-        */
         return true;
     }
 
@@ -637,7 +631,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
                         new NetLocalTask(mDataManager.getPreferensManager().getLocalServer(),
                                 storeFileFullName,fileType).execute();
                     } else {
-                        //TODO Показываем что ой нету у нас настроенного сервера
+                        // Показываем что ой нету у нас настроенного сервера
+                        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                        builder.setTitle("Внимание! ")
+                                .setMessage("Не настроено подключение к локальному серверу")
+                                .setNegativeButton(R.string.button_cancel,null)
+                                .show();
                     }
                 }
             }
@@ -650,7 +649,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
                         new GetLocalTask(mDataManager.getPreferensManager().getLocalServer(),
                                 mDataManager.getPreferensManager().getStoreFileName()).execute();
                     } else {
-                        //TODO Показываем что ой нету у нас настроенного сервера
+                        //Показываем что ой нету у нас настроенного сервера
                         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
                         builder.setTitle("Внимание! ")
                                 .setMessage("Не настроено подключение к локальному серверу")
