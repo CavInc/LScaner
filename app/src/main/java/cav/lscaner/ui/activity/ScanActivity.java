@@ -355,7 +355,6 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
             } else if (fileType == ConstantManager.FILE_TYPE_ALCOMARK) {
                 linkLayout = R.layout.scanned_alko_item;
             }
-            //mAdapter = new ScannedListAdapter(this,linkLayout,mDataModels);
             mAdapter = new ScannedSwipeListAdapter(this,linkLayout,mDataModels);
             mListView.setAdapter(mAdapter);
         }else {
@@ -415,12 +414,6 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
                     (keyEvent.getAction() == KeyEvent.ACTION_DOWN
                             && keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER
                             && keyEvent.getRepeatCount() == 0)) {
-                // Log.d("SA KEY", "EVENT KEY ");
-                //  Func.addLog(debugOutFile," обрабатываем ввод"); // debug
-                /*
-                InputDevice lxDev = keyEvent.getDevice();
-                Log.d("SA "," KEY DES "+lxDev.getDescriptor()+" "+lxDev.getName());
-                */
                 return workingBarcode(textView);
             }
             return false;
@@ -572,7 +565,6 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
         // если камера отрыта то запускаем детектор по новой
         // по хорошему тут должна быть задержка
         if (frameScanVisible) {
-           // setDetector();
             startCamera();
         }
     }
@@ -776,14 +768,6 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
 
     private void deleteRec() {
         deleteRecord(idFile,selModel.getPosId());
-        /*
-        if (filterLock) {
-            //android.widget.Filter fl = mAdapter.getFilter();
-            mAdapter.remove(selModel);
-            mAdapter.getFilter().filter(filterString);
-            mAdapter.notifyDataSetChanged();
-        }
-        */
     }
 
     private void deleteRecord(final int selIdFile, final int position) {
@@ -794,8 +778,7 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
                     @Override
                     public void onClick(DialogInterface dialogInterface, int witch) {
                         if (filterLock) {
-                            //android.widget.Filter fl = mAdapter.getFilter();
-                            mAdapter.remove(selModel);
+                                    mAdapter.remove(selModel);
                             mAdapter.getFilter().filter(filterString);
                             mAdapter.notifyDataSetChanged();
                         }
@@ -825,7 +808,6 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
             if (swipeDetector.getAction() == SwipeDetector.Action.LR) {
                 Log.d("SA","LEFT");
                 // удаляем
-                //deleteRecord(mFileAdapter.getItem(position).getId());
                 deleteRec();
             }
             if (swipeDetector.getAction() == SwipeDetector.Action.RL) {
@@ -842,7 +824,6 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
         public void barcodeResult(BarcodeResult result) {
             if (result.getText() != null) {
                 Log.d("M2A",result.getText());
-                //Log.d("M2A",result.getBarcodeFormat().toString());
                 mBarCode.setText(result.getText());
                 mStartScan.setVisibility(View.VISIBLE);
                 Func.playMessage(ScanActivity.this);
