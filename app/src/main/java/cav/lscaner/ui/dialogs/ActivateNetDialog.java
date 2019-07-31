@@ -17,6 +17,10 @@ import android.widget.TextView;
 import cav.lscaner.R;
 import cav.lscaner.data.managers.DataManager;
 import cav.lscaner.data.network.Request;
+import ru.tinkoff.decoro.MaskImpl;
+import ru.tinkoff.decoro.slots.PredefinedSlots;
+import ru.tinkoff.decoro.watchers.FormatWatcher;
+import ru.tinkoff.decoro.watchers.MaskFormatWatcher;
 
 public class ActivateNetDialog extends DialogFragment implements View.OnClickListener{
     private DataManager mDataManager;
@@ -42,6 +46,11 @@ public class ActivateNetDialog extends DialogFragment implements View.OnClickLis
 
         ((Button) v.findViewById(R.id.activate_dlg_ok)).setOnClickListener(this);
         ((Button) v.findViewById(R.id.activate_dlg_cancel)).setOnClickListener(this);
+
+        MaskImpl mask = MaskImpl.createNonTerminated(PredefinedSlots.RUS_PHONE_NUMBER);
+        mask.setHideHardcodedHead(true);
+        FormatWatcher formatWatcher = new MaskFormatWatcher(mask);
+        formatWatcher.installOn(mPhone);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("Ативация приложения")
