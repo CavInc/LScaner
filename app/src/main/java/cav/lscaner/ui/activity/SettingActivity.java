@@ -8,14 +8,17 @@ import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.LinearLayout;
 
 import cav.lscaner.R;
 import cav.lscaner.data.managers.DataManager;
+import cav.lscaner.ui.dialogs.EditPrefCustomDialog;
 
 public class SettingActivity extends PreferenceActivity {
     private DataManager mDataManager;
@@ -25,7 +28,7 @@ public class SettingActivity extends PreferenceActivity {
 
     private EditTextPreference mFileDelimeter;
     private EditTextPreference mScalePrefix;
-    private EditTextPreference mLocalServer;
+    private Preference mLocalServer;
 
     private ListPreference mCodeFile;
 
@@ -51,9 +54,8 @@ public class SettingActivity extends PreferenceActivity {
         mCodeFile = (ListPreference) findPreference("file_code");
         mCodeFile.setOnPreferenceChangeListener(mChangeListener);
 
-        mLocalServer = (EditTextPreference) findPreference("localserver");
-        mLocalServer.setOnPreferenceChangeListener(mChangeListener);
-
+        mLocalServer = findPreference("localserver");
+        mLocalServer.setOnPreferenceClickListener(mOnPreferenceClickListener);
 
 
 
@@ -85,6 +87,27 @@ public class SettingActivity extends PreferenceActivity {
             }
         });
     }
+
+    Preference.OnPreferenceClickListener mOnPreferenceClickListener = new Preference.OnPreferenceClickListener() {
+        @Override
+        public boolean onPreferenceClick(final Preference preference) {
+            String localserv =  mDataManager.getPreferensManager().getLocalServer();
+
+            EditPrefCustomDialog dialog = EditPrefCustomDialog.newInstance(preference.getTitle().toString(),
+                    "http://server[:port]",localserv);
+            dialog.setPrefDialogListener(new EditPrefCustomDialog.EditPrefDialogListener() {
+                @Override
+                public void onChange(String data) {
+                    preference.setSummary(data);
+                    preference.setKey(data);
+                    mDataManager.getPreferensManager().setLocalServer(data);
+                }
+            });
+            dialog.show(getFragmentManager(),"EPC");
+            return true;
+        }
+    };
+
 
 
     Preference.OnPreferenceChangeListener mChangeListener = new Preference.OnPreferenceChangeListener() {
