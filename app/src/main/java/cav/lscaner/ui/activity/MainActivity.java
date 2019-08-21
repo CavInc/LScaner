@@ -388,22 +388,28 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
                 }
                 */
                 directionGD = WRITE_FILE;
-                // сохраняем файл
-                WorkInFile workInFile = new WorkInFile(mDataManager.getPreferensManager().getCodeFile());
-                workInFile.saveFile(selModel.getId(),selModel.getName(),mDataManager,selModel.getType());
-                Log.d(TAG,workInFile.getSavedFile());
-                storeFileFullName = workInFile.getSavedFile();
-                fileType =  selModel.getType();
+                if (mDataManager.isExternalStorageWritable()) {
+                    // сохраняем файл
+                    WorkInFile workInFile = new WorkInFile(mDataManager.getPreferensManager().getCodeFile());
+                    workInFile.saveFile(selModel.getId(), selModel.getName(), mDataManager, selModel.getType());
+                    Log.d(TAG, workInFile.getSavedFile());
+                    storeFileFullName = workInFile.getSavedFile();
+                    fileType = selModel.getType();
 
-                // показываем окно с выбором... если нет сохраненного локал сервере
-                // то нваерно не показываем..
+                    // показываем окно с выбором... если нет сохраненного локал сервере
+                    // то нваерно не показываем..
 
-                SendReciveDialog dialog = new SendReciveDialog();
-                dialog.setSendReciveListener(mSendReciveListener);
-                dialog.show(getSupportFragmentManager(),"SRD");
-                return;
-
-
+                    SendReciveDialog dialog = new SendReciveDialog();
+                    dialog.setSendReciveListener(mSendReciveListener);
+                    dialog.show(getSupportFragmentManager(), "SRD");
+                    return;
+                } else {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                    builder.setTitle("Внимание !")
+                            .setMessage("Не доступно или отсутствует хранилище (SD карта)")
+                            .setNegativeButton(R.string.button_close,null)
+                            .show();
+                }
             }
         }
     };
