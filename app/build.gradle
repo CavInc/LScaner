@@ -2,14 +2,14 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 27
-    buildToolsVersion "28.0.1"
+    buildToolsVersion "28.0.3"
 
     defaultConfig {
         applicationId "cav.lscaner.v4"
         minSdkVersion 14
         targetSdkVersion 27
-        versionCode 29
-        versionName "4.1.0"
+        versionCode 30
+        versionName "4.1.1"
         project.ext.set("archivesBaseName", "LScanerV-" + defaultConfig.versionName);
         resConfigs "en", "ru"
     }
