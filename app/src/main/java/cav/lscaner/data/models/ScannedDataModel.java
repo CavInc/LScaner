@@ -42,9 +42,10 @@ public class ScannedDataModel {
         mSumm = Double.valueOf(Func.round((float) (quantity * price),2));
     }
 
-    public ScannedDataModel(String barCode, String articul) {
+    public ScannedDataModel(String barCode, String articul,String name) {
         mBarCode = barCode;
         mArticul = articul;
+        mName = name;
     }
 
     public ScannedDataModel(String name) {
@@ -195,8 +196,9 @@ public class ScannedDataModel {
             } else if (tmp.getBarCode().equals(this.mBarCode)){
                 //Log.d("ABE","True "+this.mSpId+" "+tmp.mSpId);
                 return true;
-            } else if ((tmp.getName() != null) && (tmp.getName().toUpperCase().equals(this.mName.toUpperCase()))) {
-                return true;
+            } else if ((tmp.getName() != null)){
+                if (tmp.getName().toUpperCase().equals(this.mName.toUpperCase()))
+                    return true;
             } else if ((tmp.getName() != null) && tmp.getName().toUpperCase().indexOf(this.mName.toUpperCase()) != -1) {
                 return true;
             }

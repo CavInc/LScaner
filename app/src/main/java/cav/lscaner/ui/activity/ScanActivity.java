@@ -536,7 +536,7 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
             }
         }
 
-        int l = mDataModels.indexOf(new ScannedDataModel(mBar,product.getArticul()));
+        int l = mDataModels.indexOf(new ScannedDataModel(mBar,product.getArticul(),product.getName()));
         if (l == -1) {
             // Func.addLog(debugOutFile,"New File pos : "+product.getArticul()+" :: "+product.getName()+" :: "+mBar); // debug
             if (fileType == ConstantManager.FILE_TYPE_ALCOMARK) {
@@ -704,7 +704,7 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
         @Override
         public void onSelectItem(StoreProductModel product) {
             //showQuantityQuery(product);
-            int l = mDataModels.indexOf(new ScannedDataModel(mBar,product.getArticul()));
+            int l = mDataModels.indexOf(new ScannedDataModel(mBar,product.getArticul(),product.getName()));
             if (l == -1) {
                 showQuantityQuery(product);
             } else {
