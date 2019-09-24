@@ -5,12 +5,17 @@ import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 
 import com.google.zxing.ResultPoint;
 import com.journeyapps.barcodescanner.BarcodeCallback;
@@ -91,6 +96,7 @@ public class EditPrefCustomDialog extends DialogFragment {
             }
         });
 
+        mEditText.setOnEditorActionListener(mEditorActionListener);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(title)
@@ -107,6 +113,26 @@ public class EditPrefCustomDialog extends DialogFragment {
 
         return builder.create();
     }
+
+    TextView.OnEditorActionListener mEditorActionListener = new TextView.OnEditorActionListener() {
+        @Override
+        public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
+
+            //Func.addLog(debugOutFile,"KEY EVENT  ac: "+actionId+" kv :"+keyEvent); // debug
+
+            if (actionId == EditorInfo.IME_ACTION_DONE ||
+                    (keyEvent.getAction() == KeyEvent.ACTION_DOWN
+                            && keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER
+                            && keyEvent.getRepeatCount() == 0)) {
+                if (mPrefDialogListener != null) {
+                    mPrefDialogListener.onChange(mEditText.getText().toString());
+                }
+                dismiss();
+                return true;
+            }
+            return false;
+        }
+    };
 
     private void startCamera(){
         try {
