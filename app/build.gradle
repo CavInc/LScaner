@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 27
-    buildToolsVersion "28.0.3"
+    buildToolsVersion '29.0.2'
 
     defaultConfig {
         applicationId "cav.lscaner.v4"
@@ -30,10 +30,10 @@ android {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
-    compile 'com.android.support:appcompat-v7:27.1.0'
-    compile 'com.android.support:design:27.1.0'
-    compile('pub.devrel:easypermissions:0.3.1',{
-        exclude group: 'com.android.support',module: 'appcompat-v7'
+    compile 'com.android.support:appcompat-v7:27.1.1'
+    compile 'com.android.support:design:27.1.1'
+    compile('pub.devrel:easypermissions:0.3.1', {
+        exclude group: 'com.android.support', module: 'appcompat-v7'
     })
     compile 'com.journeyapps:zxing-android-embedded:3.2.0@aar'
     compile 'com.google.zxing:core:3.2.1'
