@@ -746,7 +746,7 @@ public class ScanActivity extends AppCompatActivity implements AdapterView.OnIte
         mArticul = selModel.getArticul();
         if (fileType == ConstantManager.FILE_TYPE_EGAIS || fileType == ConstantManager.FILE_TYPE_PRODUCT) {
             QueryQuantityDialog dialog = QueryQuantityDialog.newInstans(new StoreProductModel(selModel.getBarCode(),
-                            selModel.getName(), selModel.getArticul()),
+                            selModel.getName(), selModel.getArticul(),selModel.getPrice(),selModel.getOstatok()),
                     selModel.getQuantity(), selModel.getQuantity(), editRecord);
             dialog.setQuantityChangeListener(mQuantityChangeListener);
             dialog.show(getSupportFragmentManager(), "EDITSD");

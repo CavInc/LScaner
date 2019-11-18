@@ -6,7 +6,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class DBHelper extends SQLiteOpenHelper {
 
-    public static final int DATABASE_VERSION = 1 ;
+    public static final int DATABASE_VERSION = 2 ;
     public static final String DATABASE_NAME = "lscanerv3.db3";
 
     public static final String SCAN_TABLE_SPEC = "scan_table_spec";
@@ -49,6 +49,7 @@ public class DBHelper extends SQLiteOpenHelper {
                     "name_file text,"+
                     "date text,"+
                     "time text,"+
+                    "delete_flg integer default 0," + // удаленный или нет 1 - удаленный
                     "type integer default 0)"); // 0 - товары 1 -егаис 2 - поступление 3 - переоценка
 
             db.execSQL("create table "+SCAN_TABLE_SPEC+"("+
@@ -63,6 +64,8 @@ public class DBHelper extends SQLiteOpenHelper {
                     "tv_articul,"+ // артикул в терминах документации
                     "primary key(head_id,pos_id,barcode))");
             db.execSQL("CREATE INDEX \""+SCAN_TABLE_SPEC+"_BA\" on "+SCAN_TABLE_SPEC+" (barcode,articul)");
+        } else if (oldVersion < 2){
+            db.execSQL("alter table "+SCAN_TABLE+" add column delete_flg integer default 0");
         }
 
     }
