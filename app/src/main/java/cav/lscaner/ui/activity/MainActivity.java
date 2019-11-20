@@ -254,6 +254,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
         if (item.getItemId() == R.id.menu_send_select) {
             multiSelectSend();
         }
+        // удаленные файлы
+        if (item.getItemId() == R.id.menu_delete_file) {
+            Intent deleteFile = new Intent(this,DeleteFilesActivity.class);
+            startActivity(deleteFile);
+        }
         return true;
     }
 
@@ -309,30 +314,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
         SendFileDialog dialog = new SendFileDialog();
         dialog.setListener(mSendMultiFileDialogListener);
         dialog.show(getFragmentManager(),"SL");
-
-        /*
-        // сохраняем файл
-        WorkInFile workInFile = new WorkInFile(mDataManager.getPreferensManager().getCodeFile());
-
-        for (int i = 0;i < mFileAdapter.getCount();i++){
-            if (mFileAdapter.getItem(i).isSelected()) {
-               // mDataManager.getDB().deleteFile(mFileAdapter.getItem(i).getId());
-                selModel = mFileAdapter.getItem(i);
-                workInFile.saveFile(selModel.getId(),selModel.getName(),mDataManager,selModel.getType());
-                Log.d(TAG,workInFile.getSavedFile());
-
-                storeFileFullName = workInFile.getSavedFile();
-                fileType =  selModel.getType();
-                //pushGD();
-            }
-        }
-        multiSelectChange();
-        updateUI();
-        */
     }
 
     private void updateUI(){
-        ArrayList<ScannedFileModel> model = mDataManager.getScannedFile();
+        ArrayList<ScannedFileModel> model = mDataManager.getScannedFile(false);
         if (mFileAdapter == null){
             //mFileAdapter = new ScannedFileAdapter(this,R.layout.scanned_file_item,model);
             mFileAdapter = new ScannedSwipeFileAdapter(this,R.layout.scanned_file_item,model);
@@ -610,7 +595,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
                     @Override
                     public void onClick(DialogInterface dialogInterface, int witch) {
                         //TODO добавить удаление файла выгрузки с SD
-                        mDataManager.getDB().deleteFile(selIdFile);
+                        //
+                        // mDataManager.getDB().deleteFile(selIdFile);
+                        mDataManager.getDB().deleteFileMark(selIdFile);
                         updateUI();
                     }
                 })

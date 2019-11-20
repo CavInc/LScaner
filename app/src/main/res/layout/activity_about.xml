@@ -12,7 +12,7 @@
         <ImageView
             android:id="@+id/ab_up_lv"
             android:layout_gravity="top"
-            android:src="@drawable/logo5"
+            android:src="@drawable/logo"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/height_about_logo"/>
     <TextView

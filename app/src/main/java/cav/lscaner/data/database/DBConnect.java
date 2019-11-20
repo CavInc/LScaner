@@ -39,10 +39,16 @@ public class DBConnect {
 
     //-------------------- Запросы к базе ------------------------------
 
-    public Cursor getScannedFile(){
-        return database.query(DBHelper.SCAN_TABLE,
-                new String [] {"id","name_file","date","time","type"},
-                null,null,null,null,"date");
+    public Cursor getScannedFile(boolean deleted){
+        if (deleted) {
+            return database.query(DBHelper.SCAN_TABLE,
+                    new String[]{"id", "name_file", "date", "time", "type"},
+                    "delete_flg=1", null, null, null, "date");
+        } else {
+            return database.query(DBHelper.SCAN_TABLE,
+                    new String[]{"id", "name_file", "date", "time", "type"},
+                    "delete_flg<>1", null, null, null, "date");
+        }
     }
 
     public void addFileName(String name,String date,String time,int idFile,int type_file){
@@ -253,6 +259,31 @@ public class DBConnect {
         open();
         database.delete(DBHelper.SCAN_TABLE,"id="+idFile,null);
         database.delete(DBHelper.SCAN_TABLE_SPEC,"head_id="+idFile,null);
+        close();
+    }
+
+    // пометка на удаление
+    public void deleteFileMark(int idFile){
+        open();
+        ContentValues values = new ContentValues();
+        values.put("delete_flg",1);
+        database.update(DBHelper.SCAN_TABLE,values,"id="+idFile,null);
+        close();
+    }
+
+    // восстанавливаем файл
+    public void returnDeleteFile(int idFile){
+        open();
+        ContentValues values = new ContentValues();
+        values.put("delete_flg",0);
+        database.update(DBHelper.SCAN_TABLE,values,"id="+idFile,null);
+        close();
+    }
+
+    // удаляем все
+    public void deleteAll(){
+        open();
+        database.delete(DBHelper.SCAN_TABLE,"delete_flg=1",null);
         close();
     }
 

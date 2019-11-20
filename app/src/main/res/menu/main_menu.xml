@@ -6,6 +6,9 @@
         android:id="@+id/menu_refresh"
         android:title="Обновить данные о товаре"/>
     <item
+        android:id="@+id/menu_delete_file"
+        android:title="Удаленные файлы"/>
+    <item
         android:id="@+id/menu_setting"
         android:title="Настройки"/>
     <item android:id="@+id/menu_filefield_setting"

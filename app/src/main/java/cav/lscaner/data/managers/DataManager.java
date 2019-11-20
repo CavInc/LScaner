@@ -99,10 +99,10 @@ public class DataManager{
 
     // =============================== запросы к базе данных =======================================
     // запрос списка файлов
-    public ArrayList<ScannedFileModel> getScannedFile(){
+    public ArrayList<ScannedFileModel> getScannedFile(boolean deleted){
         ArrayList<ScannedFileModel> rec = new ArrayList<>();
         mDB.open();
-        Cursor cursor = mDB.getScannedFile();
+        Cursor cursor = mDB.getScannedFile(deleted);
         while (cursor.moveToNext()){
             rec.add(new ScannedFileModel(cursor.getInt(cursor.getColumnIndex("id")),
                     cursor.getString(cursor.getColumnIndex("name_file")),
