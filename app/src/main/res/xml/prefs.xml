@@ -41,12 +41,10 @@
             android:entryValues="@array/code_entry_values"
             android:defaultValue="WIN-1251"
             android:summary=""/>
-        <EditTextPreference
+        <Preference
             android:key="localserver"
-            android:hint="http://server[:port]"
             android:title="Локальный сервер"
-            android:summary="http://сервер[:порт]"
-            android:inputType="textUri"/>
+            android:hint="http://server[:port]"/>
     </PreferenceCategory>
 
 </PreferenceScreen>

@@ -61,6 +61,8 @@
         <activity android:name=".ui.activity.HelpActivity"
             android:label="Описание файла загрузки">
         </activity>
+        <activity android:name=".ui.activity.DeleteFilesActivity">
+        </activity>
 
         <provider
             android:authorities="${applicationId}.provider"

@@ -254,6 +254,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
         if (item.getItemId() == R.id.menu_send_select) {
             multiSelectSend();
         }
+        // удаленные файлы
+        if (item.getItemId() == R.id.menu_delete_file) {
+            Intent deleteFile = new Intent(this,DeleteFilesActivity.class);
+            startActivity(deleteFile);
+        }
         return true;
     }
 
@@ -309,30 +314,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
         SendFileDialog dialog = new SendFileDialog();
         dialog.setListener(mSendMultiFileDialogListener);
         dialog.show(getFragmentManager(),"SL");
-
-        /*
-        // сохраняем файл
-        WorkInFile workInFile = new WorkInFile(mDataManager.getPreferensManager().getCodeFile());
-
-        for (int i = 0;i < mFileAdapter.getCount();i++){
-            if (mFileAdapter.getItem(i).isSelected()) {
-               // mDataManager.getDB().deleteFile(mFileAdapter.getItem(i).getId());
-                selModel = mFileAdapter.getItem(i);
-                workInFile.saveFile(selModel.getId(),selModel.getName(),mDataManager,selModel.getType());
-                Log.d(TAG,workInFile.getSavedFile());
-
-                storeFileFullName = workInFile.getSavedFile();
-                fileType =  selModel.getType();
-                //pushGD();
-            }
-        }
-        multiSelectChange();
-        updateUI();
-        */
     }
 
     private void updateUI(){
-        ArrayList<ScannedFileModel> model = mDataManager.getScannedFile();
+        ArrayList<ScannedFileModel> model = mDataManager.getScannedFile(false);
         if (mFileAdapter == null){
             //mFileAdapter = new ScannedFileAdapter(this,R.layout.scanned_file_item,model);
             mFileAdapter = new ScannedSwipeFileAdapter(this,R.layout.scanned_file_item,model);
@@ -375,8 +360,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
             for (int i = 0;i < mFileAdapter.getCount();i++){
                 if (mFileAdapter.getItem(i).isSelected()) {
                     selModel = mFileAdapter.getItem(i);
-                    String fname = Func.createFileName(selModel.getName(),selModel.getType());
-                    workInFile.saveFile(selModel.getId(),fname,mDataManager,selModel.getType());
+                    //String fname = Func.createFileName(selModel.getName(),selModel.getType());
+                    //workInFile.saveFile(selModel.getId(),fname,mDataManager,selModel.getType());
+                    workInFile.saveFile(selModel.getId(),selModel.getName(),mDataManager,selModel.getType());
                     Log.d(TAG,workInFile.getSavedFile());
 
                     storeFileFullName = workInFile.getSavedFile();
@@ -609,7 +595,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
                     @Override
                     public void onClick(DialogInterface dialogInterface, int witch) {
                         //TODO добавить удаление файла выгрузки с SD
-                        mDataManager.getDB().deleteFile(selIdFile);
+                        //
+                        // mDataManager.getDB().deleteFile(selIdFile);
+                        mDataManager.getDB().deleteFileMark(selIdFile);
                         updateUI();
                     }
                 })
@@ -890,29 +878,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
             String boundary = "-------------" + System.currentTimeMillis();
             filePath = new java.io.File(fname);
             fname = filePath.getName();
-
-            /*
-            if (fname.toUpperCase().indexOf(".TXT") == -1){ fname = fname+".txt";}
-
-            fname="_"+fname;
-
-
-            if (filetype == ConstantManager.FILE_TYPE_PRODUCT) {
-                fname = ConstantManager.PREFIX_FILE_TOVAR+fname;
-            }
-            if (filetype == ConstantManager.FILE_TYPE_EGAIS) {
-                fname = ConstantManager.PREFIX_FILE_EGAIS+fname;
-            }
-            if (filetype == ConstantManager.FILE_TYPE_CHANGE_PRICE) {
-                fname = ConstantManager.PREFIX_FILE_CHANGEPRICE+fname;
-            }
-            if (filetype == ConstantManager.FILE_TYPE_PRIHOD) {
-                fname = ConstantManager.PREFIX_FILE_PRIHOD+fname;
-            }
-            if (filetype == ConstantManager.FILE_TYPE_ALCOMARK) {
-                fname = ConstantManager.PREFIX_FILE_ALCOMARK+fname;
-            }
-            */
 
             fname = Func.createFileName(fname,fileType);
 

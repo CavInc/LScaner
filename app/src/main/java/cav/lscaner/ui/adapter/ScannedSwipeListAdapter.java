@@ -112,7 +112,7 @@ public class ScannedSwipeListAdapter extends BaseSwipeListAdapter implements Fil
         }
 
         if (holder.mPrice !=null) {
-            if (priceFlg == -1) {
+            if (priceFlg == -1 & rec.getFileType() != ConstantManager.FILE_TYPE_CHANGE_PRICE) {
                 holder.mPrice.setVisibility(View.INVISIBLE);
             } else {
                 holder.mPrice.setVisibility(View.VISIBLE);
