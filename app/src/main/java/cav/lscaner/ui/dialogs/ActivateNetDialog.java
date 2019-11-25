@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
+import android.telephony.PhoneNumberUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -74,7 +75,8 @@ public class ActivateNetDialog extends DialogFragment implements View.OnClickLis
         new Thread(new Runnable() {
             @Override
             public void run() {
-                request.registryLicense(mPhone.getText().toString(),mName.getText().toString(),
+                String phone = PhoneNumberUtils.stripSeparators(mPhone.getText().toString());
+                request.registryLicense(phone,mName.getText().toString(),
                         mDataManager.getAndroidID());
             }
         }).start();
