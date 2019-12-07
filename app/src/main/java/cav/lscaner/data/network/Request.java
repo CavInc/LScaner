@@ -73,6 +73,7 @@ public class Request {
                 String res = getRequestMessage(conn);
                 if (res !=null) {
                     JSONObject jObj = new JSONObject(res);
+                    String status = jObj.getString("status");
 
                 }
             } else {
@@ -94,6 +95,10 @@ public class Request {
        }
 
      */
+    public void getLicense(){
+        String getPoint = "/api/getdevlicense.php";
+
+    }
 
 
 }
