@@ -9,10 +9,13 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import cav.lscaner.data.managers.PreferensManager;
+import cav.lscaner.data.models.GetLicenseModel;
 import cav.lscaner.utils.ConstantManager;
 
 public class Request {
 
+    private PreferensManager mPreferensManager;
     // заполняем заголовок запроса
     private void setHeadParams(HttpURLConnection conn){
         conn.setRequestProperty("Accept-Charset", "UTF-8");
@@ -20,6 +23,10 @@ public class Request {
         conn.setRequestProperty("Charset", "UTF-8");
         conn.setRequestProperty("Accept", "application/json");
         conn.setRequestProperty("Content-Type", "application/json");
+    }
+
+    public Request(PreferensManager pref){
+        mPreferensManager = pref;
     }
 
     private String getRequestMessage( HttpURLConnection conn) throws IOException {
@@ -46,7 +53,8 @@ public class Request {
        }
 
      */
-    public void registryLicense(String phone,String client,String device){
+    public GetLicenseModel registryLicense(String phone, String client, String device){
+        GetLicenseModel ret = null;
         String getPoint = "/api/requestlicense.php";
         try {
             URL url = new URL(ConstantManager.BASE_URL + getPoint);
@@ -74,15 +82,20 @@ public class Request {
                 if (res !=null) {
                     JSONObject jObj = new JSONObject(res);
                     String status = jObj.getString("status");
-
+                    System.out.println(status);
+                    ret = new GetLicenseModel(true,jObj.getString("message"),status);
                 }
             } else {
                 String res = conn.getResponseMessage();
+                ret = new GetLicenseModel(false,res);
             }
             conn.disconnect();
         } catch (Exception e){
             e.printStackTrace();
+            ret = new GetLicenseModel(false,e.getLocalizedMessage());
+            return ret;
         }
+        return ret;
     }
 
 

@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import cav.lscaner.R;
 import cav.lscaner.data.managers.DataManager;
+import cav.lscaner.data.models.GetLicenseModel;
 import cav.lscaner.data.network.Request;
 import ru.tinkoff.decoro.MaskImpl;
 import ru.tinkoff.decoro.slots.PredefinedSlots;
@@ -71,13 +72,14 @@ public class ActivateNetDialog extends DialogFragment implements View.OnClickLis
     }
 
     private void licenseRequest(){
-        final Request request = new Request();
+        final Request request = new Request(mDataManager.getPreferensManager());
         new Thread(new Runnable() {
             @Override
             public void run() {
                 String phone = PhoneNumberUtils.stripSeparators(mPhone.getText().toString());
-                request.registryLicense(phone,mName.getText().toString(),
+                GetLicenseModel ret = request.registryLicense(phone, mName.getText().toString(),
                         mDataManager.getAndroidID());
+
             }
         }).start();
     }

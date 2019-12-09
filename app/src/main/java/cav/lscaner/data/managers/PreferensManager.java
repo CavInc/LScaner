@@ -77,6 +77,11 @@ public class PreferensManager {
     private static final String FFPRIHOD = "FFPRIHOD";
     private static final String LOCAL_SERVER = "LOCAL_SERVER";
 
+    private static final String LICENSE_TYPE ="LICENSE_TYPE";
+    private static final String LICENSE_WORK_DAY = "LWD";
+    private static final String LICENSE_REGISTRY_PHONE = "LRPHONE";
+    private static final String LICENSE_REGISTRY_NAME = "LRNAME";
+
 
     private SharedPreferences mSharedPreferences;
 
@@ -403,6 +408,28 @@ public class PreferensManager {
         );
         return md;
     }
+
+    public String getLicenseRegistryName(){
+        return mSharedPreferences.getString(LICENSE_REGISTRY_NAME,null);
+    }
+
+    public void setLicenseRegistryName(String name){
+        SharedPreferences.Editor editor = mSharedPreferences.edit();
+        editor.putString(LICENSE_REGISTRY_NAME,name);
+        editor.apply();
+    }
+
+    // тип лицензии
+    public int getLicenseType(){
+        return mSharedPreferences.getInt(LICENSE_TYPE,0);
+    }
+
+    public void setLicenseType(int type){
+        SharedPreferences.Editor editor = mSharedPreferences.edit();
+        editor.putInt(LICENSE_TYPE,type);
+        editor.apply();
+    }
+
 
 
 }
