@@ -108,9 +108,40 @@ public class Request {
        }
 
      */
-    public void getLicense(){
+    public void getLicense(String deviceID){
         String getPoint = "/api/getdevlicense.php";
 
+        try {
+            URL url = new URL(ConstantManager.BASE_URL + getPoint);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setDoOutput(true);
+            conn.setDoInput(true);
+            conn.setUseCaches(false);
+            conn.setRequestMethod("POST");
+
+            setHeadParams(conn);
+
+            JSONObject jdata = new JSONObject();
+            jdata.put("deviceId",deviceID);
+            jdata.put("requestDate","");
+
+            OutputStream os = conn.getOutputStream();
+            os.write(jdata.toString().getBytes("UTF-8"));
+            os.flush();
+            os.close();
+
+
+
+            if (conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                String res = getRequestMessage(conn);
+
+            } else {
+
+            }
+            conn.disconnect();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 

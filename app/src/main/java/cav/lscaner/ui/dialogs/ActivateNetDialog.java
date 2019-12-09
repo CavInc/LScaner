@@ -54,6 +54,8 @@ public class ActivateNetDialog extends DialogFragment implements View.OnClickLis
         FormatWatcher formatWatcher = new MaskFormatWatcher(mask);
         formatWatcher.installOn(mPhone);
 
+        mName.setText(mDataManager.getPreferensManager().getLicenseRegistryName());
+
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("Ативация приложения")
                 .setView(v);
@@ -67,6 +69,7 @@ public class ActivateNetDialog extends DialogFragment implements View.OnClickLis
             dismiss();
         }
         if (v.getId() == R.id.activate_dlg_ok) {
+            mDataManager.getPreferensManager().setLicenseRegistryName(mName.getText().toString());
             licenseRequest();
         }
     }
@@ -79,7 +82,14 @@ public class ActivateNetDialog extends DialogFragment implements View.OnClickLis
                 String phone = PhoneNumberUtils.stripSeparators(mPhone.getText().toString());
                 GetLicenseModel ret = request.registryLicense(phone, mName.getText().toString(),
                         mDataManager.getAndroidID());
+                // если EXISTS_DEVICE_AND_CLIENT то запросим лицензию
+                if (ret.getRequestServer().equals("EXISTS_DEVICE_AND_CLIENT")) {
+                    request.getLicense(mDataManager.getAndroidID());
+                }
+                // если новое устройство то тоже запрос лицензии
+                if (ret.getRequestServer().equals("")) {
 
+                }
             }
         }).start();
     }
