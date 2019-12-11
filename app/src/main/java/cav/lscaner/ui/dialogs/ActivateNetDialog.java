@@ -70,6 +70,7 @@ public class ActivateNetDialog extends DialogFragment implements View.OnClickLis
         }
         if (v.getId() == R.id.activate_dlg_ok) {
             mDataManager.getPreferensManager().setLicenseRegistryName(mName.getText().toString());
+
             licenseRequest();
         }
     }

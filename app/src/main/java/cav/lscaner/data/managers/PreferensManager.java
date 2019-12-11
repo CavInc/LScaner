@@ -81,6 +81,7 @@ public class PreferensManager {
     private static final String LICENSE_WORK_DAY = "LWD";
     private static final String LICENSE_REGISTRY_PHONE = "LRPHONE";
     private static final String LICENSE_REGISTRY_NAME = "LRNAME";
+    private static final String LICENSE_REFRESH = "LREFRESH";
 
 
     private SharedPreferences mSharedPreferences;
@@ -430,6 +431,18 @@ public class PreferensManager {
         editor.apply();
     }
 
+    // телефон
+    public String getLicenseRegistryPhone(){
+        return mSharedPreferences.getString(LICENSE_REGISTRY_PHONE,null);
+    }
+
+    public void setLicenseRegistryPhone(String phone){
+        SharedPreferences.Editor editor = mSharedPreferences.edit();
+        editor.putString(LICENSE_REGISTRY_PHONE,phone);
+        editor.apply();
+    }
+
+    // запрос лицензии
 
 
 }

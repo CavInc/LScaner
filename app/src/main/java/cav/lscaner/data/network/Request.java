@@ -1,5 +1,6 @@
 package cav.lscaner.data.network;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -11,6 +12,7 @@ import java.net.URL;
 
 import cav.lscaner.data.managers.PreferensManager;
 import cav.lscaner.data.models.GetLicenseModel;
+import cav.lscaner.data.models.LicenseModel;
 import cav.lscaner.utils.ConstantManager;
 
 public class Request {
@@ -108,7 +110,8 @@ public class Request {
        }
 
      */
-    public void getLicense(String deviceID){
+    public LicenseModel getLicense(String deviceID){
+        LicenseModel ret = null;
         String getPoint = "/api/getdevlicense.php";
 
         try {
@@ -134,14 +137,23 @@ public class Request {
 
             if (conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
                 String res = getRequestMessage(conn);
+                if (res !=null) {
+                    JSONObject jObj = new JSONObject(res);
+                    if (jObj.has("data")) {
+                        JSONArray data = jObj.getJSONArray("data");
 
+                    }
+                }
             } else {
-
+                String res = conn.getResponseMessage();
+                ret = new LicenseModel(false,res);
             }
             conn.disconnect();
         } catch (Exception e) {
             e.printStackTrace();
+            return new LicenseModel(false,e.getLocalizedMessage());
         }
+        return ret;
     }
 
 
