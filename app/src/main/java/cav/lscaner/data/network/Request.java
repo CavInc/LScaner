@@ -141,7 +141,13 @@ public class Request {
                     JSONObject jObj = new JSONObject(res);
                     if (jObj.has("data")) {
                         JSONArray data = jObj.getJSONArray("data");
-
+                        if (data.length() != 0) {
+                            JSONObject lx = (JSONObject) data.get(0);
+                            int licType = lx.getInt("license_type");
+                            int workDay = lx.getInt("work_day_license");
+                            String actionLic = lx.getString("action_license_date");
+                            ret = new LicenseModel(licType,workDay,actionLic);
+                        }
                     }
                 }
             } else {

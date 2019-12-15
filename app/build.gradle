@@ -9,7 +9,7 @@ android {
         minSdkVersion 14
         targetSdkVersion 27
         versionCode 35
-        versionName "4.2.1"
+        versionName "4.3.0"
         project.ext.set("archivesBaseName", "LScanerV-" + defaultConfig.versionName);
         resConfigs "en", "ru"
     }

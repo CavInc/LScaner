@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.telephony.PhoneNumberUtils;
@@ -15,10 +16,15 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import java.util.Date;
+
 import cav.lscaner.R;
 import cav.lscaner.data.managers.DataManager;
 import cav.lscaner.data.models.GetLicenseModel;
+import cav.lscaner.data.models.LicenseModel;
 import cav.lscaner.data.network.Request;
+import cav.lscaner.utils.ConstantManager;
+import cav.lscaner.utils.Func;
 import ru.tinkoff.decoro.MaskImpl;
 import ru.tinkoff.decoro.slots.PredefinedSlots;
 import ru.tinkoff.decoro.watchers.FormatWatcher;
@@ -55,6 +61,7 @@ public class ActivateNetDialog extends DialogFragment implements View.OnClickLis
         formatWatcher.installOn(mPhone);
 
         mName.setText(mDataManager.getPreferensManager().getLicenseRegistryName());
+        mPhone.setText(mDataManager.getPreferensManager().getLicenseRegistryPhone());
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("Ативация приложения")
@@ -70,7 +77,7 @@ public class ActivateNetDialog extends DialogFragment implements View.OnClickLis
         }
         if (v.getId() == R.id.activate_dlg_ok) {
             mDataManager.getPreferensManager().setLicenseRegistryName(mName.getText().toString());
-
+            mDataManager.getPreferensManager().setLicenseRegistryPhone(PhoneNumberUtils.stripSeparators(mPhone.getText().toString()));
             licenseRequest();
         }
     }
@@ -85,13 +92,38 @@ public class ActivateNetDialog extends DialogFragment implements View.OnClickLis
                         mDataManager.getAndroidID());
                 // если EXISTS_DEVICE_AND_CLIENT то запросим лицензию
                 if (ret.getRequestServer().equals("EXISTS_DEVICE_AND_CLIENT")) {
-                    request.getLicense(mDataManager.getAndroidID());
+                    LicenseModel license = request.getLicense(mDataManager.getAndroidID());
+                    if (license.isStatus()) {
+                        Func.storeLicense(mDataManager,license);
+                    }
                 }
                 // если новое устройство то тоже запрос лицензии
-                if (ret.getRequestServer().equals("")) {
+                if (ret.getRequestServer().equals("NOT_DEVICE")) {
+                    LicenseModel license = request.getLicense(mDataManager.getAndroidID());
+                    if (license.isStatus()) {
+                        Func.storeLicense(mDataManager,license);
+                    }
+                }
+                // новый клиент и новое устройство
+                if (ret.getRequestServer().equals("NEW_DEVICE_AND_CLIENT")){
 
                 }
+                dismiss();
             }
         }).start();
     }
+
+    // сораняем лицензию
+    private void storeLicense(LicenseModel licenseModel){
+        mDataManager.getPreferensManager().setLicenseType(licenseModel.getLicenseType());
+        mDataManager.getPreferensManager().setLicenseWorkDay(licenseModel.getLicenseDay());
+        mDataManager.getPreferensManager().setLicenseActivate(licenseModel.getActionLicense());
+        // так как мы получили лицензию то активуруем даже если она временная
+        mDataManager.getPreferensManager().setDemo(false);
+        mDataManager.getPreferensManager().setLicenseLastDayRefresh(Func.getDateToStr(new Date(),"yyyy-MM-dd"));
+        if (licenseModel.getLicenseType() == ConstantManager.LICENSE_PERMANENT) {
+            // постоянная
+        }
+    }
+
 }

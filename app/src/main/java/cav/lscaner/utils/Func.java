@@ -19,6 +19,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
+import cav.lscaner.data.managers.DataManager;
+import cav.lscaner.data.models.LicenseModel;
+
 public class Func {
 
     public  static String getNowDate(String mask){
@@ -240,6 +243,21 @@ public class Func {
         return fname;
     }
 
+    // количество дней между текущей датой и переданной
+    public static int getCountDay(Date date){
+        Date currentDate = new Date();
+        long diff = currentDate.getTime() - date.getTime();
+        return (int) (diff / (24 * 60 * 60 * 1000));
+    }
 
+    // сораняем лицензию
+    public static void storeLicense(DataManager manager, LicenseModel licenseModel){
+        manager.getPreferensManager().setLicenseType(licenseModel.getLicenseType());
+        manager.getPreferensManager().setLicenseWorkDay(licenseModel.getLicenseDay());
+        manager.getPreferensManager().setLicenseActivate(licenseModel.getActionLicense());
+        // так как мы получили лицензию то активуруем даже если она временная
+        manager.getPreferensManager().setDemo(false);
+        manager.getPreferensManager().setLicenseLastDayRefresh(getDateToStr(new Date(),"yyyy-MM-dd"));
+    }
 
 }

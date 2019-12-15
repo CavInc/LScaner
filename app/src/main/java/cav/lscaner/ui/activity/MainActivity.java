@@ -45,11 +45,14 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.channels.FileChannel;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import cav.lscaner.R;
 import cav.lscaner.data.managers.DataManager;
+import cav.lscaner.data.models.LicenseModel;
 import cav.lscaner.data.models.ScannedFileModel;
+import cav.lscaner.data.network.Request;
 import cav.lscaner.ui.adapter.ScannedFileAdapter;
 import cav.lscaner.ui.adapter.ScannedSwipeFileAdapter;
 import cav.lscaner.ui.dialogs.AddEditNameFileDialog;
@@ -171,10 +174,56 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
     @Override
     protected void onResume() {
         super.onResume();
-        demo = mDataManager.getPreferensManager().getDemo();
+        //demo = mDataManager.getPreferensManager().getDemo();
+        checkLicense();
         getPermisionStorage(); // запрос разрешения на SD
         getPermissionCamera(); // разрешения на камеру
         updateUI();
+    }
+
+    // проверяем лицензию
+    private void checkLicense(){
+        demo = mDataManager.getPreferensManager().getDemo();
+        if (demo) {
+            // если лицензия временная то проверяем кончилась ли
+            if (mDataManager.getPreferensManager().getLicenseType() == ConstantManager.LICENSE_TEMPORARY) {
+                Date licActivate = Func.getStrToDate(mDataManager.getPreferensManager().getLicenseActivate(),
+                        "yyyy-MM-dd");
+                int day = Func.getCountDay(licActivate);
+                if ((mDataManager.getPreferensManager().getLicenseWorkDay() - day) <= 0){
+                    // лицензия кончилась
+                    demo = false;
+                    mDataManager.getPreferensManager().setDemo(false);
+                } else {
+                    Date lastDate = Func.getStrToDate(mDataManager.getPreferensManager().getLicenseLastDayRefresh(),
+                            "yyyy-MM-dd");
+                    int dayLast = Func.getCountDay(lastDate);
+                    if (dayLast >= 2 && dayLast <= ConstantManager.WORK_LICENSE_DAY) {
+                        // запрос лицензии
+                        getLicenseServer();
+                    } else if (dayLast > ConstantManager.WORK_LICENSE_DAY) {
+                        // прошло 30 дней
+                    }
+                }
+            }
+        }
+    }
+
+    private void getLicenseServer(){
+        if (mDataManager.isOnline()) {
+            // есть сеть посылаем запрос на лицензию
+            final Request request = new Request(mDataManager.getPreferensManager());
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    LicenseModel license = request.getLicense(mDataManager.getAndroidID());
+                    if (license.isStatus()) {
+                        Func.storeLicense(mDataManager,license);
+                        checkLicense();
+                    }
+                }
+            }).start();
+        }
     }
 
     private Menu menu;

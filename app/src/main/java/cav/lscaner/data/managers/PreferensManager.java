@@ -82,6 +82,8 @@ public class PreferensManager {
     private static final String LICENSE_REGISTRY_PHONE = "LRPHONE";
     private static final String LICENSE_REGISTRY_NAME = "LRNAME";
     private static final String LICENSE_REFRESH = "LREFRESH";
+    private static final String LICENSE_LAST_DAY_REFRESH = "LLDR"; // дата последнего запроса лицензии
+    private static final String LICENSE_ACTIVATE_DATE = "LAD";
 
 
     private SharedPreferences mSharedPreferences;
@@ -442,7 +444,48 @@ public class PreferensManager {
         editor.apply();
     }
 
-    // запрос лицензии
+    // количество дней
+    public int getLicenseWorkDay(){
+        return mSharedPreferences.getInt(LICENSE_WORK_DAY,30);
+    }
 
+    public void setLicenseWorkDay(int workDay){
+        SharedPreferences.Editor editor = mSharedPreferences.edit();
+        editor.putInt(LICENSE_WORK_DAY,workDay);
+        editor.apply();
+    }
+
+    // запрос лицензии
+    public boolean getLicenseRefresh(){
+        return mSharedPreferences.getBoolean(LICENSE_REFRESH,true);
+    }
+
+    public void setLicenseRefresh(boolean val){
+        SharedPreferences.Editor editor = mSharedPreferences.edit();
+        editor.putBoolean(LICENSE_REFRESH,val);
+        editor.apply();
+    }
+
+    // дата последнего запроса лицензии
+    public String getLicenseLastDayRefresh(){
+        return mSharedPreferences.getString(LICENSE_LAST_DAY_REFRESH,null);
+    }
+
+    public void setLicenseLastDayRefresh(String date){
+        SharedPreferences.Editor editor = mSharedPreferences.edit();
+        editor.putString(LICENSE_LAST_DAY_REFRESH,date);
+        editor.apply();
+    }
+
+    // дата активации лицензии с сервера
+    public String getLicenseActivate(){
+        return mSharedPreferences.getString(LICENSE_ACTIVATE_DATE,null);
+    }
+
+    public void setLicenseActivate(String date) {
+        SharedPreferences.Editor editor = mSharedPreferences.edit();
+        editor.putString(LICENSE_ACTIVATE_DATE,date);
+        editor.apply();
+    }
 
 }
