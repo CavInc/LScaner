@@ -479,7 +479,7 @@ public class PreferensManager {
 
     // дата активации лицензии с сервера
     public String getLicenseActivate(){
-        return mSharedPreferences.getString(LICENSE_ACTIVATE_DATE,null);
+        return mSharedPreferences.getString(LICENSE_ACTIVATE_DATE,"1090-01-01");
     }
 
     public void setLicenseActivate(String date) {
