@@ -200,9 +200,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
                     int dayLast = Func.getCountDay(lastDate);
                     if (dayLast >= 2 && dayLast <= ConstantManager.WORK_LICENSE_DAY) {
                         // запрос лицензии
-                        getLicenseServer();
+                       getLicenseServer();
                     } else if (dayLast > ConstantManager.WORK_LICENSE_DAY) {
                         // прошло 30 дней
+                        getLicenseServer();
                     }
                 }
             }
