@@ -37,7 +37,6 @@ public class AboutActivity extends AppCompatActivity implements View.OnClickList
             mActivateTv.setText("(активирована)");
         }
 
-        // TODO добавить информацию о версии
         mVersion.setText("v"+BuildConfig.VERSION_NAME);
 
         mActiveButton.setOnClickListener(this);
@@ -69,15 +68,22 @@ public class AboutActivity extends AppCompatActivity implements View.OnClickList
         dialog.show(getSupportFragmentManager(),"AD");
         */
         ActivateNetDialog dialog = new ActivateNetDialog();
+        dialog.setDialogListener(mDialogListener);
         dialog.show(getSupportFragmentManager(),"AD");
     }
 
     ActivateDialog.ActivateDialogListener mDialogListener = new ActivateDialog.ActivateDialogListener() {
         @Override
         public void activateState(boolean state) {
-            if (!mDataManager.getPreferensManager().getDemo()){
-                mActivateTv.setText("(активированна)");
-            }
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (!mDataManager.getPreferensManager().getDemo()){
+                        mActivateTv.setText("(активированна)");
+                    }
+                }
+            });
+
         }
     };
 }

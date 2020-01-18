@@ -147,6 +147,8 @@ public class Request {
                             int workDay = lx.getInt("work_day_license");
                             String actionLic = lx.getString("action_license_date");
                             ret = new LicenseModel(licType,workDay,actionLic);
+                        } else {
+                           ret = new LicenseModel(false,ConstantManager.LICENSE_NO_LICENSE);
                         }
                     }
                 }

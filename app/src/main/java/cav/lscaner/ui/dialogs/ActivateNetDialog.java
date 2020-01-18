@@ -36,6 +36,8 @@ public class ActivateNetDialog extends DialogFragment implements View.OnClickLis
     private EditText mPhone;
     private EditText mName;
 
+    private ActivateDialog.ActivateDialogListener mDialogListener;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -95,6 +97,7 @@ public class ActivateNetDialog extends DialogFragment implements View.OnClickLis
                     LicenseModel license = request.getLicense(mDataManager.getAndroidID());
                     if (license.isStatus()) {
                         Func.storeLicense(mDataManager,license);
+                        setActivateStatus(true);
                     }
                 }
                 // если новое устройство то тоже запрос лицензии
@@ -102,28 +105,30 @@ public class ActivateNetDialog extends DialogFragment implements View.OnClickLis
                     LicenseModel license = request.getLicense(mDataManager.getAndroidID());
                     if (license.isStatus()) {
                         Func.storeLicense(mDataManager,license);
+                        setActivateStatus(true);
                     }
                 }
                 // новый клиент и новое устройство
                 if (ret.getRequestServer().equals("NEW_DEVICE_AND_CLIENT")){
 
                 }
+
                 dismiss();
             }
         }).start();
     }
 
-    // сораняем лицензию
-    private void storeLicense(LicenseModel licenseModel){
-        mDataManager.getPreferensManager().setLicenseType(licenseModel.getLicenseType());
-        mDataManager.getPreferensManager().setLicenseWorkDay(licenseModel.getLicenseDay());
-        mDataManager.getPreferensManager().setLicenseActivate(licenseModel.getActionLicense());
-        // так как мы получили лицензию то активуруем даже если она временная
-        mDataManager.getPreferensManager().setDemo(false);
-        mDataManager.getPreferensManager().setLicenseLastDayRefresh(Func.getDateToStr(new Date(),"yyyy-MM-dd"));
-        if (licenseModel.getLicenseType() == ConstantManager.LICENSE_PERMANENT) {
-            // постоянная
+    public void setDialogListener(ActivateDialog.ActivateDialogListener dialogListener) {
+        mDialogListener = dialogListener;
+    }
+
+    private void setActivateStatus(boolean state){
+        if (mDialogListener != null) {
+            mDialogListener.activateState(state);
         }
     }
 
+    public interface ActivateDialogListener {
+        public void activateState(boolean state);
+    }
 }

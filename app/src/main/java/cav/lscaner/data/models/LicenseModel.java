@@ -35,6 +35,12 @@ public class LicenseModel {
     public LicenseModel(boolean status, String msg) {
         mStatus = status;
         mMsg = msg;
+        mLicenseType = -1;
+    }
+
+    public LicenseModel(boolean status,int licenseType) {
+        mStatus = status;
+        mLicenseType = licenseType;
     }
 
     public int getLicenseType() {

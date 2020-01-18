@@ -179,12 +179,14 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
         getPermisionStorage(); // запрос разрешения на SD
         getPermissionCamera(); // разрешения на камеру
         updateUI();
+        viewDemoTitle();
     }
 
     // проверяем лицензию
     private void checkLicense(){
         demo = mDataManager.getPreferensManager().getDemo();
-        if (demo) {
+        viewDemoTitle();
+        if (!demo) {
             // если лицензия временная то проверяем кончилась ли
             if (mDataManager.getPreferensManager().getLicenseType() == ConstantManager.LICENSE_TEMPORARY) {
                 Date licActivate = Func.getStrToDate(mDataManager.getPreferensManager().getLicenseActivate(),
@@ -192,8 +194,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
                 int day = Func.getCountDay(licActivate);
                 if ((mDataManager.getPreferensManager().getLicenseWorkDay() - day) <= 0){
                     // лицензия кончилась
-                    demo = false;
-                    mDataManager.getPreferensManager().setDemo(false);
+                    demo = true;
+                    mDataManager.getPreferensManager().setDemo(demo);
+                    viewDemoTitle();
                 } else {
                     Date lastDate = Func.getStrToDate(mDataManager.getPreferensManager().getLicenseLastDayRefresh(),
                             "yyyy-MM-dd");
@@ -206,7 +209,29 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
                         getLicenseServer();
                     }
                 }
+            } else if (mDataManager.getPreferensManager().getLicenseType() == ConstantManager.LICENSE_PERMANENT) {
+                // постоянная лицензия
+                Date lastDate = Func.getStrToDate(mDataManager.getPreferensManager().getLicenseLastDayRefresh(),
+                        "yyyy-MM-dd");
+                int dayLast = Func.getCountDay(lastDate);
+                if (dayLast > ConstantManager.WORK_LICENSE_DAY) {
+                    // прошло 30 дней
+                    getLicenseServer();
+                }
             }
+        } else {
+            // вкдючен демо режим
+            Log.d(TAG,"DEMO");
+            // запрашиваем лицензию
+            getLicenseServer();
+        }
+    }
+
+    private void viewDemoTitle(){
+        if (mDataManager.getPreferensManager().getDemo()) {
+            getSupportActionBar().setSubtitle("демо режим (не активировано)");
+        } else {
+            getSupportActionBar().setSubtitle(null);
         }
     }
 
@@ -221,6 +246,22 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
                     if (license.isStatus()) {
                         Func.storeLicense(mDataManager,license);
                         checkLicense();
+                    } else {
+                        if (license.getLicenseType() == ConstantManager.LICENSE_NO_LICENSE) {
+                            demo = true;
+                            mDataManager.getPreferensManager().setDemo(demo);
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    viewDemoTitle();
+                                }
+                            });
+                            mDataManager.getPreferensManager().setLicenseType(license.getLicenseType());
+                            mDataManager.getPreferensManager().setLicenseWorkDay(license.getLicenseDay());
+                            mDataManager.getPreferensManager().setLicenseActivate(license.getActionLicense());
+                        } else{
+                            // здесь была просто ошибка ответа от сервера
+                        }
                     }
                 }
             }).start();
