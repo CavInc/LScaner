@@ -72,7 +72,7 @@ public class AboutActivity extends AppCompatActivity implements View.OnClickList
         dialog.show(getSupportFragmentManager(),"AD");
     }
 
-    ActivateDialog.ActivateDialogListener mDialogListener = new ActivateDialog.ActivateDialogListener() {
+    ActivateNetDialog.ActivateDialogListener mDialogListener = new ActivateNetDialog.ActivateDialogListener() {
         @Override
         public void activateState(boolean state) {
             runOnUiThread(new Runnable() {

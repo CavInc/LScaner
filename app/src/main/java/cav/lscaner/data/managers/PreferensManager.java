@@ -84,6 +84,7 @@ public class PreferensManager {
     private static final String LICENSE_REFRESH = "LREFRESH";
     private static final String LICENSE_LAST_DAY_REFRESH = "LLDR"; // дата последнего запроса лицензии
     private static final String LICENSE_ACTIVATE_DATE = "LAD";
+    private static final String LICENSE_NEW_CLIENT = "LNC"; // новый клиент
 
 
     private SharedPreferences mSharedPreferences;
@@ -485,6 +486,17 @@ public class PreferensManager {
     public void setLicenseActivate(String date) {
         SharedPreferences.Editor editor = mSharedPreferences.edit();
         editor.putString(LICENSE_ACTIVATE_DATE,date);
+        editor.apply();
+    }
+
+    // Новый клиент и устройство
+    public boolean getLicenseNewClient(){
+        return mSharedPreferences.getBoolean(LICENSE_NEW_CLIENT,true);
+    }
+
+    public void setLicenseNewClient(boolean val){
+        SharedPreferences.Editor editor = mSharedPreferences.edit();
+        editor.putBoolean(LICENSE_NEW_CLIENT,val);
         editor.apply();
     }
 

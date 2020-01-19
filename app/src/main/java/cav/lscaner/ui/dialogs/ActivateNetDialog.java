@@ -16,7 +16,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import java.util.Date;
 
 import cav.lscaner.R;
 import cav.lscaner.data.managers.DataManager;
@@ -36,7 +35,7 @@ public class ActivateNetDialog extends DialogFragment implements View.OnClickLis
     private EditText mPhone;
     private EditText mName;
 
-    private ActivateDialog.ActivateDialogListener mDialogListener;
+    private ActivateDialogListener mDialogListener;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -110,6 +109,9 @@ public class ActivateNetDialog extends DialogFragment implements View.OnClickLis
                 }
                 // новый клиент и новое устройство
                 if (ret.getRequestServer().equals("NEW_DEVICE_AND_CLIENT")){
+                    mDataManager.getPreferensManager().setLicenseNewClient(true);
+                    mDataManager.getPreferensManager().setDemo(true);
+                    mDataManager.getPreferensManager().setLicenseType(ConstantManager.LICENSE_NEW_CLIENT);
 
                 }
 
@@ -118,7 +120,7 @@ public class ActivateNetDialog extends DialogFragment implements View.OnClickLis
         }).start();
     }
 
-    public void setDialogListener(ActivateDialog.ActivateDialogListener dialogListener) {
+    public void setDialogListener(ActivateDialogListener dialogListener) {
         mDialogListener = dialogListener;
     }
 

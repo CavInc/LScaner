@@ -40,6 +40,7 @@ public interface ConstantManager{
     int LICENSE_TEMPORARY  = 0;
     int LICENSE_PERMANENT = 1;
     int LICENSE_NO_LICENSE = 2;
+    int LICENSE_NEW_CLIENT = 3;
 
     int WORK_LICENSE_DAY = 30;
 }
