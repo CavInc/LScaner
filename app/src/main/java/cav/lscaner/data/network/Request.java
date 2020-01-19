@@ -4,16 +4,20 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 
 import cav.lscaner.data.managers.PreferensManager;
 import cav.lscaner.data.models.GetLicenseModel;
 import cav.lscaner.data.models.LicenseModel;
 import cav.lscaner.utils.ConstantManager;
+import cav.lscaner.utils.Func;
 
 public class Request {
 
@@ -164,5 +168,42 @@ public class Request {
         return ret;
     }
 
+    /*
+       удалить
+     */
+    public void deleteDevice(String deviceId){
+        String getPoint = "/api/deletedevice.php";
+
+        Map <String,String> params = new HashMap<>();
+        params.put("id",deviceId);
+
+        try {
+            URL url = new URL(ConstantManager.BASE_URL + getPoint);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setDoOutput(true);
+            conn.setDoInput(true);
+            conn.setUseCaches(false);
+            conn.setRequestMethod("POST");
+
+            conn.setRequestProperty("Accept-Charset", "UTF-8");
+            conn.setRequestProperty("Connection", "Keep-Alive");
+            conn.setRequestProperty("Charset", "UTF-8");
+            conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
+
+
+            conn.setDoOutput(true);
+            DataOutputStream out = new DataOutputStream(conn.getOutputStream());
+            out.writeBytes(Func.getParamsString(params));
+            out.flush();
+            out.close();
+
+
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
 
 }

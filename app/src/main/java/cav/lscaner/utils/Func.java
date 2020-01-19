@@ -7,8 +7,10 @@ import android.util.Log;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.net.URLEncoder;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.DecimalFormat;
@@ -18,6 +20,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Map;
 
 import cav.lscaner.data.managers.DataManager;
 import cav.lscaner.data.models.LicenseModel;
@@ -259,5 +262,15 @@ public class Func {
         manager.getPreferensManager().setDemo(false);
         manager.getPreferensManager().setLicenseLastDayRefresh(getDateToStr(new Date(),"yyyy-MM-dd"));
     }
+
+    public static String getParamsString(Map <String,String> param) throws UnsupportedEncodingException {
+        StringBuilder args = new StringBuilder("&");
+        for(Map.Entry<String,String> entry : param.entrySet()){
+            args.append(URLEncoder.encode(entry.getKey(), "UTF-8") + "="
+                    + URLEncoder.encode(entry.getValue(), "UTF-8"));
+        }
+        return args.toString();
+    }
+
 
 }
