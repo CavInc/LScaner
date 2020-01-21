@@ -1,11 +1,15 @@
 package cav.lscaner.ui.activity;
 
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+
+import java.io.IOException;
+import java.nio.CharBuffer;
 
 import cav.lscaner.BuildConfig;
 import cav.lscaner.R;
@@ -82,10 +86,27 @@ public class AboutActivity extends AppCompatActivity implements View.OnClickList
                 public void run() {
                     if (!mDataManager.getPreferensManager().getDemo()){
                         mActivateTv.setText("(активированна)");
+                    } else {
+                        mActivateTv.setText("(не активирована)");
                     }
                 }
             });
 
+        }
+
+        @Override
+        public void noLicense() {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(AboutActivity.this);
+                    builder.setIcon(android.R.drawable.ic_dialog_alert)
+                            .setTitle("Внимание")
+                            .setMessage("На клиенте нет свободных или активынх лицензий")
+                            .setPositiveButton(R.string.button_ok,null)
+                            .show();
+                }
+            });
         }
     };
 }

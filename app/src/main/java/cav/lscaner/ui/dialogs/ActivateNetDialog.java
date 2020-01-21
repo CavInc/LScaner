@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import cav.lscaner.R;
@@ -106,10 +107,26 @@ public class ActivateNetDialog extends DialogFragment implements View.OnClickLis
                 }
                 // если новое устройство то тоже запрос лицензии
                 if (ret.getRequestServer().equals("NOT_DEVICE")) {
-                    LicenseModel license = request.getLicense(mDataManager.getAndroidID());
-                    if (license.isStatus()) {
-                        Func.storeLicense(mDataManager,license);
-                        setActivateStatus(true);
+                    if (ret.isLicense()) {
+                        LicenseModel license = request.getLicense(mDataManager.getAndroidID());
+                        if (license.isStatus()) {
+                            Func.storeLicense(mDataManager, license);
+                            setActivateStatus(true);
+                        }
+                    } else {
+                        // показываем что на устройстве и клиенте  нет лицензии
+                        /*
+                        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(getActivity());
+                        builder.setIcon(android.R.drawable.ic_dialog_alert)
+                                .setTitle("Внимание")
+                                .setMessage("На клиенте нет свободных или активынх лицензий")
+                                .setPositiveButton(R.string.button_ok,null)
+                                .show();
+                      */
+                        //Toast.makeText(getActivity(),"На клиенте нет свободных или активынх лицензий\n свяжитесь с поставщиком решения",Toast.LENGTH_LONG).show();
+                        if (mDialogListener != null) {
+                            mDialogListener.noLicense();
+                        }
                     }
                 }
                 // новый клиент и новое устройство
@@ -117,7 +134,6 @@ public class ActivateNetDialog extends DialogFragment implements View.OnClickLis
                     mDataManager.getPreferensManager().setLicenseNewClient(true);
                     mDataManager.getPreferensManager().setDemo(true);
                     mDataManager.getPreferensManager().setLicenseType(ConstantManager.LICENSE_NEW_CLIENT);
-
                 }
 
                 dismiss();
@@ -152,6 +168,7 @@ public class ActivateNetDialog extends DialogFragment implements View.OnClickLis
     }
 
     public interface ActivateDialogListener {
-        public void activateState(boolean state);
+        void activateState(boolean state);
+        void noLicense();
     }
 }

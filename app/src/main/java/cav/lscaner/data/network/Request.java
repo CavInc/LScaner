@@ -91,7 +91,11 @@ public class Request {
                     JSONObject jObj = new JSONObject(res);
                     String status = jObj.getString("status");
                     System.out.println(status);
-                    ret = new GetLicenseModel(true,jObj.getString("message"),status);
+                    if (jObj.has("licence")) {
+                        ret = new GetLicenseModel(true, jObj.getString("message"), status,false);
+                    } else {
+                        ret = new GetLicenseModel(true, jObj.getString("message"), status,true);
+                    }
                 }
             } else {
                 String res = conn.getResponseMessage();
