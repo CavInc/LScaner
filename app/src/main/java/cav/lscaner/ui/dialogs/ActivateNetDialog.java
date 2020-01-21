@@ -115,15 +115,6 @@ public class ActivateNetDialog extends DialogFragment implements View.OnClickLis
                         }
                     } else {
                         // показываем что на устройстве и клиенте  нет лицензии
-                        /*
-                        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(getActivity());
-                        builder.setIcon(android.R.drawable.ic_dialog_alert)
-                                .setTitle("Внимание")
-                                .setMessage("На клиенте нет свободных или активынх лицензий")
-                                .setPositiveButton(R.string.button_ok,null)
-                                .show();
-                      */
-                        //Toast.makeText(getActivity(),"На клиенте нет свободных или активынх лицензий\n свяжитесь с поставщиком решения",Toast.LENGTH_LONG).show();
                         if (mDialogListener != null) {
                             mDialogListener.noLicense();
                         }
