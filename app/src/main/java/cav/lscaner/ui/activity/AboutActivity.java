@@ -35,11 +35,13 @@ public class AboutActivity extends AppCompatActivity implements View.OnClickList
 
         if (!mDataManager.getPreferensManager().getDemo()){
             mActivateTv.setText("(активирована)");
+            mActiveButton.setText("Деактивировать");
         }
 
         mVersion.setText("v"+BuildConfig.VERSION_NAME);
 
         mActiveButton.setOnClickListener(this);
+
 
         setupToolbar();
     }

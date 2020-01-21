@@ -1,5 +1,7 @@
 package cav.lscaner.data.network;
 
+import android.util.Log;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -171,8 +173,9 @@ public class Request {
     /*
        удалить
      */
-    public void deleteDevice(String deviceId){
+    public boolean deleteDevice(String deviceId){
         String getPoint = "/api/deletedevice.php";
+        boolean ret = false;
 
         Map <String,String> params = new HashMap<>();
         params.put("id",deviceId);
@@ -198,12 +201,26 @@ public class Request {
             out.close();
 
 
-
+            if (conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                String res = getRequestMessage(conn);
+                if (res !=null) {
+                    JSONObject jObj = new JSONObject(res);
+                    if (jObj.getBoolean("status")) {
+                        ret = true;
+                    } else {
+                        ret = false;
+                    }
+                }
+            }else {
+                String res = conn.getResponseMessage();
+                ret = false;
+            }
+            conn.disconnect();
 
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        return ret;
     }
 
 }

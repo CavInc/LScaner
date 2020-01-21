@@ -77,9 +77,14 @@ public class ActivateNetDialog extends DialogFragment implements View.OnClickLis
             dismiss();
         }
         if (v.getId() == R.id.activate_dlg_ok) {
-            mDataManager.getPreferensManager().setLicenseRegistryName(mName.getText().toString());
-            mDataManager.getPreferensManager().setLicenseRegistryPhone(PhoneNumberUtils.stripSeparators(mPhone.getText().toString()));
-            licenseRequest();
+            if (mDataManager.getPreferensManager().getDemo()) {
+                mDataManager.getPreferensManager().setLicenseRegistryName(mName.getText().toString());
+                mDataManager.getPreferensManager().setLicenseRegistryPhone(PhoneNumberUtils.stripSeparators(mPhone.getText().toString()));
+                licenseRequest();
+            } else {
+                // есть лицензия отвязываемся
+                deleteDeviceAndLicense(mDataManager.getAndroidID());
+            }
         }
     }
 
@@ -118,6 +123,22 @@ public class ActivateNetDialog extends DialogFragment implements View.OnClickLis
                 dismiss();
             }
         }).start();
+    }
+
+    private void deleteDeviceAndLicense(final String deviceID){
+        final Request request = new Request(mDataManager.getPreferensManager());
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                boolean res = request.deleteDevice(deviceID);
+                if (res) {
+                    mDataManager.getPreferensManager().setDemo(true);
+                    setActivateStatus(false);
+                }
+                dismiss();
+            }
+        }).start();
+
     }
 
     public void setDialogListener(ActivateDialogListener dialogListener) {
