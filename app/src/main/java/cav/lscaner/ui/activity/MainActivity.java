@@ -245,7 +245,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
                     LicenseModel license = request.getLicense(mDataManager.getAndroidID());
                     if (license.isStatus()) {
                         Func.storeLicense(mDataManager,license);
-                        checkLicense();
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                checkLicense();
+                            }
+                        });
                     } else {
                         if (license.getLicenseType() == ConstantManager.LICENSE_NO_LICENSE) {
                             demo = true;
