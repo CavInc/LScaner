@@ -92,7 +92,6 @@ public class AboutActivity extends AppCompatActivity implements View.OnClickList
                     .setPositiveButton(R.string.dialog_yes, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int with) {
-                            //deleteDeviceAndLicense(mDataManager.getAndroidID());
                             new DeleteDeviceAndLicenseAS(AboutActivity.this,mDataManager.getAndroidID()).execute();
                         }
                     })
@@ -112,8 +111,18 @@ public class AboutActivity extends AppCompatActivity implements View.OnClickList
                     } else {
                         mActivateTv.setText("(не активирована)");
                     }
+                    if (mDataManager.getPreferensManager().getLicenseNewClient()) {
+                        // новый клиент
+                        AlertDialog.Builder builder = new AlertDialog.Builder(AboutActivity.this);
+                        builder.setIcon(android.R.drawable.ic_dialog_alert)
+                                .setTitle("Внимание")
+                                .setMessage("Клиет новый на нем нет лицензий")
+                                .setPositiveButton(R.string.button_ok,null)
+                                .show();
+                    }
                 }
             });
+
 
         }
 
@@ -133,19 +142,6 @@ public class AboutActivity extends AppCompatActivity implements View.OnClickList
         }
     };
 
-    private void deleteDeviceAndLicense(final String deviceID){
-        final Request request = new Request(mDataManager.getPreferensManager());
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                boolean res = request.deleteDevice(deviceID);
-                if (res) {
-                    mDataManager.getPreferensManager().setDemo(true);
-                    //setActivateStatus(false);
-                }
-            }
-        }).start();
-    }
 
     private class DeleteDeviceAndLicenseAS  extends AsyncTask<Void,Void,String>{
 

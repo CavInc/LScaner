@@ -125,6 +125,7 @@ public class ActivateNetDialog extends DialogFragment implements View.OnClickLis
                     mDataManager.getPreferensManager().setLicenseNewClient(true);
                     mDataManager.getPreferensManager().setDemo(true);
                     mDataManager.getPreferensManager().setLicenseType(ConstantManager.LICENSE_NEW_CLIENT);
+                    setActivateStatus(false);
                 }
 
                 dismiss();
