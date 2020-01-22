@@ -1,5 +1,10 @@
 package cav.lscaner.ui.activity;
 
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
+import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -14,8 +19,10 @@ import java.nio.CharBuffer;
 import cav.lscaner.BuildConfig;
 import cav.lscaner.R;
 import cav.lscaner.data.managers.DataManager;
+import cav.lscaner.data.network.Request;
 import cav.lscaner.ui.dialogs.ActivateDialog;
 import cav.lscaner.ui.dialogs.ActivateNetDialog;
+import cav.lscaner.utils.SwipeDetector;
 
 public class AboutActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -73,9 +80,24 @@ public class AboutActivity extends AppCompatActivity implements View.OnClickList
         dialog.setDialogListener(mDialogListener);
         dialog.show(getSupportFragmentManager(),"AD");
         */
-        ActivateNetDialog dialog = new ActivateNetDialog();
-        dialog.setDialogListener(mDialogListener);
-        dialog.show(getSupportFragmentManager(),"AD");
+        if (mDataManager.getPreferensManager().getDemo()) {
+            ActivateNetDialog dialog = new ActivateNetDialog();
+            dialog.setDialogListener(mDialogListener);
+            dialog.show(getSupportFragmentManager(), "AD");
+        } else {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Внимание")
+                    .setMessage("Деактивируем лицензию на устройство ?")
+                    .setNegativeButton(R.string.dialog_no,null)
+                    .setPositiveButton(R.string.dialog_yes, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int with) {
+                            //deleteDeviceAndLicense(mDataManager.getAndroidID());
+                            new DeleteDeviceAndLicenseAS(AboutActivity.this,mDataManager.getAndroidID()).execute();
+                        }
+                    })
+                    .show();
+        }
     }
 
     ActivateNetDialog.ActivateDialogListener mDialogListener = new ActivateNetDialog.ActivateDialogListener() {
@@ -86,6 +108,7 @@ public class AboutActivity extends AppCompatActivity implements View.OnClickList
                 public void run() {
                     if (!mDataManager.getPreferensManager().getDemo()){
                         mActivateTv.setText("(активированна)");
+                        mActiveButton.setText("Деактивировать");
                     } else {
                         mActivateTv.setText("(не активирована)");
                     }
@@ -109,4 +132,60 @@ public class AboutActivity extends AppCompatActivity implements View.OnClickList
             });
         }
     };
+
+    private void deleteDeviceAndLicense(final String deviceID){
+        final Request request = new Request(mDataManager.getPreferensManager());
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                boolean res = request.deleteDevice(deviceID);
+                if (res) {
+                    mDataManager.getPreferensManager().setDemo(true);
+                    //setActivateStatus(false);
+                }
+            }
+        }).start();
+    }
+
+    private class DeleteDeviceAndLicenseAS  extends AsyncTask<Void,Void,String>{
+
+        private final Activity parent;
+        private String deviceid;
+
+        private ProgressDialog dialog;
+
+        public DeleteDeviceAndLicenseAS(Activity activity,String deviceID) {
+            parent = activity;
+            deviceid = deviceID;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            dialog = ProgressDialog.show(parent, "Удаление", "Please wait...", true);
+        }
+
+        @Override
+        protected String doInBackground(Void... voids) {
+            Request request = new Request(mDataManager.getPreferensManager());
+            boolean res = request.deleteDevice(deviceid);
+            if (res) {
+                mDataManager.getPreferensManager().setDemo(true);
+            }
+            return null;
+        }
+
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            dialog.dismiss();
+            if (!mDataManager.getPreferensManager().getDemo()){
+                mActivateTv.setText("(активированна)");
+            } else {
+                mActivateTv.setText("(не активирована)");
+                mActiveButton.setText("Активировать");
+            }
+        }
+    }
 }

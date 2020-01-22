@@ -29,5 +29,7 @@
         pprice - цена закупочная\n
         egais - код егаис\n
         vend - артикул\n</string>
+    <string name="dialog_no">Нет</string>
+    <string name="dialog_yes">Да</string>
 
 </resources>
