@@ -111,6 +111,7 @@ public class ActivateNetDialog extends DialogFragment implements View.OnClickLis
                         LicenseModel license = request.getLicense(mDataManager.getAndroidID());
                         if (license.isStatus()) {
                             Func.storeLicense(mDataManager, license);
+                            mDataManager.getPreferensManager().setLicenseNewClient(false);
                             setActivateStatus(true);
                         }
                     } else {
