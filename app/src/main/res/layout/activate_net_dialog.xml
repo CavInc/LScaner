@@ -37,17 +37,31 @@
             android:id="@+id/active_phone"
             android:hint="Телефон"
             android:inputType="phone"
+            android:imeOptions="actionNext"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
     </android.support.design.widget.TextInputLayout>
 
     <android.support.design.widget.TextInputLayout
-        android:layout_marginBottom="16dp"
+
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <EditText
             android:id="@+id/active_name"
             android:hint="Наименование"
+            android:imeOptions="actionNext"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </android.support.design.widget.TextInputLayout>
+    <android.support.design.widget.TextInputLayout
+        android:layout_marginBottom="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <EditText
+            android:id="@+id/active_email"
+            android:imeOptions="actionDone"
+            android:hint="Электронная почта"
+            android:inputType="textEmailAddress"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
     </android.support.design.widget.TextInputLayout>

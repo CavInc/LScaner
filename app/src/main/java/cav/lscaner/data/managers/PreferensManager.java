@@ -85,6 +85,7 @@ public class PreferensManager {
     private static final String LICENSE_LAST_DAY_REFRESH = "LLDR"; // дата последнего запроса лицензии
     private static final String LICENSE_ACTIVATE_DATE = "LAD";
     private static final String LICENSE_NEW_CLIENT = "LNC"; // новый клиент
+    private static final String LICENSE_EMAIL = "LEML";
 
 
     private SharedPreferences mSharedPreferences;
@@ -500,4 +501,14 @@ public class PreferensManager {
         editor.apply();
     }
 
+    // емайл
+    public String getLicenseEmail(){
+        return mSharedPreferences.getString(LICENSE_EMAIL,null);
+    }
+
+    public void setLicenseEmail(String email) {
+        SharedPreferences.Editor editor = mSharedPreferences.edit();
+        editor.putString(LICENSE_EMAIL,email);
+        editor.apply();
+    }
 }

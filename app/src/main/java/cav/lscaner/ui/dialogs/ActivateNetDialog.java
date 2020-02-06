@@ -35,6 +35,7 @@ public class ActivateNetDialog extends DialogFragment implements View.OnClickLis
 
     private EditText mPhone;
     private EditText mName;
+    private EditText mEmail;
 
     private ActivateDialogListener mDialogListener;
 
@@ -51,6 +52,7 @@ public class ActivateNetDialog extends DialogFragment implements View.OnClickLis
 
         mPhone = v.findViewById(R.id.active_phone);
         mName = v.findViewById(R.id.active_name);
+        mEmail = v.findViewById(R.id.active_email);
 
         ((TextView) v.findViewById(R.id.active_device_id)).setText(mDataManager.getAndroidID());
 
@@ -64,6 +66,7 @@ public class ActivateNetDialog extends DialogFragment implements View.OnClickLis
 
         mName.setText(mDataManager.getPreferensManager().getLicenseRegistryName());
         mPhone.setText(mDataManager.getPreferensManager().getLicenseRegistryPhone());
+        mEmail.setText(mDataManager.getPreferensManager().getLicenseEmail());
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("Ативация приложения")
@@ -81,6 +84,7 @@ public class ActivateNetDialog extends DialogFragment implements View.OnClickLis
             if (mDataManager.getPreferensManager().getDemo()) {
                 mDataManager.getPreferensManager().setLicenseRegistryName(mName.getText().toString());
                 mDataManager.getPreferensManager().setLicenseRegistryPhone(PhoneNumberUtils.stripSeparators(mPhone.getText().toString()));
+                mDataManager.getPreferensManager().setLicenseEmail(mEmail.toString());
                 licenseRequest();
             } else {
                 // есть лицензия отвязываемся
@@ -96,7 +100,7 @@ public class ActivateNetDialog extends DialogFragment implements View.OnClickLis
             public void run() {
                 String phone = PhoneNumberUtils.stripSeparators(mPhone.getText().toString());
                 GetLicenseModel ret = request.registryLicense(phone, mName.getText().toString(),
-                        mDataManager.getAndroidID());
+                        mDataManager.getAndroidID(),mEmail.getText().toString());
                 // если EXISTS_DEVICE_AND_CLIENT то запросим лицензию
                 if (ret.getRequestServer().equals("EXISTS_DEVICE_AND_CLIENT")) {
                     LicenseModel license = request.getLicense(mDataManager.getAndroidID());

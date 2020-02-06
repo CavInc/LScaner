@@ -61,7 +61,7 @@ public class Request {
        }
 
      */
-    public GetLicenseModel registryLicense(String phone, String client, String device){
+    public GetLicenseModel registryLicense(String phone, String client, String device,String email){
         GetLicenseModel ret = null;
         String getPoint = "/api/requestlicense.php";
         try {
@@ -78,6 +78,7 @@ public class Request {
             jdata.put("phone",phone);
             jdata.put("clientName",client);
             jdata.put("deviceId",device);
+            jdata.put("email",email);
 
             OutputStream os = conn.getOutputStream();
             os.write(jdata.toString().getBytes("UTF-8"));
