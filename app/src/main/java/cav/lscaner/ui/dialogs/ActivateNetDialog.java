@@ -84,7 +84,7 @@ public class ActivateNetDialog extends DialogFragment implements View.OnClickLis
             if (mDataManager.getPreferensManager().getDemo()) {
                 mDataManager.getPreferensManager().setLicenseRegistryName(mName.getText().toString());
                 mDataManager.getPreferensManager().setLicenseRegistryPhone(PhoneNumberUtils.stripSeparators(mPhone.getText().toString()));
-                mDataManager.getPreferensManager().setLicenseEmail(mEmail.toString());
+                mDataManager.getPreferensManager().setLicenseEmail(mEmail.getText().toString());
                 licenseRequest();
             } else {
                 // есть лицензия отвязываемся
