@@ -13,8 +13,6 @@ android {
         project.ext.set("archivesBaseName", "LScanerV-" + defaultConfig.versionName);
         resConfigs "en", "ru"
     }
-
-
     buildTypes {
         debug {
             //applicationIdSuffix ".debug"
