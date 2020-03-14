@@ -362,7 +362,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
                     selModel = mFileAdapter.getItem(i);
                     //String fname = Func.createFileName(selModel.getName(),selModel.getType());
                     //workInFile.saveFile(selModel.getId(),fname,mDataManager,selModel.getType());
-                    workInFile.saveFile(selModel.getId(),selModel.getName(),mDataManager,selModel.getType());
+                    String fname = selModel.getName();
+                    if (item == R.id.dialog_send_item) {
+                        fname = Func.createFileName(selModel.getName(),selModel.getType());
+                    }
+                    workInFile.saveFile(selModel.getId(),fname,mDataManager,selModel.getType());
                     Log.d(TAG,workInFile.getSavedFile());
 
                     storeFileFullName = workInFile.getSavedFile();
