@@ -35,7 +35,8 @@ public interface ConstantManager{
     int GD = 0;
     int LS = 1;
     int FL = 2;
-    String BASE_URL = "https://kempir.com/lscanner";
+    //String BASE_URL = "https://kempir.com/lscanner";
+    String BASE_URL= "http://chupkov.net/lscanner";
 
     int LICENSE_TEMPORARY  = 0;
     int LICENSE_PERMANENT = 1;
